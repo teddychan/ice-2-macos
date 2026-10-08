@@ -570,27 +570,27 @@ extension MenuBarItemManager {
         var errorDescription: String? {
             switch self {
             case .cannotComplete:
-                "Operation could not be completed"
+                localizedErrorText("app.error.moveItem.cannotComplete")
             case .invalidEventSource:
-                "Invalid event source"
+                localizedErrorText("app.error.moveItem.invalidEventSource")
             case .missingMouseLocation:
-                "Missing mouse location"
+                localizedErrorText("app.error.moveItem.missingMouseLocation")
             case .eventCreationFailure(let item):
-                "Could not create event for \"\(item.displayName)\""
+                String(format: localizedErrorText("app.error.moveItem.eventCreationFailure"), item.displayName)
             case .eventOperationTimeout(let item):
-                "Event operation timed out for \"\(item.displayName)\""
+                String(format: localizedErrorText("app.error.moveItem.eventOperationTimeout"), item.displayName)
             case .itemNotMovable(let item):
-                "\"\(item.displayName)\" is not movable"
+                String(format: localizedErrorText("app.error.moveItem.itemNotMovable"), item.displayName)
             case .itemResponseTimeout(let item):
-                "\"\(item.displayName)\" took too long to respond"
+                String(format: localizedErrorText("app.error.moveItem.itemResponseTimeout"), item.displayName)
             case .missingItemBounds(let item):
-                "Missing bounds rectangle for \"\(item.displayName)\""
+                String(format: localizedErrorText("app.error.moveItem.missingItemBounds"), item.displayName)
             }
         }
 
         var recoverySuggestion: String? {
             if case .itemNotMovable = self { return nil }
-            return "Please try again. If the error persists, please file a bug report."
+            return localizedErrorText("app.error.moveItem.tryAgain")
         }
     }
 

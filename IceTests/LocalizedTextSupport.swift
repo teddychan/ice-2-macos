@@ -12,14 +12,14 @@ import Testing
 ///
 /// Every display string in Ice 2 now resolves through DragonKit's `L(_:)`, which reads
 /// ``LocalizationManager``. Its default is `.system`, i.e. `Bundle.main.preferredLocalizations`
-/// — and the test host is a real `.app` shipping all seven locales, so the tests that pin exact
+/// — and the test host is a real `.app` shipping all eight locales, so the tests that pin exact
 /// wording would return Spanish on a Spanish Mac and fail there while passing on every English
 /// machine and on CI. That is a test whose result depends on who runs it, which is worse than no
 /// test: it reports green everywhere it is normally run.
 ///
 /// Pinning is deliberate rather than asserting language-independently (say, that each case
 /// merely resolves to something non-empty). The assertions exist to pin the *English copy* a
-/// user reads; the six translations are checked structurally instead, by
+/// user reads; the seven translations are checked structurally instead, by
 /// `LocalizationCoverageTests`.
 @MainActor
 func withEnglish<T>(_ body: () throws -> T) rethrows -> T {
@@ -29,7 +29,7 @@ func withEnglish<T>(_ body: () throws -> T) rethrows -> T {
     return try body()
 }
 
-/// Structural checks over the seven shipped `Localizable.strings` tables.
+/// Structural checks over the eight shipped `Localizable.strings` tables.
 ///
 /// These are the invariants that break silently. A key added to `en.lproj` and nowhere else
 /// still compiles, still passes every other test, and renders the raw key — `app.general.width`
@@ -61,7 +61,7 @@ struct LocalizationCoverageTests {
     @Test func shipsEveryLanguageTheKitOffers() throws {
         // The app-side half of §R13: the picker is constructed bare, so it offers
         // `DragonLanguage.selectable`, and every one of those has to be on disk.
-        #expect(Self.shipped.count == 7)
+        #expect(Self.shipped.count == 8)
         for language in Self.shipped {
             #expect(throws: Never.self) { try table(language) }
         }
@@ -151,12 +151,31 @@ struct LocalizationCoverageTests {
         #expect(seen[.en] == "Launch at login|About")
         #expect(seen[.ja] == "ログイン時に起動|情報")
         // Every language resolves to something distinct — a table that failed to load would
-        // fall back to the key and collapse all seven onto the same value.
+        // fall back to the key and collapse all eight onto the same value.
         #expect(Set(seen.values).count == Self.shipped.count)
         for (language, value) in seen {
             #expect(!value.contains("app."), "\(language.rawValue) left a key unresolved")
             #expect(!value.contains("DragonKit."), "\(language.rawValue) left a kit key unresolved")
         }
+    }
+
+    @Test func errorAlertsFollowTheChosenLanguage() {
+        // `NSAlert(error:)` and `LocalizedErrorWrapper` read the nonisolated `LocalizedError`
+        // properties, which `L(_:)` cannot be called from directly. Until #132 they were English
+        // literals, so a failed profile apply, spacing relaunch or item move showed an English
+        // alert in every language. `localizedErrorText(_:)` routes them through `L(_:)`.
+        let previous = LocalizationManager.shared.language
+        defer { LocalizationManager.shared.setLanguage(previous) }
+        let error = MenuBarLayoutProfilesSettings.ApplyError.missingAppState
+
+        LocalizationManager.shared.setLanguage(.en)
+        #expect(error.errorDescription == "Ice 2 is not ready to apply layout profiles.")
+        LocalizationManager.shared.setLanguage(.ru)
+        #expect(error.errorDescription == "Ice 2 пока не может применять профили расположения.")
+        #expect(
+            String(format: localizedErrorText("app.error.moveItem.itemNotMovable"), "Wi-Fi")
+                == "«Wi-Fi» нельзя переместить"
+        )
     }
 
     @Test func noTranslationClaimsAKitOwnedKey() throws {
