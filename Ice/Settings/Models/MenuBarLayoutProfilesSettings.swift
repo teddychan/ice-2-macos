@@ -210,7 +210,7 @@ extension MenuBarLayoutProfilesSettings {
 
         var errorDescription: String? {
             switch self {
-            case .missingAppState: "Ice is not ready to apply layout profiles."
+            case .missingAppState: localizedErrorText("app.error.layoutProfiles.notReady")
             }
         }
     }
