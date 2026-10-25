@@ -138,7 +138,7 @@ jobs:
       # derived-data SourcePackages artifacts (generate_appcast_glob: xcodebuild, below) rather
       # than a SwiftPM .build directory. That lookup is unchanged and already runs on every
       # release — only the publish destinations move.
-      appcast_repo: teddychan/ice-2
+      appcast_repo: teddychan/ice-2-macos
       release_title_prefix: Ice 2
       bot_name: Ice 2 Release Bot
       xcode_project: Ice.xcodeproj
