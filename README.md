@@ -35,7 +35,7 @@ profiles, and searches your items.
 
 ![Backup and restore](Resources/screenshots/settings-backup.png)
 
-[![Download](https://img.shields.io/badge/download-latest-brightgreen?style=flat-square)](https://github.com/teddychan/ice-2/releases/latest)
+[![Download](https://img.shields.io/badge/download-latest-brightgreen?style=flat-square)](https://github.com/teddychan/ice-2-macos/releases/latest)
 ![Platform](https://img.shields.io/badge/platform-macOS-blue?style=flat-square)
 ![Requirements](https://img.shields.io/badge/requirements-macOS%2026%2B-fa4e49?style=flat-square)
 [![Website](https://img.shields.io/badge/Website-dragonapp.com-015FBA?style=flat-square)](https://www.dragonapp.com/ice-2/)
@@ -60,7 +60,7 @@ profiles, and searches your items.
 - macOS 26 (Tahoe) or later.
 - An Apple Silicon Mac. Ice 2 is built for arm64 only; if you are on an Intel Mac,
   stay on version 2.4.1, which remains available on the
-  [releases page](https://github.com/teddychan/ice-2/releases).
+  [releases page](https://github.com/teddychan/ice-2-macos/releases).
 - Accessibility and Screen Recording permissions. Ice 2 asks for both on first
   launch and cannot manage menu bar items without them.
 
@@ -75,7 +75,7 @@ brew install --cask teddychan/tap/ice-2
 ### Manual
 
 Download the `Ice-2-vX.Y.Z.zip` file from the
-[latest release](https://github.com/teddychan/ice-2/releases/latest) and move the
+[latest release](https://github.com/teddychan/ice-2-macos/releases/latest) and move the
 unzipped app into your `Applications` folder.
 
 ### Uninstall
@@ -103,7 +103,7 @@ rm -rf ~/Library/Application\ Support/com.dragonapp.ice \
 ## Features
 
 > [!NOTE]
-> Ice 2 is an independent, open-source fork of [Ice](https://github.com/jordanbaird/Ice) — the menu bar manager originally created by [Jordan Baird](https://github.com/jordanbaird) — now actively maintained by [Teddy Chan](https://github.com/teddychan) and carried forward to support modern macOS. Download the latest release [here](https://github.com/teddychan/ice-2/releases/latest) and see the roadmap below for upcoming features.
+> Ice 2 is an independent, open-source fork of [Ice](https://github.com/jordanbaird/Ice) — the menu bar manager originally created by [Jordan Baird](https://github.com/jordanbaird) — now actively maintained by [Teddy Chan](https://github.com/teddychan) and carried forward to support modern macOS. Download the latest release [here](https://github.com/teddychan/ice-2-macos/releases/latest) and see the roadmap below for upcoming features.
 
 ### Menu bar item management
 
@@ -182,7 +182,7 @@ Security**. Granting Screen Recording may require relaunching Ice 2.
 Ice 2 uses a number of system APIs that are available starting in macOS 26, and it
 builds against the macOS 26 SDK. As such, there are no plans to support earlier
 versions of macOS. Older releases remain downloadable on the
-[releases page](https://github.com/teddychan/ice-2/releases).
+[releases page](https://github.com/teddychan/ice-2-macos/releases).
 
 ### Why does Ice 2 need network access?
 
@@ -250,7 +250,7 @@ event taps, or granted permissions is covered by the manual checklist in
 instead. CI runs the suite on every pull request; the Debug configuration signs ad-hoc,
 so no Apple Development certificate is needed to run it locally either.
 
-[![Tests](https://github.com/teddychan/ice-2/actions/workflows/tests.yml/badge.svg)](https://github.com/teddychan/ice-2/actions/workflows/tests.yml)
+[![Tests](https://github.com/teddychan/ice-2-macos/actions/workflows/tests.yml/badge.svg)](https://github.com/teddychan/ice-2-macos/actions/workflows/tests.yml)
 
 ```bash
 xcodebuild test -project Ice.xcodeproj -scheme Ice \

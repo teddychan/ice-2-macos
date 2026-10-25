@@ -1,6 +1,6 @@
 # Releasing Ice 2
 
-Pushing a `vX.Y.Z` tag to `teddychan/ice-2` triggers
+Pushing a `vX.Y.Z` tag to `teddychan/ice-2-macos` triggers
 `.github/workflows/release.yml`, which builds, Developer ID-signs, notarizes,
 and staples the app, uploads `Ice-2-vX.Y.Z.zip` to the GitHub Release,
 publishes the signed Sparkle appcast to `docs/ice-2/appcast.xml` **in this

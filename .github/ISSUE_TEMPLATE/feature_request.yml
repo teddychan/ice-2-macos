@@ -7,7 +7,7 @@ body:
     attributes:
       label: Search for Similar Requests
       description: |
-        Please use the search feature on the repository's [Issues](https://github.com/teddychan/ice-2/issues) page to see if this feature has already been requested. Make sure to include both open and closed issues in your search.
+        Please use the search feature on the repository's [Issues](https://github.com/teddychan/ice-2-macos/issues) page to see if this feature has already been requested. Make sure to include both open and closed issues in your search.
 
         **Important**: Only submit a new issue if the feature you want hasn't been requested in another issue.
       options:

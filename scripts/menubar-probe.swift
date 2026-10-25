@@ -15,7 +15,7 @@
 //
 // Run it without cloning the repository:
 //
-//   curl -fsSL https://raw.githubusercontent.com/teddychan/ice-2/main/scripts/menubar-probe.swift \
+//   curl -fsSL https://raw.githubusercontent.com/teddychan/ice-2-macos/main/scripts/menubar-probe.swift \
 //     -o /tmp/menubar-probe.swift &&
 //     swiftc -O /tmp/menubar-probe.swift -o /tmp/menubar-probe &&
 //     /tmp/menubar-probe

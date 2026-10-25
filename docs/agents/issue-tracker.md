@@ -12,7 +12,7 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 - **Apply / remove labels**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`
 - **Close**: `gh issue close <number> --comment "..."`
 
-This repo is a fork of `jordanbaird/Ice`, so `gh` defaults to the upstream. Always pass `--repo teddychan/ice-2` to every `gh issue` / `gh label` / `gh pr` command, and use `teddychan/ice-2` as `<owner>/<repo>` in `gh api` paths.
+This repo is a fork of `jordanbaird/Ice`, so `gh` defaults to the upstream. Always pass `--repo teddychan/ice-2-macos` to every `gh issue` / `gh label` / `gh pr` command, and use `teddychan/ice-2-macos` as `<owner>/<repo>` in `gh api` paths.
 
 ## Pull requests as a triage surface
 

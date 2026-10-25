@@ -116,11 +116,11 @@ experiment. Its integration checklist predates this backend.
 
 ## Related reports and intended fix
 
-* [#53](https://github.com/teddychan/ice-2/issues/53) reports that collapsing the
+* [#53](https://github.com/teddychan/ice-2-macos/issues/53) reports that collapsing the
   hidden section leaves apps visible on macOS 27 beta. The native backend
   replaces the legacy oversized-divider/window model with bundle-level native
   visibility assertions on macOS 27.
-* [#116](https://github.com/teddychan/ice-2/issues/116) reports an Ice Bar stuck at
+* [#116](https://github.com/teddychan/ice-2-macos/issues/116) reports an Ice Bar stuck at
   “Loading menu bar items…” on 27.0 (26A428). Native discovery no longer waits
   for individual item windows that this build does not expose. Hidden items are
   revealed in the system menu bar, and settings explain that the separate Ice

@@ -4,7 +4,7 @@
 
 ### Issue tracker
 
-GitHub Issues on `teddychan/ice-2` (always pass `--repo teddychan/ice-2`: this is a fork). See `docs/agents/issue-tracker.md`.
+GitHub Issues on `teddychan/ice-2-macos` (always pass `--repo teddychan/ice-2-macos`: this is a fork). See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
