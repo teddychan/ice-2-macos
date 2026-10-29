@@ -472,10 +472,12 @@ struct MenuBarLayoutProfileCaptureTests {
     }
 
     @Test func applyErrorHasUserFacingDescription() {
-        #expect(
-            MenuBarLayoutProfilesSettings.ApplyError.missingAppState.errorDescription
-                == "Ice is not ready to apply layout profiles."
-        )
+        withEnglish {
+            #expect(
+                MenuBarLayoutProfilesSettings.ApplyError.missingAppState.errorDescription
+                    == "Ice 2 is not ready to apply layout profiles."
+            )
+        }
     }
 }
 

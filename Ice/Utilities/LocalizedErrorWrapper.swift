@@ -3,7 +3,21 @@
 //  Ice
 //
 
+import DragonKit
 import Foundation
+
+/// `L(_:)` for a `LocalizedError` property, which the protocol requires to be nonisolated
+/// while `L(_:)` is main-actor-isolated.
+///
+/// Every alert that shows these errors reads them on the main thread (`NSAlert(error:)` and
+/// `LocalizedErrorWrapper` in a view), so that path follows the language chosen in Settings.
+/// Read from anywhere else, the text falls back to the system language rather than trapping.
+func localizedErrorText(_ key: String) -> String {
+    if Thread.isMainThread {
+        return MainActor.assumeIsolated { L(key) }
+    }
+    return Bundle.main.localizedString(forKey: key, value: nil, table: nil)
+}
 
 /// A type that wraps the information of any error inside a `LocalizedError`.
 ///

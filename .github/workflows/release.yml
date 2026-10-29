@@ -67,9 +67,9 @@ jobs:
       # never changed. Needs dragon-release-ci >= v6.2.0, which is what made the input accept a
       # list. Matches how spectacle-2 and yahoo-keykey-2 already declare theirs.
       #
-      # ALL SEVEN locales, not just en. A list naming only English would let a release rewrite the
-      # notes there and ship the previous version's text to Spanish, French, Japanese, Korean and
-      # both Chinese readers — the exact staleness this gate exists to catch, narrowed to the
+      # ALL EIGHT locales, not just en. A list naming only English would let a release rewrite the
+      # notes there and ship the previous version's text to Spanish, French, Japanese, Korean,
+      # Russian and both Chinese readers — the exact staleness this gate exists to catch, narrowed to the
       # languages nobody cutting the release would be reading. Add a line here with every new
       # .lproj.
       whats_new_path: >-
@@ -79,6 +79,7 @@ jobs:
         Ice/Resources/fr.lproj/Localizable.strings
         Ice/Resources/ja.lproj/Localizable.strings
         Ice/Resources/ko.lproj/Localizable.strings
+        Ice/Resources/ru.lproj/Localizable.strings
         Ice/Resources/zh-Hans.lproj/Localizable.strings
         Ice/Resources/zh-Hant.lproj/Localizable.strings
       build_kind: xcodebuild

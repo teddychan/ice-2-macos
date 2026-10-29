@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Ice 2 speaks Russian.** Русский is now in the **Language** control in Settings ▸ General,
+  alongside the other seven, and switches the whole app live like they do. Thanks to
+  [@shendrykau](https://github.com/shendrykau), who translated all of Ice 2 and DragonKit and
+  matched the wording Apple's Russian macOS uses (#132).
+
+### Fixed
+
+- **Error alerts are translated.** A failed layout profile, a failed item move and apps that did
+  not relaunch after a spacing change all showed their alert in English, whatever language Ice 2
+  was set to. @shendrykau spotted the four messages in #132. The item-move alert's titles were
+  English too, so all 12 strings are now translated into every language.
+
+### Internal
+
+- DragonKit 4.1.2 → 4.2.0, the release that adds Russian to the shared screens and the language
+  control.
+
 ## 2.16.1 - 2026-09-28
 
 ### Fixed

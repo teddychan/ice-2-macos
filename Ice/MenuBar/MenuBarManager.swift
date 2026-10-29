@@ -315,7 +315,7 @@ final class MenuBarManager: ObservableObject {
     /// menu bar, not the app's dropdown, which the control item already builds from the full
     /// `items(_:)` block. The kit exposes the block rather than its parts, so it is filtered —
     /// on the ⌘, key equivalent, which `DragonAppMenu` documents as canon and which, unlike the
-    /// title, reads the same in all seven languages. If the canon ever stops producing it, the
+    /// title, reads the same in all eight languages. If the canon ever stops producing it, the
     /// whole block is added instead so Settings is never unreachable from here.
     private func canonicalSettingsItems() -> [NSMenuItem] {
         let items = DragonAppMenu.items(DragonAppMenu.Config(

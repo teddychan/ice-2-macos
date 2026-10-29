@@ -390,6 +390,7 @@
 				fr,
 				ja,
 				ko,
+				ru,
 				"zh-Hans",
 				"zh-Hant",
 			);
@@ -893,7 +894,7 @@
 			repositoryURL = "https://github.com/teddychan/dragon-kit";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.1.2;
+				minimumVersion = 4.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

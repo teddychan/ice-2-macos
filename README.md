@@ -11,7 +11,7 @@ profiles, and searches your items.
 
 ## Screenshots
 
-#### Settings, in any of seven languages
+#### Settings, in any of eight languages
 
 ![General settings](Resources/screenshots/settings-general.png)
 
