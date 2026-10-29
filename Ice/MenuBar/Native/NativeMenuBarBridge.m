@@ -113,3 +113,48 @@ NSArray<NSDictionary<NSString *, NSString *> *> *ICENativeMenuBarSnapshot(void) 
     CFRelease(root);
     return items.allValues;
 }
+
+static void ICECollectFrames(AXUIElementRef element, NSString *identifier, NSUInteger depth,
+                             NSMutableArray<NSValue *> *frames, NSUInteger *budget) {
+    if (depth > 4 || *budget == 0) return;
+    (*budget)--;
+    id value = ICEAttribute(element, kAXIdentifierAttribute);
+    if ([value isKindOfClass:NSString.class] && [value isEqualToString:identifier]) {
+        CGPoint origin = CGPointZero;
+        CGSize size = CGSizeZero;
+        id position = ICEAttribute(element, kAXPositionAttribute);
+        id extent = ICEAttribute(element, kAXSizeAttribute);
+        if (position && extent &&
+            AXValueGetValue((__bridge AXValueRef)position, kAXValueTypeCGPoint, &origin) &&
+            AXValueGetValue((__bridge AXValueRef)extent, kAXValueTypeCGSize, &size) &&
+            size.width > 0 && size.height > 0) {
+            [frames addObject:[NSValue valueWithRect:NSMakeRect(origin.x, origin.y, size.width, size.height)]];
+        }
+        return;
+    }
+    // Hosted applications expose their ordinary menus too; don't enumerate them.
+    if ([ICEAttribute(element, kAXRoleAttribute) isEqual:@"AXApplication"]) return;
+    for (id child in ICEChildren(element)) {
+        ICECollectFrames((__bridge AXUIElementRef)child, identifier, depth + 1, frames, budget);
+    }
+}
+
+NSArray<NSValue *> *ICENativeMenuBarFrames(NSString *identifier) {
+    if (!AXIsProcessTrusted()) return @[];
+    NSRunningApplication *agent = [NSRunningApplication
+        runningApplicationsWithBundleIdentifier:@"com.apple.MenuBarAgent"].firstObject;
+    if (!agent) return @[];
+    AXUIElementRef root = AXUIElementCreateApplication(agent.processIdentifier);
+    AXUIElementSetMessagingTimeout(root, 0.1);
+    NSMutableArray<NSValue *> *frames = [NSMutableArray array];
+    NSUInteger budget = 256;
+    for (id window in ICEChildren(root)) {
+        AXUIElementRef element = (__bridge AXUIElementRef)window;
+        if (![ICEAttribute(element, kAXRoleAttribute) isEqual:@"AXWindow"]) continue;
+        for (id group in ICEChildren(element)) {
+            ICECollectFrames((__bridge AXUIElementRef)group, identifier, 0, frames, &budget);
+        }
+    }
+    CFRelease(root);
+    return frames;
+}
