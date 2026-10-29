@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# run-debug.sh — build Ice and (re)launch the Debug product as "Ice 2 Debug".
+# run-debug.sh — build Ice, install the Debug product as /Applications/Ice 2 Debug.app,
+# and (re)launch it from there.
 #
 # Why: a debug build must not share the installed app's bundle id
 # (com.dragonapp.ice), which collides on TCC permissions, the menu-bar manager,
@@ -9,11 +10,13 @@
 # to "Ice 2 Debug", so the built product is already the isolated app and
 # `xcodebuild test` gets the same isolation without going through this script.
 #
-# This script therefore builds, stamps and launches — it deliberately does NOT
-# copy the product to a second bundle. An earlier version did, which left two
-# bundles claiming com.dragonapp.ice.debug in every DerivedData folder;
+# This script therefore builds, stamps, installs and launches — it deliberately does
+# NOT re-id a copy of the product inside DerivedData. An earlier version did, which
+# left two bundles claiming com.dragonapp.ice.debug in every DerivedData folder;
 # LaunchServices then resolved that id ambiguously and could launch a stale build
-# instead of the one just built. One bundle per checkout, one id.
+# instead of the one just built. The stamped product is installed to
+# /Applications/Ice 2 Debug.app (the old copy is deleted first, no backup) and
+# launched by that exact path, so the running build is always the one just made.
 #
 # PRODUCT_NAME is "Ice 2 Debug" in the Debug configuration, so the bundle on disk,
 # its executable, CFBundleName and CFBundleDisplayName all read "Ice 2 Debug" —
@@ -78,19 +81,6 @@ if [[ "$built_id" != "$DEBUG_ID" ]]; then
   echo "       The Debug configuration must never build with the release id." >&2
   exit 1
 fi
-
-# Every running copy, not just this path's: one started from another DerivedData folder or
-# by a relative path still holds the menu bar and this id's defaults. The name ends in
-# " Debug", so the pattern can never match the installed "Ice 2.app".
-[[ "$DEBUG_NAME" == *" Debug" ]] || { echo "error: refusing to kill a non-Debug name" >&2; exit 1; }
-debug_process="$DEBUG_NAME.app/Contents/MacOS/$DEBUG_NAME"
-echo "==> Stopping any running ${DEBUG_NAME}…"
-pkill -f "$debug_process" 2>/dev/null || true
-for _ in {1..10}; do
-  pgrep -f "$debug_process" >/dev/null || break
-  sleep 0.5
-done
-pkill -9 -f "$debug_process" 2>/dev/null || true
 
 # Build number is the git commit count, never the hardcoded CURRENT_PROJECT_VERSION
 # in the project — that value goes stale the moment anyone commits without bumping
@@ -159,19 +149,48 @@ fi
 echo "==> Re-signing after stamping Debug channel, v$short_version ($build_number), as: $identity"
 codesign --force --deep --sign "$identity" "$app"
 
-# `open -n` on this exact path, never `open -b <id>`: stray "Ice 2 Debug.app" copies in other
-# DerivedData folders claim the same id, and LaunchServices would pick one it likes. Not an
-# exec from this shell either: a process started from a terminal has the terminal as its
-# responsible process, so TCC checks the terminal's grants and the app reports Accessibility
-# as missing however often it is granted. `open` also parents the app to launchd, so it
-# outlives this shell.
-echo "==> Launching $app"
-open -n "$app"
+# Every running copy, wherever it was started from (/Applications, another DerivedData folder),
+# found by the Debug bundle id, so the installed release "Ice 2.app" (com.dragonapp.ice) is
+# never touched. The guard keeps the rm -rf below from ever naming a non-Debug bundle.
+[[ "$DEBUG_NAME" == *" Debug" && "$DEBUG_ID" == *.debug ]] \
+  || { echo "error: refusing to stop or replace a non-Debug identity" >&2; exit 1; }
+debug_pids() {
+  lsappinfo find "bundleid=$DEBUG_ID" | while IFS= read -r asn; do
+    lsappinfo info -only pid "$asn" | sed -n 's/.*pid = \([0-9][0-9]*\).*/\1/p'
+  done
+}
+echo "==> Quitting any running ${DEBUG_NAME}…"
+pids="$(debug_pids)"
+if [[ -n "$pids" ]]; then
+  kill $pids 2>/dev/null || true
+  for _ in {1..10}; do
+    [[ -z "$(debug_pids)" ]] && break
+    sleep 0.5
+  done
+  pids="$(debug_pids)"
+  [[ -z "$pids" ]] || kill -9 $pids 2>/dev/null || true
+fi
+
+# Installed like any other app: the previous copy is deleted outright (no backup), then the
+# freshly stamped bundle is copied in. ditto keeps the signature intact.
+installed="/Applications/$DEBUG_NAME.app"
+echo "==> Installing $installed"
+rm -rf "$installed"
+ditto "$app" "$installed"
+
+# `open -n` on this exact path, never `open -b <id>`: the DerivedData product and stray
+# "Ice 2 Debug.app" copies in other DerivedData folders claim the same id, and LaunchServices
+# would pick one it likes. Not an exec from this shell either: a process started from a
+# terminal has the terminal as its responsible process, so TCC checks the terminal's grants
+# and the app reports Accessibility as missing however often it is granted. `open` also
+# parents the app to launchd, so it outlives this shell.
+echo "==> Launching $installed"
+open -n "$installed"
 
 cat <<EOF
 
 Launched "$DEBUG_NAME" v$short_version Debug (build $build_number), id $DEBUG_ID, from:
-  $app
+  $installed
 
 - v$short_version is the numeric candidate for the next public release; "Debug" is the
   build channel, not part of the version.

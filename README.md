@@ -226,8 +226,9 @@ The product itself is the isolated app; nothing re-ids it afterwards, so only on
 bundle ever claims that id.
 
 To try a local build alongside an installed copy of Ice 2, use the debug runner. It
-builds the **Ice** scheme and launches the product, which already has its own name,
-permissions, and settings, alongside the release app:
+builds the **Ice** scheme, installs the product as `/Applications/Ice 2 Debug.app`
+(replacing the previous copy) and launches it from there. It already has its own
+name, permissions, and settings, so it runs alongside the release app:
 
 ```sh
 bash scripts/run-debug.sh
