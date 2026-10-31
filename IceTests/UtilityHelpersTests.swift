@@ -118,4 +118,27 @@ struct UtilityHelpersTests {
         #expect(!AXHelpers.isMenuExtraNode(role: .window, subrole: nil, bundleIdentifier: "com.apple.MenuBarAgent"))
         #expect(!AXHelpers.isMenuExtraNode(role: .button, subrole: nil, bundleIdentifier: "example.app"))
     }
+
+    // MARK: Permission polling
+
+    @MainActor
+    @Test func optionalMissingPermissionDoesNotPollInBackground() async throws {
+        var checkCalls = 0
+        let optionalPermission = Permission(
+            title: "test.optional",
+            details: [],
+            isRequired: false,
+            check: {
+                checkCalls += 1
+                return false
+            },
+            request: {}
+        )
+        defer { optionalPermission.stopCheck() }
+
+        // Initial check runs once during init; no background timer should fire afterwards.
+        #expect(checkCalls == 1)
+        try await Task.sleep(for: .milliseconds(50))
+        #expect(checkCalls == 1)
+    }
 }
