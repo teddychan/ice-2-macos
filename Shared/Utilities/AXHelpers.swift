@@ -7,11 +7,19 @@ import AXSwift
 import Cocoa
 
 enum AXHelpers {
-    private static let queue = DispatchQueue.targetingGlobal(
-        label: "AXHelpers.queue",
-        qos: .userInteractive,
-        attributes: .concurrent
-    )
+    /// Process-wide Accessibility IPC timeout in seconds. Prevents synchronous
+    /// queries from stalling the main thread for the 6-second HIServices default
+    /// when a target application is unresponsive.
+    static let defaultMessagingTimeout: Float = 0.2
+
+    private static let queue: DispatchQueue = {
+        UIElement.globalMessagingTimeout = defaultMessagingTimeout
+        return DispatchQueue.targetingGlobal(
+            label: "AXHelpers.queue",
+            qos: .userInteractive,
+            attributes: .concurrent
+        )
+    }()
 
     @discardableResult
     static func isProcessTrusted(prompt: Bool = false) -> Bool {

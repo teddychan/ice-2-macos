@@ -3,6 +3,7 @@
 //  IceTests
 //
 
+import AXSwift
 import Foundation
 import Testing
 @testable import Ice_2
@@ -70,5 +71,14 @@ struct UtilityHelpersTests {
             let title = SystemAppearance.current.localized
             #expect(title == "Light Appearance" || title == "Dark Appearance")
         }
+    }
+
+    // MARK: AXHelpers timeout
+
+    @Test func axHelpersConfiguresBoundedGlobalMessagingTimeout() {
+        _ = AXHelpers.isProcessTrusted()
+        #expect(UIElement.globalMessagingTimeout == AXHelpers.defaultMessagingTimeout)
+        #expect(AXHelpers.defaultMessagingTimeout > 0)
+        #expect(AXHelpers.defaultMessagingTimeout <= 0.5)
     }
 }
