@@ -76,7 +76,23 @@ static void ICECollect(AXUIElementRef element, pid_t agentPID, NSUInteger depth,
     NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
     NSString *bundle = app.bundleIdentifier;
     if (pid != agentPID && bundle) {
-        items[bundle] = @{@"bundle": bundle, @"name": app.localizedName ?: bundle};
+        NSString *name = app.localizedName ?: bundle;
+        // SystemUIServer hosts several unrelated extras (VPN, …): name the item after
+        // the extras it shows, joined, since they can only be hidden together.
+        if ([bundle isEqualToString:@"com.apple.systemuiserver"]) {
+            // Only an extra's description names it; the process element's title is just
+            // "SystemUIServer". Each display repeats the extras, so skip known names.
+            id extra = ICEAttribute(element, kAXDescriptionAttribute);
+            if ([extra isKindOfClass:NSString.class] && [extra length]) {
+                NSString *previous = items[bundle][@"extras"];
+                if ([[previous componentsSeparatedByString:@", "] containsObject:extra]) return;
+                name = previous ? [previous stringByAppendingFormat:@", %@", extra] : extra;
+                items[bundle] = @{@"bundle": bundle, @"name": name, @"extras": name};
+                return;
+            }
+            if (items[bundle]) return;
+        }
+        items[bundle] = @{@"bundle": bundle, @"name": name};
         return;
     }
     id identifier = ICEAttribute(element, kAXIdentifierAttribute);

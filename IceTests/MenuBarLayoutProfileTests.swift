@@ -150,6 +150,20 @@ struct NativeMenuBarPolicyTests {
         #expect(NativeMenuBarPolicy.item(bundle: nil, identifier: "com.apple.menuextra.focusmode", name: "Focus")?.canAssign == false)
     }
 
+    @Test func systemUIServerExtrasAreAssignableAndHideTogether() throws {
+        let vpn = try #require(NativeMenuBarPolicy.item(bundle: "com.apple.systemuiserver", identifier: nil, name: "VPN"))
+        #expect(vpn.id == "bundle:com.apple.systemuiserver")
+        #expect(vpn.canAssign)
+        #expect(vpn.name == "VPN")
+        #expect(NativeMenuBarPolicy.item(bundle: "com.apple.MenuBarAgent", identifier: nil, name: "Agent")?.canAssign == false)
+        let config = try #require(configuration(
+            ["bundle:com.apple.systemuiserver": .hidden],
+            running: ["com.apple.systemuiserver", "com.example.one"]
+        ))
+        #expect(!config.bundles.contains("com.apple.systemuiserver"))
+        #expect(config.bundles.contains("com.example.one"))
+    }
+
     @Test func nativeProfileTagsRoundTrip() {
         for id in ["bundle:com.example.one", "system:0", "system:7"] {
             let tag = NativeMenuBarPolicy.tag(for: id)

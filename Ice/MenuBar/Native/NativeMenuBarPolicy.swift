@@ -19,6 +19,7 @@ struct NativeMenuBarItem: Identifiable, Equatable, Sendable {
         case "system:5": "speaker.wave.2"
         case "system:6": "wifi"
         case "system:7": "rectangle.on.rectangle"
+        case NativeMenuBarPolicy.systemUIServerID: "network.badge.shield.half.filled"
         default: "menubar.rectangle"
         }
     }
@@ -27,7 +28,7 @@ struct NativeMenuBarItem: Identifiable, Equatable, Sendable {
         if id.hasPrefix("bundle:") {
             let bundle = String(id.dropFirst(7))
             return !bundle.isEmpty && !NativeMenuBarPolicy.ownBundles.contains(bundle)
-                && bundle != "com.apple.systemuiserver" && bundle != "com.apple.MenuBarAgent"
+                && bundle != "com.apple.MenuBarAgent"
         }
         guard id.hasPrefix("system:"), let number = Int(id.dropFirst(7)) else { return false }
         return (0...8).contains(number) && number != 2 && number != 8
@@ -36,6 +37,10 @@ struct NativeMenuBarItem: Identifiable, Equatable, Sendable {
 
 enum NativeMenuBarPolicy {
     static let ownBundles: Set<String> = ["com.dragonapp.ice", "com.dragonapp.ice.debug"]
+    /// SystemUIServer still hosts legacy extras such as VPN. Assessment mode filters
+    /// by process, so its extras can only be shown or hidden together, as one item.
+    static let systemUIServerBundle = "com.apple.systemuiserver"
+    static let systemUIServerID = "bundle:\(systemUIServerBundle)"
     static let systemNames = ["Battery", "Bluetooth", "Clock", "Displays", "Keyboard", "Sound", "Wi-Fi", "Screen Mirroring", "Control Center"]
 
     static func systemID(for identifier: String) -> Int? {
@@ -53,8 +58,7 @@ enum NativeMenuBarPolicy {
             if bundle == "com.apple.TextInputMenuAgent" {
                 return NativeMenuBarItem(id: "system:4", name: systemNames[4])
             }
-            // Siri and legacy extras share this process. Do not promise to split them.
-            if bundle == "com.apple.systemuiserver" || bundle == "com.apple.MenuBarAgent" {
+            if bundle == "com.apple.MenuBarAgent" {
                 return NativeMenuBarItem(id: "unmanaged:\(bundle)", name: name)
             }
             return NativeMenuBarItem(id: "bundle:\(bundle)", name: name)
