@@ -274,13 +274,10 @@ final class MenuBarManager: ObservableObject {
     /// Returns a Boolean value that indicates whether the given display
     /// has a valid menu bar.
     func hasValidMenuBar(in windows: [WindowInfo], for display: CGDirectDisplayID) -> Bool {
-        guard
-            let window = WindowInfo.menuBarWindow(from: windows, for: display),
-            let element = AXHelpers.element(at: window.bounds.origin)
-        else {
+        guard let window = WindowInfo.menuBarWindow(from: windows, for: display) else {
             return false
         }
-        return AXHelpers.role(for: element) == .menuBar
+        return AXHelpers.menuBarElement(nearDisplayOrigin: window.bounds.origin) != nil
     }
 
     /// Shows the secondary context menu: Ice 2's own appearance shortcut, then Settings.
