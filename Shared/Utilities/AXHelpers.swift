@@ -50,47 +50,62 @@ enum AXHelpers {
         queue.sync { try? element.attribute(.parent) }
     }
 
-    /// Returns the screen frames (in CoreGraphics global coordinates) of the
-    /// status items hosted by `MenuBarAgent` on the given display.
-    static func menuExtraFrames(
-        on display: CGDirectDisplayID,
-        matchingControlItemFrame controlItemFrame: CGRect? = nil
-    ) -> [CGRect] {
+    /// Returns a conservative snapshot of the menu extras in the real menu-bar
+    /// strip. MenuBarAgent can expose several overlapping copies of that strip;
+    /// retaining all their frames protects icons without guessing which is live.
+    /// Call off the main thread. An incomplete or timed-out snapshot is unknown.
+    static func menuExtraFrames(in menuBarBounds: CGRect) -> [CGRect]? {
         guard
             let agent = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.MenuBarAgent").first,
             let app = application(for: agent)
         else {
-            return []
+            return nil
         }
-        let displayBounds = CGDisplayBounds(display)
-        var fallbackFrames = [CGRect]()
-
-        for window in children(for: app) {
+        let deadline = ContinuousClock.now.advanced(by: .milliseconds(300))
+        app.messagingTimeout = 0.05
+        guard let windows: [UIElement] = try? app.arrayAttribute(.children), windows.count <= 16 else {
+            return nil
+        }
+        var frames = [CGRect]()
+        var remainingItems = 128
+        for window in windows {
+            guard ContinuousClock.now < deadline else {
+                return nil
+            }
+            window.messagingTimeout = 0.05
+            guard let windowFrame: CGRect = try? window.attribute(.frame) else {
+                return nil
+            }
             guard
-                role(for: window) == .window,
-                let windowFrame = frame(for: window),
-                displayBounds.intersects(windowFrame)
+                abs(windowFrame.minX - menuBarBounds.minX) < 1,
+                abs(windowFrame.minY - menuBarBounds.minY) < 1,
+                abs(windowFrame.width - menuBarBounds.width) < 1,
+                abs(windowFrame.height - menuBarBounds.height) < 1
             else {
                 continue
             }
-            let itemFrames = children(for: window)
-                .compactMap { frame(for: $0) }
-                .filter { $0.width > 2 && displayBounds.intersects($0) }
-            guard !itemFrames.isEmpty else {
-                continue
+            guard let items: [UIElement] = try? window.arrayAttribute(.children), items.count <= remainingItems else {
+                return nil
             }
-            if
-                let controlItemFrame,
-                itemFrames.contains(where: { abs($0.minX - controlItemFrame.minX) < 4 })
-            {
-                return itemFrames
-            }
-            if fallbackFrames.isEmpty {
-                fallbackFrames = itemFrames
+            remainingItems -= items.count
+            for item in items {
+                guard ContinuousClock.now < deadline else {
+                    return nil
+                }
+                item.messagingTimeout = 0.05
+                guard let frame: CGRect = try? item.attribute(.frame) else {
+                    return nil
+                }
+                let clippedFrame = frame.intersection(menuBarBounds)
+                if !clippedFrame.isNull, clippedFrame.width > 0, clippedFrame.height > 0 {
+                    frames.append(clippedFrame)
+                }
             }
         }
-
-        return fallbackFrames
+        guard ContinuousClock.now < deadline, !frames.isEmpty else {
+            return nil
+        }
+        return frames
     }
 
     /// Returns the menu bar AX element near the given display origin.

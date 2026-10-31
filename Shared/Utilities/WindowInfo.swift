@@ -131,7 +131,7 @@ extension WindowInfo {
         let desktopIconLevel = Int(CGWindowLevelForKey(.desktopIconWindow))
 
         return windows.first { window in
-            guard displayBounds.contains(window.bounds) else {
+            guard window.isOnScreen, displayBounds.contains(window.bounds) else {
                 return false
             }
             // Check the title first. It's a cheap string comparison, whereas
