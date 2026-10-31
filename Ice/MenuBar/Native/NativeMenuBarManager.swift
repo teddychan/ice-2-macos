@@ -131,7 +131,10 @@ final class NativeMenuBarManager: ObservableObject {
             merged[id] = NativeMenuBarItem(id: id, name: name)
         }
         items = merged.values.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-        for item in items where item.id.hasPrefix("bundle:") && appIcons[item.id] == nil {
+        // SystemUIServer's own icon and name say nothing about the extras it shows (such
+        // as VPN), so it keeps the discovered extra names and a symbol instead.
+        for item in items where item.id.hasPrefix("bundle:") && item.id != NativeMenuBarPolicy.systemUIServerID
+            && appIcons[item.id] == nil {
             let bundle = String(item.id.dropFirst(7))
             if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundle) {
                 appIcons[item.id] = NSWorkspace.shared.icon(forFile: url.path)
