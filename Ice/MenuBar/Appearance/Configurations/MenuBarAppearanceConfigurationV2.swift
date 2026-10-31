@@ -35,6 +35,23 @@ struct MenuBarAppearanceConfigurationV2: Hashable {
         removesMenuBarBackground || roundsScreenCorners || shapeKind != .noShape
     }
 
+    /// Returns whether an overlay panel is required to render this
+    /// configuration (or the active preview configuration, if any).
+    func needsOverlayPanels(
+        with previewConfiguration: MenuBarAppearancePartialConfiguration? = nil
+    ) -> Bool {
+        if needsDesktopWallpaper {
+            return true
+        }
+        if let previewConfiguration {
+            return previewConfiguration.needsOverlayPanels
+        }
+        if isDynamic {
+            return lightModeConfiguration.needsOverlayPanels || darkModeConfiguration.needsOverlayPanels
+        }
+        return staticConfiguration.needsOverlayPanels
+    }
+
     var current: MenuBarAppearancePartialConfiguration {
         if isDynamic {
             switch SystemAppearance.current {
@@ -118,6 +135,10 @@ struct MenuBarAppearancePartialConfiguration: Hashable {
     var tintKind: MenuBarTintKind
     var tintColor: CGColor
     var tintGradient: IceGradient
+
+    var needsOverlayPanels: Bool {
+        hasShadow || hasBorder || tintKind != .noTint
+    }
 }
 
 // MARK: Default Partial Configuration

@@ -214,6 +214,42 @@ struct AppearanceConfigurationV2Tests {
         #expect(!MenuBarAppearanceConfigurationV2.defaultConfiguration.needsDesktopWallpaper)
     }
 
+    // MARK: needsOverlayPanels
+
+    @Test func defaultConfigurationDoesNotNeedOverlayPanels() {
+        var configuration = MenuBarAppearanceConfigurationV2.defaultConfiguration
+        // Non-visual scalar tweaks (such as borderWidth while hasBorder is false)
+        // must not keep overlay panels alive once all visual effects are turned off.
+        configuration.staticConfiguration.borderWidth = 3
+        #expect(!configuration.needsOverlayPanels())
+    }
+
+    @Test func anyVisualEffectOrActivePreviewNeedsOverlayPanels() {
+        for makeConfiguration in [
+            { (c: inout MenuBarAppearanceConfigurationV2) in c.removesMenuBarBackground = true },
+            { (c: inout MenuBarAppearanceConfigurationV2) in c.roundsScreenCorners = true },
+            { (c: inout MenuBarAppearanceConfigurationV2) in c.shapeKind = .full },
+            { (c: inout MenuBarAppearanceConfigurationV2) in c.shapeKind = .split },
+            { (c: inout MenuBarAppearanceConfigurationV2) in c.staticConfiguration.hasShadow = true },
+            { (c: inout MenuBarAppearanceConfigurationV2) in c.staticConfiguration.hasBorder = true },
+            { (c: inout MenuBarAppearanceConfigurationV2) in c.staticConfiguration.tintKind = .solid },
+            { (c: inout MenuBarAppearanceConfigurationV2) in c.staticConfiguration.tintKind = .gradient },
+        ] {
+            var configuration = MenuBarAppearanceConfigurationV2.defaultConfiguration
+            makeConfiguration(&configuration)
+            #expect(configuration.needsOverlayPanels())
+        }
+
+        var preview = MenuBarAppearancePartialConfiguration.defaultConfiguration
+        preview.hasBorder = true
+        #expect(MenuBarAppearanceConfigurationV2.defaultConfiguration.needsOverlayPanels(with: preview))
+
+        var dynamicConfig = MenuBarAppearanceConfigurationV2.defaultConfiguration
+        dynamicConfig.isDynamic = true
+        dynamicConfig.darkModeConfiguration.hasShadow = true
+        #expect(dynamicConfig.needsOverlayPanels())
+    }
+
     // MARK: Defaults
 
     @Test func defaultConfigurationIsInsetAndUntinted() {

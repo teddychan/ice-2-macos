@@ -64,11 +64,9 @@ final class MenuBarAppearanceManager: ObservableObject {
                     return
                 }
                 while let panel = overlayPanels.popFirst() {
-                    panel.orderOut(self)
+                    panel.close()
                 }
-                if Set(overlayPanels.map { $0.owningScreen }) != Set(NSScreen.screens) {
-                    configureOverlayPanels(with: configuration)
-                }
+                configureOverlayPanels(with: configuration, previewConfiguration: previewConfiguration)
             }
             .store(in: &c)
 
@@ -84,53 +82,24 @@ final class MenuBarAppearanceManager: ObservableObject {
             }
             .store(in: &c)
 
-        $configuration
+        Publishers.CombineLatest($configuration, $previewConfiguration)
             .throttle(for: 0.1, scheduler: DispatchQueue.main, latest: true)
-            .sink { [weak self] configuration in
-                guard let self else {
-                    return
-                }
-                // The overlay panels may not have been configured yet. Since some of the
-                // properties on the manager might call for them, try to configure now.
-                if overlayPanels.isEmpty {
-                    configureOverlayPanels(with: configuration)
-                }
+            .sink { [weak self] configuration, previewConfiguration in
+                self?.configureOverlayPanels(with: configuration, previewConfiguration: previewConfiguration)
             }
             .store(in: &c)
 
         cancellables = c
     }
 
-    /// Returns a Boolean value that indicates whether a set of overlay panels
-    /// is needed for the given configuration.
-    private func needsOverlayPanels(for configuration: MenuBarAppearanceConfigurationV2) -> Bool {
-        let current = configuration.current
-        if configuration.removesMenuBarBackground {
-            return true
-        }
-        if configuration.roundsScreenCorners {
-            return true
-        }
-        if current.hasShadow {
-            return true
-        }
-        if current.hasBorder {
-            return true
-        }
-        if configuration.shapeKind != .noShape {
-            return true
-        }
-        if current.tintKind != .noTint {
-            return true
-        }
-        return false
-    }
-
     /// Configures the manager's overlay panels, if required by the given configuration.
-    private func configureOverlayPanels(with configuration: MenuBarAppearanceConfigurationV2) {
+    private func configureOverlayPanels(
+        with configuration: MenuBarAppearanceConfigurationV2,
+        previewConfiguration: MenuBarAppearancePartialConfiguration? = nil
+    ) {
         guard
             let appState,
-            needsOverlayPanels(for: configuration)
+            configuration.needsOverlayPanels(with: previewConfiguration)
         else {
             while let panel = overlayPanels.popFirst() {
                 panel.close()
@@ -138,8 +107,17 @@ final class MenuBarAppearanceManager: ObservableObject {
             return
         }
 
+        let screens = NSScreen.screens
+        guard Set(overlayPanels.map(\.owningScreen)) != Set(screens) else {
+            return
+        }
+
+        while let panel = overlayPanels.popFirst() {
+            panel.close()
+        }
+
         var overlayPanels = Set<MenuBarOverlayPanel>()
-        for screen in NSScreen.screens {
+        for screen in screens {
             let panel = MenuBarOverlayPanel(appState: appState, owningScreen: screen)
             overlayPanels.insert(panel)
             panel.needsShow = true
