@@ -72,12 +72,13 @@ static void ICECollect(AXUIElementRef element, pid_t agentPID, NSUInteger depth,
     if (depth > 4 || *budget == 0) return;
     (*budget)--;
     pid_t pid = 0;
-    AXUIElementGetPid(element, &pid);
-    NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
-    NSString *bundle = app.bundleIdentifier;
-    if (pid != agentPID && bundle) {
-        items[bundle] = @{@"bundle": bundle, @"name": app.localizedName ?: bundle};
-        return;
+    if (AXUIElementGetPid(element, &pid) == kAXErrorSuccess && pid > 0 && pid != agentPID) {
+        NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
+        NSString *bundle = app.bundleIdentifier;
+        if (bundle) {
+            items[bundle] = @{@"bundle": bundle, @"name": app.localizedName ?: bundle};
+            return;
+        }
     }
     id identifier = ICEAttribute(element, kAXIdentifierAttribute);
     if ([identifier isKindOfClass:NSString.class] && [identifier hasPrefix:@"com.apple.menuextra."]) {
