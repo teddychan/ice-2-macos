@@ -116,18 +116,42 @@ extension WindowInfo {
 // MARK: - Specific Windows
 
 extension WindowInfo {
+    /// Bundle identifiers of system processes that host the desktop wallpaper window.
+    private static let systemWallpaperBundleIdentifiers: Set<String> = [
+        "com.apple.dock",
+        "com.apple.WindowManager",
+        "com.apple.wallpaper.agent",
+    ]
+
     /// Returns the wallpaper window for the given display from the
     /// given list of windows.
     static func wallpaperWindow(from windows: [WindowInfo], for display: CGDirectDisplayID) -> WindowInfo? {
         let displayBounds = CGDisplayBounds(display)
+        let desktopLevel = Int(CGWindowLevelForKey(.desktopWindow)) - 1
+        let desktopIconLevel = Int(CGWindowLevelForKey(.desktopIconWindow))
+
         return windows.first { window in
+            guard window.isOnScreen, displayBounds.contains(window.bounds) else {
+                return false
+            }
             // Check the title first. It's a cheap string comparison, whereas
             // the owner check constructs an NSRunningApplication for every
             // window it inspects, which dominates the cost of this scan.
-            window.title?.hasPrefix("Wallpaper") == true &&
-            // Wallpaper window belongs to the Dock process.
-            window.owningApplication?.bundleIdentifier == "com.apple.dock" &&
-            displayBounds.contains(window.bounds)
+            if
+                window.title?.hasPrefix("Wallpaper") == true,
+                let bundleIdentifier = window.owningApplication?.bundleIdentifier,
+                systemWallpaperBundleIdentifiers.contains(bundleIdentifier)
+            {
+                return true
+            }
+            // Fallback for third-party live wallpaper apps (or desktop-level
+            // wallpaper windows without a "Wallpaper" title): match an on-screen,
+            // non-WindowServer window in the desktop wallpaper level band that
+            // covers the entire display.
+            return !window.isWindowServerWindow &&
+                window.isOnScreen &&
+                window.bounds == displayBounds &&
+                (desktopLevel..<desktopIconLevel).contains(window.layer)
         }
     }
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Enabling **Remove menu bar background** no longer crashes when screen coordinates
+  produce an empty clipping rectangle. Overlapping status items remain protected.
+- Appearance overlays recognize system wallpaper windows hosted by WindowManager
+  or WallpaperAgent and full-display desktop-level third-party wallpaper windows.
+  On macOS 27, asynchronous ScreenCaptureKit snapshots replace the legacy capture
+  API's solid-color placeholder for wallpaper surfaces.
+- On macOS 27, split shapes and background removal use bounded background AX
+  snapshots for the status-item region. Unavailable geometry leaves the original
+  background visible rather than painting over menu content.
+
 ## 2.16.1 - 2026-09-28
 
 ### Fixed

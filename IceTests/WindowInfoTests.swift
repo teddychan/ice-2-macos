@@ -212,6 +212,125 @@ struct WindowInfoTests {
     @Test func wallpaperWindowOnEmptyListIsNil() {
         #expect(WindowInfo.wallpaperWindow(from: [], for: CGMainDisplayID()) == nil)
     }
+
+    @Test func wallpaperWindowMatchesFullDisplayDesktopLevelThirdPartyWallpaper() throws {
+        let displayBounds = CGDisplayBounds(CGMainDisplayID())
+        let desktopLevel = Int(CGWindowLevelForKey(.desktopWindow))
+        let backstop = try makeWindow(Fixture(
+            windowID: 1,
+            bounds: displayBounds,
+            layer: desktopLevel - 1,
+            title: "Display 1 Backstop",
+            ownerName: "Window Server",
+            isOnScreen: true
+        ))
+        let liveWallpaper = try makeWindow(Fixture(
+            windowID: 77,
+            ownerPID: ProcessInfo.processInfo.processIdentifier,
+            bounds: displayBounds,
+            layer: desktopLevel,
+            title: nil,
+            ownerName: "LiveWallpaperApp",
+            isOnScreen: true
+        ))
+        #expect(WindowInfo.wallpaperWindow(from: [backstop, liveWallpaper], for: CGMainDisplayID())?.windowID == 77)
+    }
+
+    @Test func wallpaperFallbackRejectsOffScreenPartialAndNormalWindows() throws {
+        let displayBounds = CGDisplayBounds(CGMainDisplayID())
+        let desktopLevel = Int(CGWindowLevelForKey(.desktopWindow))
+        let fixtures = [
+            Fixture(bounds: displayBounds, layer: desktopLevel, isOnScreen: false),
+            Fixture(bounds: boundsInsideMainDisplay, layer: desktopLevel),
+            Fixture(bounds: displayBounds, layer: 0),
+        ]
+        for fixture in fixtures {
+            #expect(WindowInfo.wallpaperWindow(from: [try makeWindow(fixture)], for: CGMainDisplayID()) == nil)
+        }
+    }
+
+    // MARK: MenuBarOverlayPanel geometry
+
+    @Test func localContentRectConvertsCGCoordinatesAndRejectsDisjointRects() {
+        let mainDisplayHeight: CGFloat = 982
+        let panelFrame = CGRect(x: 0, y: 944, width: 1512, height: 38)
+        let drawableBounds = CGRect(x: 0, y: 5, width: 1512, height: 33)
+
+        // Application menu at top-left in CoreGraphics coordinates (y=0, h=33)
+        // maps to y=5, h=33 in the overlay panel's local drawable coordinates.
+        let appMenuCG = CGRect(x: 0, y: 0, width: 534, height: 33)
+        let converted = MenuBarOverlayPanel.localContentRect(
+            forScreenRect: appMenuCG,
+            panelFrame: panelFrame,
+            drawableBounds: drawableBounds,
+            mainDisplayHeight: mainDisplayHeight
+        )
+        #expect(converted == CGRect(x: 0, y: 5, width: 534, height: 33))
+
+        // Disjoint or null rects return nil instead of CGRect.null (+inf),
+        // preventing NSBezierPath(rect:) from throwing in lineToPoint:.
+        let disjointCG = CGRect(x: 0, y: 500, width: 200, height: 33)
+        #expect(MenuBarOverlayPanel.localContentRect(
+            forScreenRect: disjointCG,
+            panelFrame: panelFrame,
+            drawableBounds: drawableBounds,
+            mainDisplayHeight: mainDisplayHeight
+        ) == nil)
+        for invalidFrame in [
+            CGRect.null,
+            CGRect.infinite,
+            CGRect(x: 0, y: 0, width: CGFloat.infinity, height: 33),
+        ] {
+            #expect(MenuBarOverlayPanel.localContentRect(
+                forScreenRect: invalidFrame,
+                panelFrame: panelFrame,
+                drawableBounds: drawableBounds,
+                mainDisplayHeight: mainDisplayHeight
+            ) == nil)
+        }
+    }
+
+    @Test(arguments: [CGPoint(x: -1512, y: 0), CGPoint(x: 1512, y: 100), CGPoint(x: 0, y: -1080)])
+    func contentCoordinatesWorkOnOffsetDisplays(origin: CGPoint) {
+        let panelFrame = CGRect(x: origin.x, y: 982 - origin.y - 38, width: 1512, height: 38)
+        let local = MenuBarOverlayPanel.localContentRect(
+            forScreenRect: CGRect(origin: origin, size: CGSize(width: 534, height: 33)),
+            panelFrame: panelFrame,
+            drawableBounds: CGRect(x: 0, y: 5, width: 1512, height: 33),
+            mainDisplayHeight: 982
+        )
+        #expect(local == CGRect(x: 0, y: 5, width: 534, height: 33))
+    }
+
+    @Test func backgroundRemovalProtectsOverlappingIconsAndApplicationMenus() {
+        let path = MenuBarOverlayPanel.backgroundRemovalClipPath(
+            in: CGRect(x: 0, y: 5, width: 1000, height: 33),
+            panelFrame: CGRect(x: 0, y: 944, width: 1000, height: 38),
+            applicationMenuFrame: CGRect(x: 0, y: 0, width: 200, height: 33),
+            itemFrames: [
+                CGRect(x: 800, y: 0, width: 40, height: 33),
+                CGRect(x: 820, y: 0, width: 40, height: 33),
+            ],
+            mainDisplayHeight: 982
+        )
+        #expect(path.contains(CGPoint(x: 500, y: 20)))
+        for x: CGFloat in [100, 815, 830, 850] {
+            #expect(!path.contains(CGPoint(x: x, y: 20)))
+        }
+    }
+
+    @Test func backgroundRemovalDoesNotPaintWhenContentGeometryIsUnknown() {
+        for itemFrames: [CGRect]? in [nil, [], [CGRect.null]] {
+            let path = MenuBarOverlayPanel.backgroundRemovalClipPath(
+                in: CGRect(x: 0, y: 5, width: 1000, height: 33),
+                panelFrame: CGRect(x: 0, y: 944, width: 1000, height: 38),
+                applicationMenuFrame: CGRect(x: 0, y: 0, width: 200, height: 33),
+                itemFrames: itemFrames,
+                mainDisplayHeight: 982
+            )
+            #expect(path.isEmpty)
+        }
+    }
 }
 
 private extension NSRunningApplication {

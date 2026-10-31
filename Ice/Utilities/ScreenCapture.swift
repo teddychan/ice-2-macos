@@ -79,6 +79,41 @@ enum ScreenCapture {
         return _CGWindowListCreateImageFromArray(bounds, array, option.rawValue)?.takeRetainedValue()
     }
 
+    /// Captures the wallpaper strip without the placeholder image returned by
+    /// the legacy window-capture API for macOS 27 wallpaper surfaces.
+    static func captureWallpaperWindow(
+        with windowID: CGWindowID,
+        screenBounds: CGRect,
+        display: CGDirectDisplayID
+    ) async -> CGImage? {
+        guard #available(macOS 27.0, *) else {
+            return captureWindow(with: windowID, screenBounds: screenBounds)
+        }
+        // Appearance refreshes must not request permission in the background.
+        guard CGPreflightScreenCaptureAccess() else {
+            return nil
+        }
+        do {
+            let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
+            guard let window = content.windows.first(where: { $0.windowID == windowID }), window.frame.contains(screenBounds) else {
+                return nil
+            }
+            let configuration = SCStreamConfiguration()
+            configuration.sourceRect = screenBounds.offsetBy(dx: -window.frame.minX, dy: -window.frame.minY)
+            let scale = CGFloat(CGDisplayPixelsWide(display)) / CGDisplayBounds(display).width
+            configuration.width = max(1, Int(screenBounds.width * scale))
+            configuration.height = max(1, Int(screenBounds.height * scale))
+            configuration.showsCursor = false
+            configuration.ignoreShadowsSingleWindow = true
+            return try await SCScreenshotManager.captureImage(
+                contentFilter: SCContentFilter(desktopIndependentWindow: window),
+                configuration: configuration
+            )
+        } catch {
+            return nil
+        }
+    }
+
     /// Captures an image of a window.
     ///
     /// - Parameters:

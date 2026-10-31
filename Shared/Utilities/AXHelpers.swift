@@ -50,6 +50,64 @@ enum AXHelpers {
         queue.sync { try? element.attribute(.parent) }
     }
 
+    /// Returns a conservative snapshot of the menu extras in the real menu-bar
+    /// strip. MenuBarAgent can expose several overlapping copies of that strip;
+    /// retaining all their frames protects icons without guessing which is live.
+    /// Call off the main thread. An incomplete or timed-out snapshot is unknown.
+    static func menuExtraFrames(in menuBarBounds: CGRect) -> [CGRect]? {
+        guard
+            let agent = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.MenuBarAgent").first,
+            let app = application(for: agent)
+        else {
+            return nil
+        }
+        let deadline = ContinuousClock.now.advanced(by: .milliseconds(300))
+        app.messagingTimeout = 0.05
+        guard let windows: [UIElement] = try? app.arrayAttribute(.children), windows.count <= 16 else {
+            return nil
+        }
+        var frames = [CGRect]()
+        var remainingItems = 128
+        for window in windows {
+            guard ContinuousClock.now < deadline else {
+                return nil
+            }
+            window.messagingTimeout = 0.05
+            guard let windowFrame: CGRect = try? window.attribute(.frame) else {
+                return nil
+            }
+            guard
+                abs(windowFrame.minX - menuBarBounds.minX) < 1,
+                abs(windowFrame.minY - menuBarBounds.minY) < 1,
+                abs(windowFrame.width - menuBarBounds.width) < 1,
+                abs(windowFrame.height - menuBarBounds.height) < 1
+            else {
+                continue
+            }
+            guard let items: [UIElement] = try? window.arrayAttribute(.children), items.count <= remainingItems else {
+                return nil
+            }
+            remainingItems -= items.count
+            for item in items {
+                guard ContinuousClock.now < deadline else {
+                    return nil
+                }
+                item.messagingTimeout = 0.05
+                guard let frame: CGRect = try? item.attribute(.frame) else {
+                    return nil
+                }
+                let clippedFrame = frame.intersection(menuBarBounds)
+                if !clippedFrame.isNull, clippedFrame.width > 0, clippedFrame.height > 0 {
+                    frames.append(clippedFrame)
+                }
+            }
+        }
+        guard ContinuousClock.now < deadline, !frames.isEmpty else {
+            return nil
+        }
+        return frames
+    }
+
     /// Returns the menu bar AX element near the given display origin.
     static func menuBarElement(nearDisplayOrigin displayOrigin: CGPoint) -> UIElement? {
         let probeOffsets = [

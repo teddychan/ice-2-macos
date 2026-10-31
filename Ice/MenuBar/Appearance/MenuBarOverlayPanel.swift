@@ -15,6 +15,7 @@ final class MenuBarOverlayPanel: NSPanel {
     enum UpdateFlag: String, CustomStringConvertible {
         case applicationMenuFrame
         case desktopWallpaper
+        case menuBarItems
 
         var description: String { rawValue }
     }
@@ -66,6 +67,12 @@ final class MenuBarOverlayPanel: NSPanel {
 
     /// The current desktop wallpaper, clipped to the bounds of the menu bar.
     @Published private(set) var desktopWallpaper: CGImage?
+
+    /// The last complete native geometry snapshot. Drawing never waits for AX.
+    @Published private(set) var nativeMenuBarItemFrames: [CGRect]?
+
+    private var nativeMenuBarItemTask: Task<Void, Never>?
+    private var wallpaperCaptureTask: Task<Void, Never>?
 
     /// Storage for internal observers.
     private var cancellables = Set<AnyCancellable>()
@@ -216,6 +223,18 @@ final class MenuBarOverlayPanel: NSPanel {
             }
             .store(in: &c)
 
+        // Native item windows are not in the CG window list. Refresh their AX
+        // geometry independently of wallpaper pixels and Ice's own item frame.
+        Timer.publish(every: 1, on: .main, in: .default)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self, needsNativeMenuBarItems else {
+                    return
+                }
+                insertUpdateFlag(.menuBarItems)
+            }
+            .store(in: &c)
+
         $needsShow
             .debounce(for: 0.05, scheduler: DispatchQueue.main)
             .sink { [weak self] needsShow in
@@ -295,6 +314,15 @@ final class MenuBarOverlayPanel: NSPanel {
             && !ScreenState.isHidden(for: owningScreen.displayID)
     }
 
+    private var needsNativeMenuBarItems: Bool {
+        guard NativeMenuBarManager.usesNativeBackend, isVisible, let appState else {
+            return false
+        }
+        let configuration = appState.appearanceManager.configuration
+        return (configuration.shapeKind == .split || configuration.removesMenuBarBackground)
+            && !ScreenState.isHidden(for: owningScreen.displayID)
+    }
+
     /// Inserts the given update flag into the panel's current list of update flags.
     private func insertUpdateFlag(_ flag: UpdateFlag) {
         updateFlags.insert(flag)
@@ -340,16 +368,55 @@ final class MenuBarOverlayPanel: NSPanel {
     /// Stores the area of the desktop wallpaper that is under the menu bar
     /// of the given display.
     private func updateDesktopWallpaper(for display: CGDirectDisplayID, with windows: [WindowInfo]) {
+        guard needsDesktopWallpaper, wallpaperCaptureTask == nil else {
+            return
+        }
         guard
-            needsDesktopWallpaper,
             let wallpaperWindow = WindowInfo.wallpaperWindow(from: windows, for: display),
             let menuBarWindow = WindowInfo.menuBarWindow(from: windows, for: display)
         else {
+            desktopWallpaper = nil
             return
         }
-        let wallpaper = ScreenCapture.captureWindow(with: wallpaperWindow.windowID, screenBounds: menuBarWindow.bounds)
-        if desktopWallpaper?.dataProvider?.data != wallpaper?.dataProvider?.data {
-            desktopWallpaper = wallpaper
+        wallpaperCaptureTask = Task { [weak self] in
+            let wallpaper = await ScreenCapture.captureWallpaperWindow(
+                with: wallpaperWindow.windowID,
+                screenBounds: menuBarWindow.bounds,
+                display: display
+            )
+            guard let self, !Task.isCancelled else {
+                return
+            }
+            wallpaperCaptureTask = nil
+            guard needsDesktopWallpaper else {
+                return
+            }
+            if desktopWallpaper?.dataProvider?.data != wallpaper?.dataProvider?.data {
+                desktopWallpaper = wallpaper
+            }
+        }
+    }
+
+    /// Reads at most one native snapshot at a time, off the drawing/main thread.
+    private func updateNativeMenuBarItems(with windows: [WindowInfo]) {
+        guard needsNativeMenuBarItems, nativeMenuBarItemTask == nil else {
+            return
+        }
+        guard let menuBarBounds = WindowInfo.menuBarWindow(from: windows, for: owningScreen.displayID)?.bounds else {
+            nativeMenuBarItemFrames = nil
+            return
+        }
+        nativeMenuBarItemTask = Task { [weak self] in
+            let frames = await Task.detached(priority: .utility) {
+                AXHelpers.menuExtraFrames(in: menuBarBounds)
+            }.value
+            guard let self, !Task.isCancelled else {
+                return
+            }
+            if nativeMenuBarItemFrames != frames {
+                nativeMenuBarItemFrames = frames
+            }
+            nativeMenuBarItemTask = nil
         }
     }
 
@@ -360,6 +427,9 @@ final class MenuBarOverlayPanel: NSPanel {
         }
         if flags.contains(.desktopWallpaper) {
             updateDesktopWallpaper(for: screen.displayID, with: windows)
+        }
+        if flags.contains(.menuBarItems) {
+            updateNativeMenuBarItems(with: windows)
         }
     }
 
@@ -402,7 +472,7 @@ final class MenuBarOverlayPanel: NSPanel {
         setFrame(newFrame, display: false)
         orderFrontRegardless()
 
-        updateFlags = [.applicationMenuFrame, .desktopWallpaper]
+        updateFlags = [.applicationMenuFrame, .desktopWallpaper, .menuBarItems]
 
         if !appState.menuBarManager.isMenuBarHiddenBySystem {
             animator().alphaValue = 1
@@ -411,6 +481,84 @@ final class MenuBarOverlayPanel: NSPanel {
 
     override func isAccessibilityElement() -> Bool {
         return false
+    }
+
+    override func close() {
+        nativeMenuBarItemTask?.cancel()
+        nativeMenuBarItemTask = nil
+        wallpaperCaptureTask?.cancel()
+        wallpaperCaptureTask = nil
+        super.close()
+    }
+
+    /// Converts a rectangle from CoreGraphics global screen coordinates
+    /// (top-left origin) into `overlayPanel`'s local view coordinates,
+    /// clipped to `drawableBounds`. Returns `nil` when the resulting
+    /// rectangle is null or empty so `NSBezierPath(rect:)` is never
+    /// handed non-finite coordinates.
+    static func localContentRect(
+        forScreenRect screenRect: CGRect,
+        panelFrame: CGRect,
+        drawableBounds: CGRect,
+        mainDisplayHeight: CGFloat = CGDisplayBounds(CGMainDisplayID()).height
+    ) -> CGRect? {
+        guard mainDisplayHeight.isFinite, [screenRect, panelFrame, drawableBounds].allSatisfy({ rect in
+            !rect.isNull && !rect.isInfinite && !rect.isEmpty &&
+                [rect.minX, rect.minY, rect.maxX, rect.maxY].allSatisfy(\.isFinite)
+        }) else {
+            return nil
+        }
+        let appKitRect = CGRect(
+            x: screenRect.minX,
+            y: mainDisplayHeight - screenRect.maxY,
+            width: screenRect.width,
+            height: screenRect.height
+        )
+        let localRect = appKitRect
+            .offsetBy(dx: -panelFrame.minX, dy: -panelFrame.minY)
+            .intersection(drawableBounds)
+        guard
+            !localRect.isNull,
+            !localRect.isEmpty,
+            localRect.origin.x.isFinite,
+            localRect.origin.y.isFinite
+        else {
+            return nil
+        }
+        return localRect
+    }
+
+    /// Subtracts the union of protected content. Appending overlapping reversed
+    /// rectangles would paint over their overlap under the nonzero winding rule.
+    /// Unknown content geometry leaves background removal unpainted.
+    static func backgroundRemovalClipPath(
+        in rect: CGRect,
+        panelFrame: CGRect,
+        applicationMenuFrame: CGRect?,
+        itemFrames: [CGRect]?,
+        mainDisplayHeight: CGFloat = CGDisplayBounds(CGMainDisplayID()).height
+    ) -> NSBezierPath {
+        guard
+            let applicationMenuFrame,
+            let appRect = localContentRect(
+                forScreenRect: applicationMenuFrame, panelFrame: panelFrame,
+                drawableBounds: rect, mainDisplayHeight: mainDisplayHeight
+            ),
+            let itemFrames, !itemFrames.isEmpty
+        else {
+            return NSBezierPath()
+        }
+        let protectedPath = NSBezierPath(rect: appRect.insetBy(dx: -4, dy: 0))
+        for frame in itemFrames {
+            guard let itemRect = localContentRect(
+                forScreenRect: frame, panelFrame: panelFrame,
+                drawableBounds: rect, mainDisplayHeight: mainDisplayHeight
+            ) else {
+                return NSBezierPath()
+            }
+            protectedPath.append(NSBezierPath(rect: itemRect.insetBy(dx: -2, dy: 0)))
+        }
+        return NSBezierPath(cgPath: CGPath(rect: rect, transform: nil).subtracting(protectedPath.cgPath, using: .winding))
     }
 }
 
@@ -483,6 +631,11 @@ private final class MenuBarOverlayPanelContentView: NSView {
 
             // Redraw whenever the application menu frame changes.
             overlayPanel.$applicationMenuFrame
+                .sink { [weak self] _ in
+                    self?.needsDisplay = true
+                }
+                .store(in: &c)
+            overlayPanel.$nativeMenuBarItemFrames
                 .sink { [weak self] _ in
                     self?.needsDisplay = true
                 }
@@ -618,12 +771,21 @@ private final class MenuBarOverlayPanelContentView: NSView {
             return CGRect(x: rect.minX, y: rect.minY, width: maxX, height: rect.height)
         }()
         let trailingPathBounds: CGRect = {
-            let itemWindows = MenuBarItem.getMenuBarItemWindows(on: screen.displayID, option: .onScreen)
-            guard !itemWindows.isEmpty else {
+            guard let itemFrames = menuBarItemFrames(on: screen), !itemFrames.isEmpty else {
                 return .zero
             }
-            let totalWidth = itemWindows.reduce(into: 0) { width, item in
-                width += item.bounds.width
+            let totalWidth: CGFloat = if
+                NativeMenuBarManager.usesNativeBackend,
+                let minX = itemFrames.map(\.minX).min()
+            {
+                rect.maxX - (minX - screen.frame.minX)
+            } else {
+                itemFrames.reduce(into: 0) { width, itemFrame in
+                    width += itemFrame.width
+                }
+            }
+            guard totalWidth > 0 else {
+                return .zero
             }
             var position = rect.maxX - totalWidth
             if shouldInset {
@@ -711,44 +873,27 @@ private final class MenuBarOverlayPanelContentView: NSView {
         context.cgContext.draw(desktopWallpaper, in: rect)
     }
 
-    /// Returns a path that covers the visible menu bar content that should
-    /// remain unobscured by background removal.
-    private func menuBarContentPath(in rect: CGRect, screen: NSScreen) -> NSBezierPath {
-        let contentPath = NSBezierPath()
-
-        func localRect(for screenRect: CGRect) -> CGRect? {
-            guard let overlayPanel else {
-                return nil
-            }
-            return screenRect
-                .offsetBy(dx: -overlayPanel.frame.minX, dy: -overlayPanel.frame.minY)
-                .intersection(rect)
+    /// Returns one stored AX snapshot on macOS 27; never queries AX while drawing.
+    private func menuBarItemFrames(on screen: NSScreen) -> [CGRect]? {
+        if NativeMenuBarManager.usesNativeBackend {
+            return overlayPanel?.nativeMenuBarItemFrames
         }
-
-        if
-            let applicationMenuFrame = overlayPanel?.applicationMenuFrame,
-            let localFrame = localRect(for: applicationMenuFrame)
-        {
-            contentPath.append(NSBezierPath(rect: localFrame.insetBy(dx: -4, dy: 0)))
-        }
-
-        let itemWindows = MenuBarItem.getMenuBarItemWindows(on: screen.displayID, option: .onScreen)
-        for window in itemWindows {
-            guard let localFrame = localRect(for: window.bounds) else {
-                continue
-            }
-            contentPath.append(NSBezierPath(rect: localFrame.insetBy(dx: -2, dy: 0)))
-        }
-
-        return contentPath
+        return MenuBarItem.getMenuBarItemWindows(on: screen.displayID, option: .onScreen)
+            .map(\.bounds)
     }
 
     /// Returns a clipping path for background removal that avoids drawing
     /// over menu bar text and item icons.
     private func backgroundRemovalClipPath(in rect: CGRect, screen: NSScreen) -> NSBezierPath {
-        let clipPath = NSBezierPath(rect: rect)
-        clipPath.append(menuBarContentPath(in: rect, screen: screen).reversed)
-        return clipPath
+        guard let overlayPanel else {
+            return NSBezierPath()
+        }
+        return MenuBarOverlayPanel.backgroundRemovalClipPath(
+            in: rect,
+            panelFrame: overlayPanel.frame,
+            applicationMenuFrame: overlayPanel.applicationMenuFrame,
+            itemFrames: menuBarItemFrames(on: screen)
+        )
     }
 
     /// Returns a path for the two top screen-corner cutouts.
