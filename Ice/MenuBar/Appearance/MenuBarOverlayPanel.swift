@@ -50,6 +50,13 @@ final class MenuBarOverlayPanel: NSPanel {
         func cancelTask(for flag: UpdateFlag) {
             tasks.removeValue(forKey: flag)?.cancel()
         }
+
+        /// Cancels all active update tasks.
+        func cancelAll() {
+            for flag in Array(tasks.keys) {
+                cancelTask(for: flag)
+            }
+        }
     }
 
     /// Shared logger for overlay panels.
@@ -158,19 +165,18 @@ final class MenuBarOverlayPanel: NSPanel {
                 var fastPollsRemaining = 20 // ~1s of 50ms polls.
                 while true {
                     try Task.checkCancellation()
-                    guard
+                    if
                         let latestFrame = self.owningScreen.getApplicationMenuFrame(),
                         latestFrame != self.applicationMenuFrame
-                    else {
-                        if fastPollsRemaining > 0 {
-                            fastPollsRemaining -= 1
-                            try await Task.sleep(for: .milliseconds(50))
-                        } else {
-                            try await Task.sleep(for: .seconds(1))
-                        }
-                        continue
+                    {
+                        self.insertUpdateFlag(.applicationMenuFrame)
                     }
-                    self.insertUpdateFlag(.applicationMenuFrame)
+                    if fastPollsRemaining > 0 {
+                        fastPollsRemaining -= 1
+                        try await Task.sleep(for: .milliseconds(50))
+                    } else {
+                        try await Task.sleep(for: .seconds(1))
+                    }
                 }
             }
             Task {
@@ -407,6 +413,12 @@ final class MenuBarOverlayPanel: NSPanel {
         if !appState.menuBarManager.isMenuBarHiddenBySystem {
             animator().alphaValue = 1
         }
+    }
+
+    override func close() {
+        updateTaskContext.cancelAll()
+        cancellables.removeAll()
+        super.close()
     }
 
     override func isAccessibilityElement() -> Bool {
