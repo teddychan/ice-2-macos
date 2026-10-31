@@ -50,6 +50,49 @@ enum AXHelpers {
         queue.sync { try? element.attribute(.parent) }
     }
 
+    /// Returns the screen frames (in CoreGraphics global coordinates) of the
+    /// status items hosted by `MenuBarAgent` on the given display.
+    static func menuExtraFrames(
+        on display: CGDirectDisplayID,
+        matchingControlItemFrame controlItemFrame: CGRect? = nil
+    ) -> [CGRect] {
+        guard
+            let agent = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.MenuBarAgent").first,
+            let app = application(for: agent)
+        else {
+            return []
+        }
+        let displayBounds = CGDisplayBounds(display)
+        var fallbackFrames = [CGRect]()
+
+        for window in children(for: app) {
+            guard
+                role(for: window) == .window,
+                let windowFrame = frame(for: window),
+                displayBounds.intersects(windowFrame)
+            else {
+                continue
+            }
+            let itemFrames = children(for: window)
+                .compactMap { frame(for: $0) }
+                .filter { $0.width > 2 && displayBounds.intersects($0) }
+            guard !itemFrames.isEmpty else {
+                continue
+            }
+            if
+                let controlItemFrame,
+                itemFrames.contains(where: { abs($0.minX - controlItemFrame.minX) < 4 })
+            {
+                return itemFrames
+            }
+            if fallbackFrames.isEmpty {
+                fallbackFrames = itemFrames
+            }
+        }
+
+        return fallbackFrames
+    }
+
     /// Returns the menu bar AX element near the given display origin.
     static func menuBarElement(nearDisplayOrigin displayOrigin: CGPoint) -> UIElement? {
         let probeOffsets = [

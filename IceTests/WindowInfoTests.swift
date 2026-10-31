@@ -212,6 +212,64 @@ struct WindowInfoTests {
     @Test func wallpaperWindowOnEmptyListIsNil() {
         #expect(WindowInfo.wallpaperWindow(from: [], for: CGMainDisplayID()) == nil)
     }
+
+    @Test func wallpaperWindowMatchesFullDisplayDesktopLevelThirdPartyWallpaper() throws {
+        let displayBounds = CGDisplayBounds(CGMainDisplayID())
+        let desktopLevel = Int(CGWindowLevelForKey(.desktopWindow))
+        let backstop = try makeWindow(Fixture(
+            windowID: 1,
+            bounds: displayBounds,
+            layer: desktopLevel - 1,
+            title: "Display 1 Backstop",
+            ownerName: "Window Server",
+            isOnScreen: true
+        ))
+        let liveWallpaper = try makeWindow(Fixture(
+            windowID: 77,
+            ownerPID: ProcessInfo.processInfo.processIdentifier,
+            bounds: displayBounds,
+            layer: desktopLevel,
+            title: nil,
+            ownerName: "LiveWallpaperApp",
+            isOnScreen: true
+        ))
+        #expect(WindowInfo.wallpaperWindow(from: [backstop, liveWallpaper], for: CGMainDisplayID())?.windowID == 77)
+    }
+
+    // MARK: MenuBarOverlayPanel.localContentRect
+
+    @Test func localContentRectConvertsCGCoordinatesAndRejectsDisjointRects() {
+        let mainDisplayHeight: CGFloat = 982
+        let panelFrame = CGRect(x: 0, y: 944, width: 1512, height: 38)
+        let drawableBounds = CGRect(x: 0, y: 5, width: 1512, height: 33)
+
+        // Application menu at top-left in CoreGraphics coordinates (y=0, h=33)
+        // maps to y=5, h=33 in the overlay panel's local drawable coordinates.
+        let appMenuCG = CGRect(x: 0, y: 0, width: 534, height: 33)
+        let converted = MenuBarOverlayPanel.localContentRect(
+            forScreenRect: appMenuCG,
+            panelFrame: panelFrame,
+            drawableBounds: drawableBounds,
+            mainDisplayHeight: mainDisplayHeight
+        )
+        #expect(converted == CGRect(x: 0, y: 5, width: 534, height: 33))
+
+        // Disjoint or null rects return nil instead of CGRect.null (+inf),
+        // preventing NSBezierPath(rect:) from throwing in lineToPoint:.
+        let disjointCG = CGRect(x: 0, y: 500, width: 200, height: 33)
+        #expect(MenuBarOverlayPanel.localContentRect(
+            forScreenRect: disjointCG,
+            panelFrame: panelFrame,
+            drawableBounds: drawableBounds,
+            mainDisplayHeight: mainDisplayHeight
+        ) == nil)
+        #expect(MenuBarOverlayPanel.localContentRect(
+            forScreenRect: .null,
+            panelFrame: panelFrame,
+            drawableBounds: drawableBounds,
+            mainDisplayHeight: mainDisplayHeight
+        ) == nil)
+    }
 }
 
 private extension NSRunningApplication {

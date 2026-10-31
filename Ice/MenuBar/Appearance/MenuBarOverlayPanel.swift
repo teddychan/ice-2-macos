@@ -412,6 +412,45 @@ final class MenuBarOverlayPanel: NSPanel {
     override func isAccessibilityElement() -> Bool {
         return false
     }
+
+    /// Converts a rectangle from CoreGraphics global screen coordinates
+    /// (top-left origin) into `overlayPanel`'s local view coordinates,
+    /// clipped to `drawableBounds`. Returns `nil` when the resulting
+    /// rectangle is null or empty so `NSBezierPath(rect:)` is never
+    /// handed non-finite coordinates.
+    static func localContentRect(
+        forScreenRect screenRect: CGRect,
+        panelFrame: CGRect,
+        drawableBounds: CGRect,
+        mainDisplayHeight: CGFloat = CGDisplayBounds(CGMainDisplayID()).height
+    ) -> CGRect? {
+        guard
+            !screenRect.isNull,
+            !screenRect.isEmpty,
+            screenRect.origin.x.isFinite,
+            screenRect.origin.y.isFinite
+        else {
+            return nil
+        }
+        let appKitRect = CGRect(
+            x: screenRect.minX,
+            y: mainDisplayHeight - screenRect.maxY,
+            width: screenRect.width,
+            height: screenRect.height
+        )
+        let localRect = appKitRect
+            .offsetBy(dx: -panelFrame.minX, dy: -panelFrame.minY)
+            .intersection(drawableBounds)
+        guard
+            !localRect.isNull,
+            !localRect.isEmpty,
+            localRect.origin.x.isFinite,
+            localRect.origin.y.isFinite
+        else {
+            return nil
+        }
+        return localRect
+    }
 }
 
 // MARK: - Content View
@@ -618,12 +657,22 @@ private final class MenuBarOverlayPanelContentView: NSView {
             return CGRect(x: rect.minX, y: rect.minY, width: maxX, height: rect.height)
         }()
         let trailingPathBounds: CGRect = {
-            let itemWindows = MenuBarItem.getMenuBarItemWindows(on: screen.displayID, option: .onScreen)
-            guard !itemWindows.isEmpty else {
+            let itemFrames = menuBarItemFrames(on: screen)
+            guard !itemFrames.isEmpty else {
                 return .zero
             }
-            let totalWidth = itemWindows.reduce(into: 0) { width, item in
-                width += item.bounds.width
+            let totalWidth: CGFloat = if
+                NativeMenuBarManager.usesNativeBackend,
+                let minX = itemFrames.map(\.minX).min()
+            {
+                rect.maxX - (minX - screen.frame.minX)
+            } else {
+                itemFrames.reduce(into: 0) { width, itemFrame in
+                    width += itemFrame.width
+                }
+            }
+            guard totalWidth > 0 else {
+                return .zero
             }
             var position = rect.maxX - totalWidth
             if shouldInset {
@@ -711,30 +760,46 @@ private final class MenuBarOverlayPanelContentView: NSView {
         context.cgContext.draw(desktopWallpaper, in: rect)
     }
 
+    /// Returns the screen frames (in CoreGraphics global coordinates) of the
+    /// visible menu bar items on the given screen.
+    private func menuBarItemFrames(on screen: NSScreen) -> [CGRect] {
+        if NativeMenuBarManager.usesNativeBackend {
+            let controlItemFrame = overlayPanel?.appState?.menuBarManager
+                .controlItem(withName: .visible)?.frame
+            return AXHelpers.menuExtraFrames(
+                on: screen.displayID,
+                matchingControlItemFrame: controlItemFrame
+            )
+        }
+        return MenuBarItem.getMenuBarItemWindows(on: screen.displayID, option: .onScreen)
+            .map(\.bounds)
+    }
+
     /// Returns a path that covers the visible menu bar content that should
     /// remain unobscured by background removal.
     private func menuBarContentPath(in rect: CGRect, screen: NSScreen) -> NSBezierPath {
         let contentPath = NSBezierPath()
-
-        func localRect(for screenRect: CGRect) -> CGRect? {
-            guard let overlayPanel else {
-                return nil
-            }
-            return screenRect
-                .offsetBy(dx: -overlayPanel.frame.minX, dy: -overlayPanel.frame.minY)
-                .intersection(rect)
+        guard let panelFrame = overlayPanel?.frame else {
+            return contentPath
         }
 
         if
             let applicationMenuFrame = overlayPanel?.applicationMenuFrame,
-            let localFrame = localRect(for: applicationMenuFrame)
+            let localFrame = MenuBarOverlayPanel.localContentRect(
+                forScreenRect: applicationMenuFrame,
+                panelFrame: panelFrame,
+                drawableBounds: rect
+            )
         {
             contentPath.append(NSBezierPath(rect: localFrame.insetBy(dx: -4, dy: 0)))
         }
 
-        let itemWindows = MenuBarItem.getMenuBarItemWindows(on: screen.displayID, option: .onScreen)
-        for window in itemWindows {
-            guard let localFrame = localRect(for: window.bounds) else {
+        for itemFrame in menuBarItemFrames(on: screen) {
+            guard let localFrame = MenuBarOverlayPanel.localContentRect(
+                forScreenRect: itemFrame,
+                panelFrame: panelFrame,
+                drawableBounds: rect
+            ) else {
                 continue
             }
             contentPath.append(NSBezierPath(rect: localFrame.insetBy(dx: -2, dy: 0)))
