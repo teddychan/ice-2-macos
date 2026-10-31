@@ -622,8 +622,14 @@ extension HIDEventManager {
     /// A Boolean value that indicates whether the mouse pointer is within
     /// the bounds of a menu bar item.
     func isMouseInsideMenuBarItem(appState: AppState, screen: NSScreen) -> Bool {
+        if isMouseInsideIceIcon(appState: appState) {
+            return true
+        }
         guard let mouseLocation = MouseHelpers.locationCoreGraphics else {
             return false
+        }
+        if NativeMenuBarManager.usesNativeBackend {
+            return AXHelpers.isMenuExtra(at: mouseLocation, in: CGDisplayBounds(screen.displayID))
         }
         let windowIDs = Bridging.getMenuBarWindowList(option: [.onScreen, .activeSpace, .itemsOnly])
         return windowIDs.contains { windowID in
