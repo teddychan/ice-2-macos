@@ -72,6 +72,7 @@ final class MenuBarOverlayPanel: NSPanel {
     @Published private(set) var nativeMenuBarItemFrames: [CGRect]?
 
     private var nativeMenuBarItemTask: Task<Void, Never>?
+    private var wallpaperCaptureTask: Task<Void, Never>?
 
     /// Storage for internal observers.
     private var cancellables = Set<AnyCancellable>()
@@ -367,16 +368,32 @@ final class MenuBarOverlayPanel: NSPanel {
     /// Stores the area of the desktop wallpaper that is under the menu bar
     /// of the given display.
     private func updateDesktopWallpaper(for display: CGDirectDisplayID, with windows: [WindowInfo]) {
+        guard needsDesktopWallpaper, wallpaperCaptureTask == nil else {
+            return
+        }
         guard
-            needsDesktopWallpaper,
             let wallpaperWindow = WindowInfo.wallpaperWindow(from: windows, for: display),
             let menuBarWindow = WindowInfo.menuBarWindow(from: windows, for: display)
         else {
+            desktopWallpaper = nil
             return
         }
-        let wallpaper = ScreenCapture.captureWindow(with: wallpaperWindow.windowID, screenBounds: menuBarWindow.bounds)
-        if desktopWallpaper?.dataProvider?.data != wallpaper?.dataProvider?.data {
-            desktopWallpaper = wallpaper
+        wallpaperCaptureTask = Task { [weak self] in
+            let wallpaper = await ScreenCapture.captureWallpaperWindow(
+                with: wallpaperWindow.windowID,
+                screenBounds: menuBarWindow.bounds,
+                display: display
+            )
+            guard let self, !Task.isCancelled else {
+                return
+            }
+            wallpaperCaptureTask = nil
+            guard needsDesktopWallpaper else {
+                return
+            }
+            if desktopWallpaper?.dataProvider?.data != wallpaper?.dataProvider?.data {
+                desktopWallpaper = wallpaper
+            }
         }
     }
 
@@ -469,6 +486,8 @@ final class MenuBarOverlayPanel: NSPanel {
     override func close() {
         nativeMenuBarItemTask?.cancel()
         nativeMenuBarItemTask = nil
+        wallpaperCaptureTask?.cancel()
+        wallpaperCaptureTask = nil
         super.close()
     }
 
