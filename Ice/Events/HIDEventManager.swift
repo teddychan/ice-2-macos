@@ -567,10 +567,15 @@ extension HIDEventManager {
     func isMouseInsideMenuBar(appState: AppState, screen: NSScreen) -> Bool {
         // Ice icon must be vertically visible. Otherwise, we can infer
         // that the menu bar is hidden and the mouse is not inside.
+        //
+        // Compare the icon's midpoint rather than its top edge: on macOS 27 the
+        // status item window is taller than the menu bar (38pt in a 30pt bar)
+        // and overhangs the top of the screen, so `maxY <= screen.frame.maxY`
+        // never held and hover over an empty menu bar area never triggered.
         guard
             let iceIcon = appState.menuBarManager.controlItem(withName: .visible),
             let iceIconFrame = iceIcon.frame,
-            iceIconFrame.maxY <= screen.frame.maxY,
+            iceIconFrame.midY <= screen.frame.maxY,
             let mouseLocation = MouseHelpers.locationAppKit
         else {
             return false
