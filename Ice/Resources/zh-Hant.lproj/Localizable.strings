@@ -230,10 +230,16 @@
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27 上的選單列區段";
 "app.native.explanation" = "為每個 App 選擇一個區段。同一 App 的所有選單列圖像共用一個區段。使用 Ice 2 圖像或快速鍵來顯示和隱藏區段。";
-"app.native.limitations" = "項目隱藏期間，專注模式和部分系統項目也可能一併消失。區段的顯示狀態會套用到所有顯示器。若要更改圖像順序，請在選單列中按住 Command 拖移；在 macOS 27 上，描述檔儲存的是各項目所屬的區段。";
+"app.native.limitations" = "隱藏任何項目時，macOS 也可能移除「播放中」、專注模式、AirDrop 和快速使用者切換。按一下「顯示所有項目」可恢復原生控制項。區段的顯示狀態會套用到所有顯示器。若要更改圖像順序，請在選單列中按住 Command 拖移；在 macOS 27 上，描述檔儲存的是各項目所屬的區段。";
 "app.native.inlineReveal" = "在 macOS 27 上，隱藏的項目會直接顯示在選單列中。無法使用獨立的 Ice 2 列。";
 "app.native.assignments" = "App 和系統項目";
 "app.native.systemManaged" = "由 macOS 管理";
+"app.native.system.nowPlaying" = "播放中";
+"app.native.system.focus" = "專注模式";
+"app.native.system.airDrop" = "AirDrop";
+"app.native.system.userSwitching" = "快速使用者切換";
+"app.native.system.inputMenu" = "輸入法選單";
+"app.native.systemManaged.note" = "這些原生控制項僅供參考，是否顯示由 macOS 設定決定，無法在 Ice 2 中分配區段。";
 "app.native.showAll" = "全部顯示";
 "app.native.showHidden" = "顯示隱藏區段";
 "app.native.hide" = "隱藏各區段";

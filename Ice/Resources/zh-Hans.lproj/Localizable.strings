@@ -230,10 +230,16 @@
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27 上的菜单栏区段";
 "app.native.explanation" = "为每个 App 选择一个区段。同一 App 的所有菜单栏图标共用一个区段。使用 Ice 2 图标或快捷键来显示和隐藏区段。";
-"app.native.limitations" = "项目隐藏期间，专注模式和部分系统项目也可能一并消失。区段的显示状态会应用到所有显示器。要更改图标顺序，请在菜单栏中按住 Command 拖移；在 macOS 27 上，描述文件存储的是各项目所属的区段。";
+"app.native.limitations" = "隐藏任何项目时，macOS 也可能移除“正在播放”、专注模式、隔空投送和快速用户切换。点按“显示所有项目”可恢复原生控件。区段的显示状态会应用到所有显示器。要更改图标顺序，请在菜单栏中按住 Command 拖移；在 macOS 27 上，描述文件存储的是各项目所属的区段。";
 "app.native.inlineReveal" = "在 macOS 27 上，隐藏的项目会直接显示在菜单栏中。独立的 Ice 2 栏不可用。";
 "app.native.assignments" = "App 和系统项目";
 "app.native.systemManaged" = "由 macOS 管理";
+"app.native.system.nowPlaying" = "正在播放";
+"app.native.system.focus" = "专注模式";
+"app.native.system.airDrop" = "隔空投送";
+"app.native.system.userSwitching" = "快速用户切换";
+"app.native.system.inputMenu" = "输入法菜单";
+"app.native.systemManaged.note" = "这些原生控件仅供参考，是否显示由 macOS 设置决定，无法在 Ice 2 中分配区段。";
 "app.native.showAll" = "全部显示";
 "app.native.showHidden" = "显示隐藏区段";
 "app.native.hide" = "隐藏各区段";

@@ -141,12 +141,48 @@ struct NativeMenuBarPolicyTests {
         #expect(configuration(["system:2": .hidden, "system:99": .hidden, "unmanaged:focus": .hidden]) == nil)
     }
 
+    @Test func inputMenuVisibilityUsesItsHostingBundle() throws {
+        let bundle = "com.apple.TextInputMenuAgent"
+        let item = try #require(NativeMenuBarPolicy.item(bundle: bundle, identifier: nil, name: "Input Menu"))
+        #expect(item.id == "bundle:\(bundle)")
+        #expect(NativeMenuBarPolicy.item(bundle: nil, identifier: "COM.APPLE.MENUEXTRA.TEXTINPUT", name: "Input")?.id == item.id)
+        let hidden = try #require(configuration([item.id: .hidden], running: [bundle]))
+        #expect(!hidden.bundles.contains(bundle))
+        // System ID 4 controls the keyboard module, not the Input menu.
+        #expect(hidden.systemItems.contains(4))
+        #expect(configuration([item.id: .hidden], shown: true, running: [bundle]) == nil)
+    }
+
+    @Test func legacyInputTagsRemainDistinctFromTheKeyboardModule() {
+        let input = MenuBarItemTag(namespace: .controlCenter, title: "TextInput")
+        let keyboard = MenuBarItemTag(namespace: .string("com.dragonapp.ice.native.system"), title: "4")
+        let profile = MenuBarLayoutProfile(id: UUID(), name: "Input", createdAt: .distantPast, updatedAt: .distantPast, sections: [
+            .init(section: .visible, itemTags: [input]),
+            .init(section: .hidden, itemTags: [keyboard]),
+        ])
+        let result = NativeMenuBarPolicy.migrate(profile)
+        #expect(result.assignments["bundle:com.apple.TextInputMenuAgent"] == .visible)
+        #expect(result.assignments["system:4"] == .hidden)
+        #expect(result.conflicts.isEmpty)
+    }
+
+    @Test func knownNativeControlsUseCanonicalIdentities() throws {
+        for control in NativeMenuBarPolicy.unmanagedSystemControls {
+            let identifier = String(control.item.id.dropFirst("unmanaged:".count)).uppercased()
+            let discovered = try #require(NativeMenuBarPolicy.item(bundle: nil, identifier: identifier, name: "Discovered"))
+            #expect(discovered.id == control.item.id)
+            #expect(!discovered.canAssign)
+        }
+        let unknown = "com.apple.menuextra.UnknownCustomItem"
+        #expect(NativeMenuBarPolicy.item(bundle: nil, identifier: unknown, name: "Unknown")?.id == "unmanaged:\(unknown)")
+    }
+
     @Test func discoveryGroupsAppIconsWithoutInventingWindowIDs() {
         let item = NativeMenuBarPolicy.item(bundle: "com.example.one", identifier: nil, name: "One")
         #expect(item?.id == "bundle:com.example.one")
         #expect(item?.canAssign == true)
         #expect(NativeMenuBarPolicy.item(bundle: "com.dragonapp.ice.debug", identifier: nil, name: "Ice") == nil)
-        #expect(NativeMenuBarPolicy.item(bundle: "com.apple.TextInputMenuAgent", identifier: nil, name: "Input")?.id == "system:4")
+        #expect(NativeMenuBarPolicy.item(bundle: "com.apple.TextInputMenuAgent", identifier: nil, name: "Input")?.id == "bundle:com.apple.TextInputMenuAgent")
         #expect(NativeMenuBarPolicy.item(bundle: nil, identifier: "com.apple.menuextra.focusmode", name: "Focus")?.canAssign == false)
     }
 
@@ -165,7 +201,7 @@ struct NativeMenuBarPolicyTests {
     }
 
     @Test func nativeProfileTagsRoundTrip() {
-        for id in ["bundle:com.example.one", "system:0", "system:7"] {
+        for id in ["bundle:com.example.one", "bundle:com.apple.TextInputMenuAgent", "system:0", "system:4", "system:7"] {
             let tag = NativeMenuBarPolicy.tag(for: id)
             #expect(tag.flatMap(NativeMenuBarPolicy.nativeID(for:)) == id)
         }

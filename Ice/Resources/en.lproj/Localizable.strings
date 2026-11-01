@@ -178,11 +178,17 @@
 
 "app.native.title" = "Menu bar sections on macOS 27";
 "app.native.explanation" = "Choose a section for each app. All menu bar icons from the same app share a section. Use the Ice icon or your hotkeys to show and hide sections.";
-"app.native.limitations" = "Focus and some system extras may also disappear while items are hidden. Section visibility applies across displays. Use Command-drag in the menu bar to change icon order; profiles save section membership on macOS 27.";
+"app.native.limitations" = "While any items are hidden, macOS may also remove Now Playing, Focus, AirDrop and Fast User Switching. Choose Show All Items to restore the native controls. Section visibility applies across displays. Use Command-drag to change icon order; profiles save section membership on macOS 27.";
 "app.native.inlineReveal" = "On macOS 27, hidden items appear directly in the menu bar. The separate Ice Bar is unavailable.";
 "app.native.unavailableActions" = "Per-icon search, temporary reveal, and the separate Ice Bar are unavailable on macOS 27. Use section toggles or Layout instead.";
 "app.native.assignments" = "Apps and system items";
 "app.native.systemManaged" = "Managed by macOS";
+"app.native.system.nowPlaying" = "Now Playing";
+"app.native.system.focus" = "Focus";
+"app.native.system.airDrop" = "AirDrop";
+"app.native.system.userSwitching" = "Fast User Switching";
+"app.native.system.inputMenu" = "Input Menu";
+"app.native.systemManaged.note" = "Listed for reference. macOS controls whether these native items appear; Ice 2 cannot assign them to sections.";
 "app.native.showAll" = "Show All";
 "app.native.showHidden" = "Show Hidden";
 "app.native.hide" = "Hide Sections";
