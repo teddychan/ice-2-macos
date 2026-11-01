@@ -67,6 +67,30 @@ static NSArray *ICEChildren(AXUIElementRef element) {
     return [value isKindOfClass:NSArray.class] ? value : @[];
 }
 
+/// Adds the names of the SystemUIServer extras at or below `element` to `extras`.
+/// MenuBarAgent hosts an extra either directly (the extra's own element) or, on some
+/// displays, as SystemUIServer's application → menu bar → extra, so an element without
+/// a description is searched; only a leaf without one is an extra that has no name.
+static void ICECollectSystemUIExtras(AXUIElementRef element, NSUInteger depth,
+                                     NSMutableArray<NSString *> *extras, BOOL *unnamed) {
+    id extra = ICEAttribute(element, kAXDescriptionAttribute);
+    if ([extra isKindOfClass:NSString.class] && [extra length]) {
+        // Descriptions are not consistently capitalized ("eject", "VPN").
+        NSString *label = [[extra substringToIndex:1].localizedUppercaseString
+            stringByAppendingString:[extra substringFromIndex:1]];
+        if (![extras containsObject:label]) [extras addObject:label];
+        return;
+    }
+    NSArray *children = depth < 3 ? ICEChildren(element) : @[];
+    if (children.count == 0) {
+        *unnamed = YES;
+        return;
+    }
+    for (id child in children) {
+        ICECollectSystemUIExtras((__bridge AXUIElementRef)child, depth + 1, extras, unnamed);
+    }
+}
+
 static void ICECollect(AXUIElementRef element, pid_t agentPID, NSUInteger depth,
                        NSMutableDictionary<NSString *, NSDictionary *> *items, NSUInteger *budget) {
     if (depth > 4 || *budget == 0) return;
@@ -82,15 +106,17 @@ static void ICECollect(AXUIElementRef element, pid_t agentPID, NSUInteger depth,
             if ([bundle isEqualToString:@"com.apple.systemuiserver"]) {
                 // Only an extra's description names it; the process element's title is just
                 // "SystemUIServer". Each display repeats the extras, so skip known names.
-                id extra = ICEAttribute(element, kAXDescriptionAttribute);
-                if ([extra isKindOfClass:NSString.class] && [extra length]) {
-                    NSString *previous = items[bundle][@"extras"];
-                    if ([[previous componentsSeparatedByString:@", "] containsObject:extra]) return;
-                    name = previous ? [previous stringByAppendingFormat:@", %@", extra] : extra;
-                    items[bundle] = @{@"bundle": bundle, @"name": name, @"extras": name};
-                    return;
+                // Some extras (Time Machine) have no description at all; they still move with
+                // the item, so the name gets a trailing "…" rather than leaving them out.
+                NSMutableArray<NSString *> *extras = [items[bundle][@"extras"] mutableCopy] ?: [NSMutableArray array];
+                BOOL unnamed = [items[bundle][@"unnamed"] boolValue];
+                ICECollectSystemUIExtras(element, 0, extras, &unnamed);
+                if (extras.count) {
+                    name = [extras componentsJoinedByString:@", "];
+                    if (unnamed) name = [name stringByAppendingString:@", …"];
                 }
-                if (items[bundle]) return;
+                items[bundle] = @{@"bundle": bundle, @"name": name, @"extras": extras, @"unnamed": @(unnamed)};
+                return;
             }
             items[bundle] = @{@"bundle": bundle, @"name": name};
             return;
@@ -128,5 +154,13 @@ NSArray<NSDictionary<NSString *, NSString *> *> *ICENativeMenuBarSnapshot(void) 
         }
     }
     CFRelease(root);
-    return items.allValues;
+    // Rows are typed as string dictionaries: drop the non-string bookkeeping keys
+    // ICECollect keeps while it merges SystemUIServer's extras.
+    NSMutableArray *rows = [NSMutableArray arrayWithCapacity:items.count];
+    for (NSDictionary *row in items.allValues) {
+        NSMutableDictionary *clean = [row mutableCopy];
+        [clean removeObjectsForKeys:@[@"extras", @"unnamed"]];
+        [rows addObject:clean];
+    }
+    return rows;
 }
