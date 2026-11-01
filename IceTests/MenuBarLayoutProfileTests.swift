@@ -199,6 +199,25 @@ struct NativeMenuBarPolicyTests {
         #expect(NativeMenuBarPolicy.migrate(profile).assignments["bundle:com.example.one"] == .hidden)
     }
 
+    @Test func legacySystemUIServerExtrasMigrateToOneItem() {
+        let vpn = MenuBarItemTag(namespace: .string("com.apple.systemuiserver"), title: "VPN")
+        let eject = MenuBarItemTag(namespace: .string("com.apple.systemuiserver"), title: "Eject")
+        let hiddenOnly = MenuBarLayoutProfile(id: UUID(), name: "Old", createdAt: .distantPast, updatedAt: .distantPast, sections: [
+            .init(section: .hidden, itemTags: [vpn, eject]),
+        ])
+        let result = NativeMenuBarPolicy.migrate(hiddenOnly)
+        #expect(result.assignments == ["bundle:com.apple.systemuiserver": .hidden])
+        #expect(result.conflicts.isEmpty)
+        // Extras split across sections can only move together: the more visible section wins.
+        let split = MenuBarLayoutProfile(id: UUID(), name: "Old", createdAt: .distantPast, updatedAt: .distantPast, sections: [
+            .init(section: .visible, itemTags: [eject]),
+            .init(section: .hidden, itemTags: [vpn]),
+        ])
+        let splitResult = NativeMenuBarPolicy.migrate(split)
+        #expect(splitResult.assignments["bundle:com.apple.systemuiserver"] == .visible)
+        #expect(splitResult.conflicts == ["bundle:com.apple.systemuiserver"])
+    }
+
     @Test func sectionAssignmentsSurviveCodableRoundTrip() throws {
         let assignments: [String: MenuBarSection.Name] = ["bundle:com.example.one": .alwaysHidden, "system:5": .hidden]
         let data = try JSONEncoder().encode(assignments)
