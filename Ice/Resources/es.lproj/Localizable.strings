@@ -230,10 +230,16 @@
 /* macOS 27 native menu bar. */
 "app.native.title" = "Secciones de la barra de menús en macOS 27";
 "app.native.explanation" = "Elige una sección para cada app. Todos los iconos de una misma app en la barra de menús comparten sección. Usa el icono de Ice 2 o tus atajos para mostrar y ocultar las secciones.";
-"app.native.limitations" = "Concentración y algunos extras del sistema también pueden desaparecer mientras los elementos están ocultos. La visibilidad de las secciones se aplica a todas las pantallas. Arrastra con Comando en la barra de menús para cambiar el orden de los iconos; en macOS 27, los perfiles guardan a qué sección pertenece cada elemento.";
+"app.native.limitations" = "Mientras haya elementos ocultos, macOS también puede ocultar En reproducción, Concentración, AirDrop y Cambio rápido de usuario. Elige Mostrar todos los elementos para recuperar los controles nativos. La visibilidad de las secciones se aplica a todas las pantallas. Arrastra con Comando para cambiar el orden de los iconos; en macOS 27, los perfiles guardan la sección de cada elemento.";
 "app.native.inlineReveal" = "En macOS 27, los elementos ocultos aparecen directamente en la barra de menús. La barra de Ice 2 independiente no está disponible.";
 "app.native.assignments" = "Apps y elementos del sistema";
 "app.native.systemManaged" = "Gestionados por macOS";
+"app.native.system.nowPlaying" = "En reproducción";
+"app.native.system.focus" = "Concentración";
+"app.native.system.airDrop" = "AirDrop";
+"app.native.system.userSwitching" = "Cambio rápido de usuario";
+"app.native.system.inputMenu" = "Menú de entrada";
+"app.native.systemManaged.note" = "Lista de referencia. La aparición de estos elementos nativos depende de los ajustes de macOS; Ice 2 no puede asignarlos a secciones.";
 "app.native.showAll" = "Mostrar todo";
 "app.native.showHidden" = "Mostrar la sección Oculta";
 "app.native.hide" = "Ocultar secciones";

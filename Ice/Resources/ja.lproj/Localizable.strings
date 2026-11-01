@@ -230,10 +230,16 @@
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27 のメニューバーのセクション";
 "app.native.explanation" = "App ごとにセクションを選択します。同じ App のメニューバーアイコンはすべて同じセクションに属します。セクションの表示・非表示は、Ice 2 アイコンまたはホットキーで切り替えます。";
-"app.native.limitations" = "項目を非表示にしている間、集中モードや一部のシステム項目も消えることがあります。セクションの表示状態はすべてのディスプレイに適用されます。アイコンの並び順を変えるには、メニューバーで Command キーを押しながらドラッグします。macOS 27 では、各項目がどのセクションに属するかがプロファイルに保存されます。";
+"app.native.limitations" = "項目を非表示にしている間、macOS は「再生中」、集中モード、AirDrop、ファストユーザスイッチも非表示にすることがあります。「すべての項目を表示」で標準のコントロールを復元できます。セクションの表示状態はすべてのディスプレイに適用されます。アイコンの並び順を変えるには、メニューバーで Command キーを押しながらドラッグします。macOS 27 では、各項目がどのセクションに属するかがプロファイルに保存されます。";
 "app.native.inlineReveal" = "macOS 27 では、非表示の項目はメニューバーに直接表示されます。独立した Ice 2 バーは利用できません。";
 "app.native.assignments" = "App とシステム項目";
 "app.native.systemManaged" = "macOS が管理";
+"app.native.system.nowPlaying" = "再生中";
+"app.native.system.focus" = "集中モード";
+"app.native.system.airDrop" = "AirDrop";
+"app.native.system.userSwitching" = "ファストユーザスイッチ";
+"app.native.system.inputMenu" = "入力メニュー";
+"app.native.systemManaged.note" = "一覧は参考情報です。これらの標準項目を表示するかどうかは macOS の設定に従い、Ice 2 ではセクションに割り当てられません。";
 "app.native.showAll" = "すべて表示";
 "app.native.showHidden" = "非表示セクションを表示";
 "app.native.hide" = "セクションを非表示";

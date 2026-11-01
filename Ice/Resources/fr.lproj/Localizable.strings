@@ -230,10 +230,16 @@
 /* macOS 27 native menu bar. */
 "app.native.title" = "Sections de la barre des menus sous macOS 27";
 "app.native.explanation" = "Choisissez une section pour chaque app. Toutes les icônes d'une même app dans la barre des menus partagent la même section. Utilisez l'icône Ice 2 ou vos raccourcis pour afficher et masquer les sections.";
-"app.native.limitations" = "Concentration et certains extras système peuvent aussi disparaître lorsque des éléments sont masqués. La visibilité des sections s'applique à tous les écrans. Faites glisser avec Commande dans la barre des menus pour changer l'ordre des icônes ; sous macOS 27, les profils enregistrent la section de chaque élément.";
+"app.native.limitations" = "Lorsque des éléments sont masqués, macOS peut aussi retirer À l’écoute, Concentration, AirDrop et la permutation rapide d’utilisateur. Choisissez Afficher tous les éléments pour retrouver les commandes natives. La visibilité des sections s’applique à tous les écrans. Faites glisser avec Commande pour changer l’ordre des icônes ; sous macOS 27, les profils enregistrent la section de chaque élément.";
 "app.native.inlineReveal" = "Sous macOS 27, les éléments masqués apparaissent directement dans la barre des menus. La barre Ice 2 séparée n'est pas disponible.";
 "app.native.assignments" = "Apps et éléments système";
 "app.native.systemManaged" = "Gérés par macOS";
+"app.native.system.nowPlaying" = "À l’écoute";
+"app.native.system.focus" = "Concentration";
+"app.native.system.airDrop" = "AirDrop";
+"app.native.system.userSwitching" = "Permutation rapide d’utilisateur";
+"app.native.system.inputMenu" = "Menu de saisie";
+"app.native.systemManaged.note" = "Liste fournie à titre indicatif. L’affichage de ces éléments natifs dépend des réglages de macOS ; Ice 2 ne peut pas les affecter à des sections.";
 "app.native.showAll" = "Tout afficher";
 "app.native.showHidden" = "Afficher la section Masquée";
 "app.native.hide" = "Masquer les sections";
