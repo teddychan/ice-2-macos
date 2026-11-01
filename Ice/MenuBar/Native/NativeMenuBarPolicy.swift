@@ -37,33 +37,52 @@ struct NativeMenuBarItem: Identifiable, Equatable, Sendable {
 enum NativeMenuBarPolicy {
     static let ownBundles: Set<String> = ["com.dragonapp.ice", "com.dragonapp.ice.debug"]
     static let systemNames = ["Battery", "Bluetooth", "Clock", "Displays", "Keyboard", "Sound", "Wi-Fi", "Screen Mirroring", "Control Center"]
+    static let inputMenuBundle = "com.apple.TextInputMenuAgent"
 
-    static func systemID(for identifier: String) -> Int? {
-        let suffix = identifier.replacingOccurrences(of: "com.apple.menuextra.", with: "").lowercased()
-        return [
+    /// Informational entries, including when assessment mode removes their AX nodes.
+    /// They have no supported assessment ID and must never become assignable.
+    static let unmanagedSystemControls: [(item: NativeMenuBarItem, nameKey: String)] = [
+        (.init(id: "unmanaged:com.apple.menuextra.now-playing", name: "Now Playing"), "app.native.system.nowPlaying"),
+        (.init(id: "unmanaged:com.apple.menuextra.focusmode", name: "Focus"), "app.native.system.focus"),
+        (.init(id: "unmanaged:com.apple.menuextra.airdrop", name: "AirDrop"), "app.native.system.airDrop"),
+        (.init(id: "unmanaged:com.apple.menuextra.user", name: "Fast User Switching"), "app.native.system.userSwitching"),
+    ]
+
+    private static func id(forSystemIdentifier identifier: String) -> String? {
+        let normalized = identifier.lowercased()
+        let prefix = "com.apple.menuextra."
+        let suffix = normalized.hasPrefix(prefix) ? String(normalized.dropFirst(prefix.count)) : normalized
+        if suffix == "textinput" {
+            return "bundle:\(inputMenuBundle)"
+        }
+        let number = [
             "battery": 0, "bluetooth": 1, "clock": 2, "display": 3, "displays": 3,
-            "textinput": 4, "keyboard": 4, "sound": 5, "volume": 5, "wifi": 6,
+            "keyboard": 4, "sound": 5, "volume": 5, "wifi": 6,
             "screen-mirroring": 7, "screenmirroring": 7, "controlcenter": 8,
         ][suffix]
+        return number.map { "system:\($0)" }
     }
 
     static func item(bundle: String?, identifier: String?, name: String) -> NativeMenuBarItem? {
         if let bundle {
             guard !ownBundles.contains(bundle) else { return nil }
-            if bundle == "com.apple.TextInputMenuAgent" {
-                return NativeMenuBarItem(id: "system:4", name: systemNames[4])
-            }
-            // Siri and legacy extras share this process. Do not promise to split them.
+            // The Input menu is hosted by its own bundle, not system item 4.
+            // Siri and legacy extras share SystemUIServer. Do not promise to split them.
             if bundle == "com.apple.systemuiserver" || bundle == "com.apple.MenuBarAgent" {
                 return NativeMenuBarItem(id: "unmanaged:\(bundle)", name: name)
             }
             return NativeMenuBarItem(id: "bundle:\(bundle)", name: name)
         }
         guard let identifier else { return nil }
-        if let number = systemID(for: identifier) {
-            return NativeMenuBarItem(id: "system:\(number)", name: systemNames[number])
+        if let id = id(forSystemIdentifier: identifier) {
+            let number = id.hasPrefix("system:") ? Int(id.dropFirst(7)) : nil
+            return NativeMenuBarItem(id: id, name: number.map { systemNames[$0] } ?? "Input Menu")
         }
-        return NativeMenuBarItem(id: "unmanaged:\(identifier)", name: name)
+        let unmanagedID = "unmanaged:\(identifier)"
+        if let control = unmanagedSystemControls.first(where: { $0.item.id.caseInsensitiveCompare(unmanagedID) == .orderedSame }) {
+            return control.item
+        }
+        return NativeMenuBarItem(id: unmanagedID, name: name)
     }
 
     static func shouldHide(_ section: MenuBarSection.Name, hiddenShown: Bool, alwaysHiddenShown: Bool, alwaysHiddenEnabled: Bool) -> Bool {
@@ -109,7 +128,7 @@ enum NativeMenuBarPolicy {
             return "system:\(number)"
         }
         if bundle == "com.apple.controlcenter" || bundle == "com.apple.MenuBarAgent" {
-            return systemID(for: tag.title).map { "system:\($0)" }
+            return id(forSystemIdentifier: tag.title)
         }
         return item(bundle: bundle, identifier: nil, name: bundle).flatMap { $0.canAssign ? $0.id : nil }
     }

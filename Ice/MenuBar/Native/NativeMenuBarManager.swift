@@ -22,7 +22,13 @@ final class NativeMenuBarManager: ObservableObject {
     private var appNames = [String: String]()
 
     func displayName(for item: NativeMenuBarItem) -> String {
-        appNames[item.id] ?? item.name
+        if item.id == "bundle:\(NativeMenuBarPolicy.inputMenuBundle)" {
+            return L("app.native.system.inputMenu")
+        }
+        if let control = NativeMenuBarPolicy.unmanagedSystemControls.first(where: { $0.item.id == item.id }) {
+            return L(control.nameKey)
+        }
+        return appNames[item.id] ?? item.name
     }
 
     /// Resolve against current discovery; stale or foreign drag payloads cannot create assignments.
