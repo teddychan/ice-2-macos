@@ -222,10 +222,14 @@
 "app.uninstall.item.state" = "已存储的应用程序状态";
 "app.updates.notification.body" = "%@ 找到了更新的版本。";
 "app.updates.notification.title" = "有新的更新可用";
-"app.whatsNew.changed1" = "“设置”中的滑块现在是 macOS 标准滑块，每一档都有刻度，并在旁边显示当前数值。";
-"app.whatsNew.fixed1" = "在 macOS 27 上，“隐藏”和“始终隐藏”区段在其项目被隐藏时，不会再在菜单栏中留下空隙，因此每次显示和隐藏时间距都保持不变。";
-"app.whatsNew.fixed2" = "macOS 27 的布局编辑器现已翻译。此前它在 Ice 2 支持的其他所有语言中都显示为英文。";
-"app.whatsNew.summary" = "这是针对 macOS 27 的维护更新。隐藏的区段不会再在菜单栏中留下空隙，布局编辑器已完成翻译，“设置”中的滑块也改用 macOS 标准样式。";
+"app.whatsNew.changed1" = "Ice 2 现在使用 Sparkle 2.10.1 进行更新，其中包含两个安全问题的修复。";
+"app.whatsNew.fixed1" = "在 macOS 27 上，即使菜单栏项目处于隐藏状态，点按日期和时间也能再次打开通知中心。";
+"app.whatsNew.fixed2" = "在 macOS 27 上，切换空间时，隐藏的项目不会再短暂出现在菜单栏中。";
+"app.whatsNew.fixed3" = "“点按时显示”在你点按时钟、控制中心或其他菜单栏项目时，不会再显示或隐藏项目。";
+"app.whatsNew.fixed4" = "在开启菜单栏外观选项的情况下切换 App，或其他 App 停止响应时，Ice 2 不会再卡住数秒。";
+"app.whatsNew.fixed5" = "在 macOS 27 上，开启“移除菜单栏背景”不会再导致 Ice 2 崩溃。";
+"app.whatsNew.fixed6" = "在 macOS 27 上，现在可以隐藏 VPN 项目和输入法菜单，布局编辑器也会按名称显示每个系统项目。";
+"app.whatsNew.summary" = "这是主要针对 macOS 27 的错误修复更新。隐藏项目时通知中心可以再次打开，切换空间时隐藏的项目保持隐藏，另外修复了两处卡顿和一次崩溃。";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27 上的菜单栏区段";

@@ -222,10 +222,14 @@
 "app.uninstall.item.state" = "저장된 응용 프로그램 상태";
 "app.updates.notification.body" = "%@에서 새 버전을 찾았습니다.";
 "app.updates.notification.title" = "새로운 업데이트가 있습니다";
-"app.whatsNew.changed1" = "설정의 슬라이더가 macOS 기본 슬라이더로 바뀌어, 단계마다 눈금이 표시되고 현재 값이 옆에 나타납니다.";
-"app.whatsNew.fixed1" = "macOS 27에서 숨김 및 항상 숨김 섹션의 항목이 숨겨져 있는 동안 메뉴 막대에 빈 공간이 남지 않습니다. 따라서 보이고 숨길 때마다 간격이 달라지지 않습니다.";
-"app.whatsNew.fixed2" = "macOS 27의 레이아웃 편집기가 번역되었습니다. 이전에는 Ice 2가 지원하는 다른 모든 언어에서 영어로 표시되었습니다.";
-"app.whatsNew.summary" = "macOS 27을 위한 유지 보수 업데이트입니다. 숨김 섹션이 더 이상 메뉴 막대에 빈 공간을 남기지 않고, 레이아웃 편집기가 번역되었으며, 설정의 슬라이더가 macOS 기본 스타일로 바뀌었습니다.";
+"app.whatsNew.changed1" = "Ice 2가 이제 Sparkle 2.10.1로 업데이트되며, 여기에는 두 가지 보안 문제에 대한 수정이 포함되어 있습니다.";
+"app.whatsNew.fixed1" = "macOS 27에서 메뉴 막대 항목을 숨긴 상태에서도 날짜와 시간을 클릭하면 알림 센터가 다시 열립니다.";
+"app.whatsNew.fixed2" = "macOS 27에서 데스크탑 공간을 전환할 때 숨긴 항목이 메뉴 막대에 잠깐 나타나지 않습니다.";
+"app.whatsNew.fixed3" = "클릭 시 표시가 시계, 제어 센터 또는 다른 메뉴 막대 항목을 클릭할 때 더 이상 항목을 보이거나 숨기지 않습니다.";
+"app.whatsNew.fixed4" = "메뉴 막대 모양 옵션을 켠 상태에서 앱을 전환하거나 다른 앱이 응답하지 않을 때 Ice 2가 몇 초 동안 멈추지 않습니다.";
+"app.whatsNew.fixed5" = "macOS 27에서 메뉴 막대 배경 제거를 켜도 Ice 2가 충돌하지 않습니다.";
+"app.whatsNew.fixed6" = "macOS 27에서 이제 VPN 항목과 입력 메뉴를 숨길 수 있으며, 레이아웃 편집기에 각 시스템 항목이 이름으로 표시됩니다.";
+"app.whatsNew.summary" = "주로 macOS 27을 위한 버그 수정 업데이트입니다. 항목을 숨긴 상태에서도 알림 센터가 다시 열리고, 데스크탑 공간을 전환해도 숨긴 항목이 숨겨진 채로 유지되며, 두 가지 멈춤 현상과 한 가지 충돌이 수정되었습니다.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27의 메뉴 막대 섹션";

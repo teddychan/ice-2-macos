@@ -723,7 +723,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.16.1;
+				MARKETING_VERSION = 2.16.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dragonapp.ice.debug;
 				SWIFT_OBJC_BRIDGING_HEADER = Ice/MenuBar/Native/NativeMenuBarBridge.h;
 				PRODUCT_MODULE_NAME = Ice_2;
@@ -760,7 +760,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.16.1;
+				MARKETING_VERSION = 2.16.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dragonapp.ice;
 				SWIFT_OBJC_BRIDGING_HEADER = Ice/MenuBar/Native/NativeMenuBarBridge.h;
 				PRODUCT_NAME = "Ice 2";

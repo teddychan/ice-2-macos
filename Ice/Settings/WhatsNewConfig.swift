@@ -22,7 +22,7 @@ enum WhatsNewConfig {
     @MainActor
     static var content: WhatsNewContent {
         WhatsNewContent(
-            date: "2026-09-28",
+            date: "2026-11-02",
             summary: L("app.whatsNew.summary"),
             sections: [
                 // The keys are stable across releases (app.whatsNew.summary, .fixed1, .changed1, …)
@@ -31,16 +31,16 @@ enum WhatsNewConfig {
                 // so nothing is left behind for `whats_new_path` in release.yml to gate on — it
                 // diffs the text at these keys, not the key names themselves.
                 //
-                // A patch release with two macOS 27 fixes from issue #120, both visible to users:
-                // collapsed Hidden and Always-Hidden dividers no longer leave a gap (#125), and the
-                // Layout editor strings, which #117 shipped in English in six locales, are now
-                // translated (#122). `changed1` is the visible side of #123: the four Settings
-                // sliders are now system sliders, which look different. The Xcode 27 build fix
-                // behind that change, the stricter locale specifier tests and the run-debug.sh
-                // changes do not affect a shipped build, so they appear only in CHANGELOG.md.
+                // A patch release of contributor fixes, most of them for the macOS 27 backend. The
+                // rewritten Layout limitation text and the end of background permission polling
+                // have no entry here; CHANGELOG.md lists them.
                 ChangeSection(kind: .fixed, entries: [
                     L("app.whatsNew.fixed1"),
                     L("app.whatsNew.fixed2"),
+                    L("app.whatsNew.fixed3"),
+                    L("app.whatsNew.fixed4"),
+                    L("app.whatsNew.fixed5"),
+                    L("app.whatsNew.fixed6"),
                 ]),
                 ChangeSection(kind: .changed, entries: [
                     L("app.whatsNew.changed1"),

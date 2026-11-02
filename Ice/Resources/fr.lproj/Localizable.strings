@@ -222,10 +222,14 @@
 "app.uninstall.item.state" = "État enregistré de l'application";
 "app.updates.notification.body" = "%@ a trouvé une version plus récente.";
 "app.updates.notification.title" = "Une nouvelle mise à jour est disponible";
-"app.whatsNew.changed1" = "Les curseurs des réglages sont désormais des curseurs macOS standard, avec une graduation pour chaque cran et la valeur affichée à côté.";
-"app.whatsNew.fixed1" = "Sur macOS 27, les sections Masquée et Toujours masquée ne laissent plus d'espace vide dans la barre des menus lorsque leurs éléments sont masqués ; l'espacement ne change donc plus chaque fois que vous les affichez ou les masquez.";
-"app.whatsNew.fixed2" = "L'éditeur de Disposition de macOS 27 est désormais traduit. Il s'affichait en anglais dans toutes les autres langues d'Ice 2.";
-"app.whatsNew.summary" = "Une mise à jour de maintenance pour macOS 27. Les sections masquées ne laissent plus d'espace vide dans la barre des menus, l'éditeur de Disposition est désormais traduit et les curseurs des réglages adoptent le style standard de macOS.";
+"app.whatsNew.changed1" = "Ice 2 se met désormais à jour avec Sparkle 2.10.1, qui corrige deux problèmes de sécurité.";
+"app.whatsNew.fixed1" = "Sur macOS 27, un clic sur la date et l'heure ouvre à nouveau le Centre de notifications quand des éléments de la barre des menus sont masqués.";
+"app.whatsNew.fixed2" = "Sur macOS 27, les éléments masqués ne réapparaissent plus brièvement dans la barre des menus quand vous changez d'espace.";
+"app.whatsNew.fixed3" = "Afficher au clic n'affiche ni ne masque plus les éléments quand vous cliquez sur l'horloge, le Centre de contrôle ou un autre élément de la barre des menus.";
+"app.whatsNew.fixed4" = "Ice 2 ne se bloque plus pendant plusieurs secondes quand vous changez d'app avec une option d'apparence de la barre des menus activée, ni quand une autre app ne répond plus.";
+"app.whatsNew.fixed5" = "Sur macOS 27, activer Supprimer l'arrière-plan de la barre des menus ne fait plus planter Ice 2.";
+"app.whatsNew.fixed6" = "Sur macOS 27, vous pouvez désormais masquer l'élément VPN et le Menu de saisie, et l'éditeur de Disposition affiche chaque élément système par son nom.";
+"app.whatsNew.summary" = "Une mise à jour corrective, surtout pour macOS 27. Le Centre de notifications s'ouvre à nouveau quand des éléments sont masqués, les éléments masqués le restent quand vous changez d'espace, et deux blocages et un plantage sont corrigés.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "Sections de la barre des menus sous macOS 27";
