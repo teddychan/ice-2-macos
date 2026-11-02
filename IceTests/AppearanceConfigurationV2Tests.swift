@@ -264,4 +264,45 @@ struct AppearanceConfigurationV2Tests {
         #expect(!configuration.staticConfiguration.hasShadow)
         #expect(configuration.staticConfiguration.borderWidth == 1)
     }
+
+    // MARK: Overlay panel geometry
+
+    @Test func localContentRectConvertsCGCoordinatesToPanelCoordinates() {
+        let local = MenuBarOverlayPanel.localContentRect(
+            forScreenRect: CGRect(x: 0, y: 0, width: 534, height: 33),
+            panelFrame: CGRect(x: 0, y: 944, width: 1512, height: 38),
+            drawableBounds: CGRect(x: 0, y: 5, width: 1512, height: 33),
+            mainDisplayHeight: 982
+        )
+        #expect(local == CGRect(x: 0, y: 5, width: 534, height: 33))
+    }
+
+    @Test(arguments: [CGPoint(x: -1512, y: 0), CGPoint(x: 1512, y: 100), CGPoint(x: 0, y: -1080)])
+    func localContentRectWorksOnOffsetDisplays(origin: CGPoint) {
+        let local = MenuBarOverlayPanel.localContentRect(
+            forScreenRect: CGRect(origin: origin, size: CGSize(width: 534, height: 33)),
+            panelFrame: CGRect(x: origin.x, y: 982 - origin.y - 38, width: 1512, height: 38),
+            drawableBounds: CGRect(x: 0, y: 5, width: 1512, height: 33),
+            mainDisplayHeight: 982
+        )
+        #expect(local == CGRect(x: 0, y: 5, width: 534, height: 33))
+    }
+
+    @Test func localContentRectRejectsRectsThatWouldCrashNSBezierPath() {
+        let panelFrame = CGRect(x: 0, y: 944, width: 1512, height: 38)
+        let drawableBounds = CGRect(x: 0, y: 5, width: 1512, height: 33)
+        for screenRect in [
+            CGRect(x: 0, y: 500, width: 200, height: 33),
+            CGRect.null,
+            CGRect.infinite,
+            CGRect(x: 0, y: 0, width: CGFloat.infinity, height: 33),
+        ] {
+            #expect(MenuBarOverlayPanel.localContentRect(
+                forScreenRect: screenRect,
+                panelFrame: panelFrame,
+                drawableBounds: drawableBounds,
+                mainDisplayHeight: 982
+            ) == nil)
+        }
+    }
 }
