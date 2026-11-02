@@ -183,10 +183,7 @@ final class MenuBarManager: ObservableObject {
                 }
 
                 if sections.contains(where: { $0.controlItem.state == .showSection }) {
-                    guard
-                        !NativeMenuBarManager.usesNativeBackend,
-                        let screen = appState.hidEventManager.bestScreen(appState: appState)
-                    else {
+                    guard let screen = appState.hidEventManager.bestScreen(appState: appState) else {
                         return
                     }
 
