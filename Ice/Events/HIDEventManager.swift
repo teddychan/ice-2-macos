@@ -24,9 +24,8 @@ final class HIDEventManager: ObservableObject {
     /// History of the manager's enabled states.
     private var enabledStateStack = [Bool]()
 
-    /// Pending show-on-hover or rehide-on-hover task, so pointer movement
-    /// within the same region does not spawn duplicate sleep tasks or cancel
-    /// cleanups when the pointer leaves the trigger region early.
+    /// The pending show-on-hover or rehide task. Pointer movement fires many
+    /// events per delay, so only one task sleeps at a time.
     private var hoverTask: Task<Void, Never>?
 
     /// A Boolean value that indicates whether the manager is enabled.
@@ -37,7 +36,6 @@ final class HIDEventManager: ObservableObject {
                     monitor.start()
                 }
             } else {
-                cancelHoverTask()
                 for monitor in allMonitors {
                     monitor.stop()
                 }
@@ -150,15 +148,8 @@ final class HIDEventManager: ObservableObject {
         if isEnabled && needsMouseMovedTap {
             mouseMovedTap.start()
         } else {
-            cancelHoverTask()
             mouseMovedTap.stop()
         }
-    }
-
-    /// Cancels any in-flight hover task.
-    private func cancelHoverTask() {
-        hoverTask?.cancel()
-        hoverTask = nil
     }
 
     // MARK: Setup
@@ -425,13 +416,11 @@ extension HIDEventManager {
             showOnHoverEmptyMenuBar || showOnHoverOverIceIcon,
             appState.menuBarManager.showOnHoverAllowed
         else {
-            cancelHoverTask()
             return
         }
 
         // Only continue if we have a hidden section (we should).
         guard let hiddenSection = appState.menuBarManager.section(withName: .hidden) else {
-            cancelHoverTask()
             return
         }
 
@@ -441,54 +430,31 @@ extension HIDEventManager {
         if hiddenSection.isHidden {
             // The Ice icon is a menu bar item, so it is never inside the
             // "empty menu bar space"; the two triggers are mutually exclusive
-            // positions. `isMouseInsideIceIcon`, `isMouseInsideMenuBar`, and
-            // `isMouseInsideNotch` are pure in-memory bounds checks, whereas
-            // `isMouseInsideEmptyMenuBarSpace` queries Accessibility and the
-            // WindowServer—so defer that expensive check until the hover delay
-            // has elapsed without further pointer movement.
+            // positions. Test the icon first, because the cheap bounds check
+            // for the empty space also passes over it. The Accessibility and
+            // WindowServer queries behind `isMouseInsideEmptyMenuBarSpace`
+            // wait until the delay is over.
             if
                 showOnHoverOverIceIcon,
                 isMouseInsideIceIcon(appState: appState)
             {
-                cancelHoverTask()
-                hoverTask = Task { [weak self] in
-                    defer { self?.hoverTask = nil }
-                    do {
-                        try await Task.sleep(for: .seconds(iceIconDelay))
-                    } catch {
-                        return
+                scheduleHoverTask(after: iceIconDelay) {
+                    // Make sure the mouse is still inside the Ice icon.
+                    if self.isMouseInsideIceIcon(appState: appState) {
+                        hiddenSection.show()
                     }
-                    guard
-                        let self,
-                        isMouseInsideIceIcon(appState: appState)
-                    else {
-                        return
-                    }
-                    hiddenSection.show()
                 }
             } else if
                 showOnHoverEmptyMenuBar,
                 isMouseInsideMenuBar(appState: appState, screen: screen),
                 !isMouseInsideNotch(appState: appState, screen: screen)
             {
-                cancelHoverTask()
-                hoverTask = Task { [weak self] in
-                    defer { self?.hoverTask = nil }
-                    do {
-                        try await Task.sleep(for: .seconds(emptyMenuBarDelay))
-                    } catch {
-                        return
+                scheduleHoverTask(after: emptyMenuBarDelay) {
+                    // Make sure the mouse is still inside.
+                    if self.isMouseInsideEmptyMenuBarSpace(appState: appState, screen: screen) {
+                        hiddenSection.show()
                     }
-                    guard
-                        let self,
-                        isMouseInsideEmptyMenuBarSpace(appState: appState, screen: screen)
-                    else {
-                        return
-                    }
-                    hiddenSection.show()
                 }
-            } else {
-                cancelHoverTask()
             }
         } else {
             guard
@@ -496,10 +462,6 @@ extension HIDEventManager {
                 !isMouseInsideIceBar(appState: appState),
                 !isMouseInsideIceBarTransitArea(appState: appState, screen: screen)
             else {
-                cancelHoverTask()
-                return
-            }
-            guard hoverTask == nil else {
                 return
             }
             // Use the larger of the enabled delays as the rehide debounce so
@@ -508,23 +470,28 @@ extension HIDEventManager {
                 showOnHoverEmptyMenuBar ? emptyMenuBarDelay : 0,
                 showOnHoverOverIceIcon ? iceIconDelay : 0
             )
-            hoverTask = Task { [weak self] in
-                defer { self?.hoverTask = nil }
-                do {
-                    try await Task.sleep(for: .seconds(rehideDelay))
-                } catch {
-                    return
+            scheduleHoverTask(after: rehideDelay) {
+                // Make sure the mouse is still outside.
+                if
+                    !self.isMouseInsideMenuBar(appState: appState, screen: screen),
+                    !self.isMouseInsideIceBar(appState: appState),
+                    !self.isMouseInsideIceBarTransitArea(appState: appState, screen: screen)
+                {
+                    hiddenSection.hide()
                 }
-                guard
-                    let self,
-                    !isMouseInsideMenuBar(appState: appState, screen: screen),
-                    !isMouseInsideIceBar(appState: appState),
-                    !isMouseInsideIceBarTransitArea(appState: appState, screen: screen)
-                else {
-                    return
-                }
-                hiddenSection.hide()
             }
+        }
+    }
+
+    /// Runs `action` after `delay`, unless a hover task is already pending.
+    private func scheduleHoverTask(after delay: TimeInterval, _ action: @escaping () -> Void) {
+        guard hoverTask == nil else {
+            return
+        }
+        hoverTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(delay))
+            self?.hoverTask = nil
+            action()
         }
     }
 
