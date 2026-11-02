@@ -3,6 +3,7 @@
 //  Ice
 //
 
+import AXSwift
 import Cocoa
 import Combine
 import DragonKit
@@ -47,9 +48,7 @@ final class NativeMenuBarManager: ObservableObject {
     // Notification Center bridge state. See the extension at the end of this file.
     fileprivate var isSuspendedForNotificationCenter = false
     fileprivate var notificationCenterTap: CFMachPort?
-    fileprivate var notificationCenterTapSource: CFRunLoopSource?
     fileprivate var notificationCenterWatch: Task<Void, Never>?
-    fileprivate var isSwallowingClockMouseUp = false
 
     init(
         activate: @escaping ([NSNumber], [String], @escaping (Error?) -> Void) -> AnyObject? = { systems, bundles, completion in
@@ -277,12 +276,12 @@ final class NativeMenuBarManager: ObservableObject {
 // While an `MBAssessmentModeAssertion` is active, macOS 27 does not open Notification
 // Center: clicking the clock and the "Show Notification Center" keyboard shortcut do
 // nothing, whatever system items and bundles the configuration allows (the restriction
-// comes from assessment mode itself). So the bridge holds those two gestures, releases
-// the assertion, replays the gesture, and keeps the assertion released while the
-// panel is open. Hidden items are visible during that time, then concealed again.
-// The trackpad gesture cannot be intercepted and is not bridged.
+// comes from assessment mode itself). So the bridge watches for those two gestures,
+// releases the assertion, replays the gesture, and keeps the assertion released while
+// the panel is open. Hidden items are visible during that time, then concealed again.
+// The trackpad gesture cannot be detected and is not bridged.
 extension NativeMenuBarManager {
-    /// Marks events posted by the bridge so that its own tap lets them through.
+    /// Marks events posted by the bridge so that its own tap ignores them.
     private static let replayMarker: Int64 = 0x1CE2_0C0C
     private static let clockIdentifier = "com.apple.menuextra.clock"
     private static let notificationCenterBundle = "com.apple.notificationcenterui"
@@ -301,21 +300,24 @@ extension NativeMenuBarManager {
             }
             return
         }
-        let mask = (1 << CGEventType.leftMouseDown.rawValue)
-            | (1 << CGEventType.leftMouseUp.rawValue)
-            | (1 << CGEventType.keyDown.rawValue)
+        let mask = (1 << CGEventType.leftMouseDown.rawValue) | (1 << CGEventType.keyDown.rawValue)
         let callback: CGEventTapCallBack = { _, type, event, refcon in
-            guard let refcon else { return Unmanaged.passUnretained(event) }
-            let manager = Unmanaged<NativeMenuBarManager>.fromOpaque(refcon).takeUnretainedValue()
-            // The tap's source is on the main run loop, so this runs on the main thread.
-            return MainActor.assumeIsolated {
-                manager.handleNotificationCenterEvent(type: type, event: event)
+            if let refcon {
+                let manager = Unmanaged<NativeMenuBarManager>.fromOpaque(refcon).takeUnretainedValue()
+                // The tap's source is on the main run loop, so this runs on the main thread.
+                MainActor.assumeIsolated {
+                    manager.handleNotificationCenterEvent(type: type, event: event)
+                }
             }
+            return Unmanaged.passUnretained(event)
         }
+        // Listen only: the gesture does nothing while the assertion is active, so it needs
+        // no swallowing, and a filtering tap would hold every click and keystroke on the
+        // system until this app's main thread got to it.
         guard let tap = CGEvent.tapCreate(
             tap: .cgSessionEventTap,
             place: .headInsertEventTap,
-            options: .defaultTap,
+            options: .listenOnly,
             eventsOfInterest: CGEventMask(mask),
             callback: callback,
             userInfo: Unmanaged.passUnretained(self).toOpaque()
@@ -327,48 +329,35 @@ extension NativeMenuBarManager {
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
         CGEvent.tapEnable(tap: tap, enable: true)
         notificationCenterTap = tap
-        notificationCenterTapSource = source
     }
 
-    private func handleNotificationCenterEvent(type: CGEventType, event: CGEvent) -> Unmanaged<CGEvent>? {
-        let passThrough = Unmanaged.passUnretained(event)
+    private func handleNotificationCenterEvent(type: CGEventType, event: CGEvent) {
         if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
             if let tap = notificationCenterTap { CGEvent.tapEnable(tap: tap, enable: true) }
-            return passThrough
+            return
         }
-        if event.getIntegerValueField(.eventSourceUserData) == Self.replayMarker {
-            return passThrough
+        guard isConcealing, !isSuspendedForNotificationCenter,
+              event.getIntegerValueField(.eventSourceUserData) != Self.replayMarker else {
+            return
         }
         switch type {
-        case .leftMouseUp:
-            guard isSwallowingClockMouseUp else { return passThrough }
-            isSwallowingClockMouseUp = false
-            return nil
         case .leftMouseDown:
-            guard isConcealing, !isSuspendedForNotificationCenter else { return passThrough }
             let location = event.location
-            guard isInMenuBar(location), clockFrames().contains(where: { $0.contains(location) }) else {
-                return passThrough
+            if isInMenuBar(location), isClock(at: location) {
+                suspendForNotificationCenter(replaying: .click(location))
             }
-            isSwallowingClockMouseUp = true
-            suspendForNotificationCenter(replaying: .click(location))
-            return nil
         case .keyDown:
-            guard isConcealing, !isSuspendedForNotificationCenter,
-                  event.getIntegerValueField(.keyboardEventAutorepeat) == 0,
+            guard event.getIntegerValueField(.keyboardEventAutorepeat) == 0,
                   let hotKey = notificationCenterHotKey() else {
-                return passThrough
+                return
             }
             let keyCode = CGKeyCode(event.getIntegerValueField(.keyboardEventKeycode))
             let relevant: CGEventFlags = [.maskCommand, .maskControl, .maskAlternate, .maskShift]
-            guard keyCode == hotKey.keyCode,
-                  event.flags.intersection(relevant) == hotKey.flags.intersection(relevant) else {
-                return passThrough
+            if keyCode == hotKey.keyCode, event.flags.intersection(relevant) == hotKey.flags.intersection(relevant) {
+                suspendForNotificationCenter(replaying: .key(keyCode, event.flags))
             }
-            suspendForNotificationCenter(replaying: .key(keyCode, event.flags))
-            return nil
         default:
-            return passThrough
+            break
         }
     }
 
@@ -377,7 +366,7 @@ extension NativeMenuBarManager {
         assertion != nil || pendingAssertion != nil
     }
 
-    /// Cheap pre-check so the Accessibility lookup only runs for clicks in a menu bar.
+    /// Cheap pre-check so the Accessibility hit test only runs for clicks in a menu bar.
     private func isInMenuBar(_ point: CGPoint) -> Bool {
         var count: UInt32 = 0
         guard CGGetActiveDisplayList(0, nil, &count) == .success, count > 0 else { return false }
@@ -390,8 +379,12 @@ extension NativeMenuBarManager {
         }
     }
 
-    private func clockFrames() -> [CGRect] {
-        ICENativeMenuBarFrames(Self.clockIdentifier).map { NSRectToCGRect($0.rectValue) }
+    /// A click can land on the clock or on the padding of the group that holds it.
+    private func isClock(at point: CGPoint) -> Bool {
+        guard let element = AXHelpers.element(at: point) else { return false }
+        return ([element] + AXHelpers.children(for: element)).contains { candidate in
+            (try? candidate.attribute(.identifier) as String?) == Self.clockIdentifier
+        }
     }
 
     /// The user's "Show Notification Center" shortcut, if one is set and enabled.
