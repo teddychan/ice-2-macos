@@ -15,11 +15,9 @@ invents window IDs. macOS 26 and earlier continue to use the legacy backend.
   has no verified per-icon image source. Earlier AX snapshots reported overlapping
   rectangles for unrelated apps, so screen crops would risk showing the wrong
   icon. Real menu bar previews are deferred until reliable bounds are verified.
-* Hidden and saved absent apps remain editable. Native controls that cannot be
-  assigned are listed separately under “Managed by macOS”, including the known
-  controls whose AX nodes disappear while hiding is active. This is a reference
-  list, not an assertion that every listed control is enabled in macOS Settings.
-  Visibility buttons distinguish showing items from changing saved assignments.
+* Hidden and saved absent apps remain editable. Unsupported system items appear
+  separately under “Managed by macOS”. Visibility buttons explicitly distinguish
+  showing items from changing their saved assignments.
 * Show Hidden reveals the Hidden section; Show All includes Always-Hidden.
   Ice's section toggles, section hotkeys, and rehide behavior use the native
   backend. Items reveal directly in the system menu bar, across displays.
@@ -41,34 +39,9 @@ invents window IDs. macOS 26 and earlier continue to use the legacy backend.
   and restores the requested section state. Assertions keep hiding across Space
   changes, so a Space change leaves them alone.
 
-## System-item identities
-
-`NativeMenuBarPolicy` owns identity mapping and whether an item can be assigned.
-The manager builds the allowlist from those identities; the layout view presents
-unsupported controls as information rather than section assignments.
-
-| Item | Identity and behavior |
-| --- | --- |
-| Battery, Bluetooth, Displays, Keyboard module, Sound, Wi-Fi, Screen Mirroring | Supported numeric system IDs; unassigned items default to Visible. |
-| Clock and Control Center | Supported numeric IDs that Ice keeps protected. |
-| Input menu (the input-source selector) | `bundle:com.apple.TextInputMenuAgent`; controlled through its hosting bundle, independently of the numeric Keyboard module. |
-| Now Playing, Focus, AirDrop, Fast User Switching | Native controls without supported assessment IDs. Listed for reference, with no drag or section assignment. Show All Items releases hiding and lets macOS restore its enabled controls. |
-| Other unrecognized system controls | Retain their discovered identity and remain nonassignable. |
-
-The current native system enum has exactly IDs 0–8. Adding guessed IDs or bundle
-aliases does not preserve the unsupported controls while assessment mode is active.
-Ice preserves the original system experience and does not create replacement
-media controls. Their visibility still follows the user's macOS settings.
-
-Input-menu bundle identities and legacy `TextInput` tags map to the same bundle.
-Existing numeric `system:4` tags keep their Keyboard-module meaning; they are not
-silently rewritten as input-menu assignments. A saved assignment to the old,
-incorrect Keyboard row may need to be reassigned to the new Input Menu row.
-
 ## Limitations shown in the app
 
-* macOS can remove Now Playing, Focus, AirDrop and Fast User Switching whenever
-  hiding is active. Show All Items restores the enabled native controls.
+* Focus and other system extras can disappear as a side effect of assessment mode.
 * Clock, Control Center, SystemUIServer extras and unmapped native items cannot
   be independently assigned through this backend.
 * Separate Ice Bar, per-icon search and temporary per-icon reveal are unavailable.
@@ -84,14 +57,7 @@ incorrect Keyboard row may need to be reassigned to the new Input Menu row.
 Automated tests cover section policy, protected items, new apps, native tag
 round-trips, legacy profile conflicts/unmatched identities, unmappable profile
 rejection, assertion handover, stale failures, failure cleanup, late callbacks
-after restoration and avoiding redundant reactivation. Input-menu regression
-checks assert that hiding removes the real host bundle while leaving system ID 4
-allowed, and that legacy input tags do not collide with the Keyboard module.
-
-2026-11-01 controlled runtime checks on macOS 27.0.1 (26A434): permitting all nine
-system IDs and running bundles still removed Now Playing while only a disposable
-test icon was hidden; invalidating the assertion restored it. Removing system ID 4
-did not hide the Input menu; excluding `com.apple.TextInputMenuAgent` did.
+after restoration and avoiding redundant reactivation.
 
 2026-09-17 validation: **341 tests passed**, changed app Swift files passed strict
 lint, and the Objective-C bridge passed `-Wall -Wextra -Werror` syntax checking.

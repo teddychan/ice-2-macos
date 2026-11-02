@@ -1,17 +1,5 @@
 # Changelog
 
-## Unreleased
-
-### Fixed
-
-- On macOS 27, the Input menu uses its actual hosting app identity, so its
-  section assignment controls the input-source selector instead of the unrelated
-  Keyboard module. Legacy input-menu profile tags use the same bundle identity.
-- Layout lists Now Playing, Focus, AirDrop and Fast User Switching under
-  **Managed by macOS**, even when hiding removes their Accessibility entries.
-  The explanation identifies the native limitation and the **Show All Items**
-  action that restores the enabled system controls. No replacement buttons are added.
-
 ## 2.16.1 - 2026-09-28
 
 ### Fixed
