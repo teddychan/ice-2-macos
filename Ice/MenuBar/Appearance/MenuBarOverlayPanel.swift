@@ -424,6 +424,38 @@ final class MenuBarOverlayPanel: NSPanel {
     override func isAccessibilityElement() -> Bool {
         return false
     }
+
+    /// Converts a rectangle in global CoreGraphics coordinates (top-left
+    /// origin) to the panel's local view coordinates, clipped to `drawableBounds`.
+    ///
+    /// Returns `nil` for an empty, null or non-finite result, because handing
+    /// `CGRect.null` to `NSBezierPath(rect:)` throws an exception in AppKit.
+    static func localContentRect(
+        forScreenRect screenRect: CGRect,
+        panelFrame: CGRect,
+        drawableBounds: CGRect,
+        mainDisplayHeight: CGFloat = CGDisplayBounds(CGMainDisplayID()).height
+    ) -> CGRect? {
+        guard mainDisplayHeight.isFinite, [screenRect, panelFrame, drawableBounds].allSatisfy({ rect in
+            !rect.isNull && !rect.isInfinite && !rect.isEmpty &&
+                [rect.minX, rect.minY, rect.maxX, rect.maxY].allSatisfy(\.isFinite)
+        }) else {
+            return nil
+        }
+        let appKitRect = CGRect(
+            x: screenRect.minX,
+            y: mainDisplayHeight - screenRect.maxY,
+            width: screenRect.width,
+            height: screenRect.height
+        )
+        let localRect = appKitRect
+            .offsetBy(dx: -panelFrame.minX, dy: -panelFrame.minY)
+            .intersection(drawableBounds)
+        guard !localRect.isNull, !localRect.isEmpty else {
+            return nil
+        }
+        return localRect
+    }
 }
 
 // MARK: - Content View
@@ -732,9 +764,11 @@ private final class MenuBarOverlayPanelContentView: NSView {
             guard let overlayPanel else {
                 return nil
             }
-            return screenRect
-                .offsetBy(dx: -overlayPanel.frame.minX, dy: -overlayPanel.frame.minY)
-                .intersection(rect)
+            return MenuBarOverlayPanel.localContentRect(
+                forScreenRect: screenRect,
+                panelFrame: overlayPanel.frame,
+                drawableBounds: rect
+            )
         }
 
         if
