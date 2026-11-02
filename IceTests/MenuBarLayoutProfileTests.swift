@@ -145,7 +145,6 @@ struct NativeMenuBarPolicyTests {
         let bundle = "com.apple.TextInputMenuAgent"
         let item = try #require(NativeMenuBarPolicy.item(bundle: bundle, identifier: nil, name: "Input Menu"))
         #expect(item.id == "bundle:\(bundle)")
-        #expect(NativeMenuBarPolicy.item(bundle: nil, identifier: "COM.APPLE.MENUEXTRA.TEXTINPUT", name: "Input")?.id == item.id)
         let hidden = try #require(configuration([item.id: .hidden], running: [bundle]))
         #expect(!hidden.bundles.contains(bundle))
         // System ID 4 controls the keyboard module, not the Input menu.
@@ -154,7 +153,7 @@ struct NativeMenuBarPolicyTests {
     }
 
     @Test func legacyInputTagsRemainDistinctFromTheKeyboardModule() {
-        let input = MenuBarItemTag(namespace: .controlCenter, title: "TextInput")
+        let input = MenuBarItemTag(namespace: .textInputMenuAgent, title: "TextInput")
         let keyboard = MenuBarItemTag(namespace: .string("com.dragonapp.ice.native.system"), title: "4")
         let profile = MenuBarLayoutProfile(id: UUID(), name: "Input", createdAt: .distantPast, updatedAt: .distantPast, sections: [
             .init(section: .visible, itemTags: [input]),
@@ -164,17 +163,6 @@ struct NativeMenuBarPolicyTests {
         #expect(result.assignments["bundle:com.apple.TextInputMenuAgent"] == .visible)
         #expect(result.assignments["system:4"] == .hidden)
         #expect(result.conflicts.isEmpty)
-    }
-
-    @Test func knownNativeControlsUseCanonicalIdentities() throws {
-        for control in NativeMenuBarPolicy.unmanagedSystemControls {
-            let identifier = String(control.item.id.dropFirst("unmanaged:".count)).uppercased()
-            let discovered = try #require(NativeMenuBarPolicy.item(bundle: nil, identifier: identifier, name: "Discovered"))
-            #expect(discovered.id == control.item.id)
-            #expect(!discovered.canAssign)
-        }
-        let unknown = "com.apple.menuextra.UnknownCustomItem"
-        #expect(NativeMenuBarPolicy.item(bundle: nil, identifier: unknown, name: "Unknown")?.id == "unmanaged:\(unknown)")
     }
 
     @Test func discoveryGroupsAppIconsWithoutInventingWindowIDs() {

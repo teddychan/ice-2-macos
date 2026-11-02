@@ -234,12 +234,7 @@
 "app.native.inlineReveal" = "Sous macOS 27, les éléments masqués apparaissent directement dans la barre des menus. La barre Ice 2 séparée n'est pas disponible.";
 "app.native.assignments" = "Apps et éléments système";
 "app.native.systemManaged" = "Gérés par macOS";
-"app.native.system.nowPlaying" = "À l’écoute";
-"app.native.system.focus" = "Concentration";
-"app.native.system.airDrop" = "AirDrop";
-"app.native.system.userSwitching" = "Permutation rapide d’utilisateur";
 "app.native.system.inputMenu" = "Menu de saisie";
-"app.native.systemManaged.note" = "Liste fournie à titre indicatif. L’affichage de ces éléments natifs dépend des réglages de macOS ; Ice 2 ne peut pas les affecter à des sections.";
 "app.native.showAll" = "Tout afficher";
 "app.native.showHidden" = "Afficher la section Masquée";
 "app.native.hide" = "Masquer les sections";

@@ -234,12 +234,7 @@
 "app.native.inlineReveal" = "macOS 27에서는 숨겨진 항목이 메뉴 막대에 바로 표시됩니다. 별도의 Ice 2 막대는 사용할 수 없습니다.";
 "app.native.assignments" = "앱 및 시스템 항목";
 "app.native.systemManaged" = "macOS에서 관리";
-"app.native.system.nowPlaying" = "지금 재생 중";
-"app.native.system.focus" = "집중 모드";
-"app.native.system.airDrop" = "AirDrop";
-"app.native.system.userSwitching" = "빠른 사용자 전환";
 "app.native.system.inputMenu" = "입력 메뉴";
-"app.native.systemManaged.note" = "참고용 목록입니다. 이 기본 항목의 표시 여부는 macOS 설정에 따르며, Ice 2에서 섹션에 할당할 수 없습니다.";
 "app.native.showAll" = "모두 표시";
 "app.native.showHidden" = "숨김 섹션 표시";
 "app.native.hide" = "섹션 가리기";

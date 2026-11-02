@@ -47,21 +47,13 @@ struct NativeMenuBarLayoutView: View {
             }
         }
         visibilityControls
-        DragonSection {
-            Text(L("app.native.systemManaged"))
-        } content: {
-            Text(unmanagedItems.map { manager.displayName(for: $0) }.joined(separator: " · "))
-                .foregroundStyle(.secondary)
-            Text(L("app.native.systemManaged.note"))
-                .font(.callout)
-                .foregroundStyle(.secondary)
-        }
-    }
-
-    private var unmanagedItems: [NativeMenuBarItem] {
-        let known = NativeMenuBarPolicy.unmanagedSystemControls.map(\.item)
-        return known + manager.items.filter { item in
-            !item.canAssign && !known.contains(where: { $0.id == item.id })
+        if manager.items.contains(where: { !$0.canAssign }) {
+            DragonSection {
+                Text(L("app.native.systemManaged"))
+            } content: {
+                Text(manager.items.filter { !$0.canAssign }.map(\.name).joined(separator: " · "))
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 
