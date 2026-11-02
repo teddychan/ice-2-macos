@@ -49,6 +49,7 @@
 "app.appearance.noShapeSelected" = "未選擇形狀類型";
 "app.appearance.panelTitle" = "選單列外觀";
 "app.appearance.removeBackground" = "移除選單列背景";
+"app.appearance.removeBackground.native" = "若要在 macOS 27 上移除選單列背景，請在「系統設定」>「選單列」中關閉「顯示選單列背景」。";
 "app.appearance.reset.message" = "此操作無法還原。";
 "app.appearance.reset.title" = "重設選單列外觀";
 "app.appearance.roundCorners" = "圓角螢幕邊角";

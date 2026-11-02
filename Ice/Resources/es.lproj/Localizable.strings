@@ -49,6 +49,7 @@
 "app.appearance.noShapeSelected" = "No se ha seleccionado ningún tipo de forma";
 "app.appearance.panelTitle" = "Apariencia de la barra de menús";
 "app.appearance.removeBackground" = "Quitar el fondo de la barra de menús";
+"app.appearance.removeBackground.native" = "Para quitar el fondo de la barra de menús en macOS 27, desactiva Mostrar fondo de la barra de menús en Ajustes del Sistema > Barra de menús.";
 "app.appearance.reset.message" = "Esta acción no se puede deshacer.";
 "app.appearance.reset.title" = "Restablecer la apariencia de la barra de menús";
 "app.appearance.roundCorners" = "Redondear las esquinas de la pantalla";
