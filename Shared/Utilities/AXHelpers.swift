@@ -54,8 +54,65 @@ enum AXHelpers {
         queue.sync { try? element.role() }
     }
 
+    static func subrole(for element: UIElement) -> String? {
+        queue.sync { try? element.attribute(.subrole) }
+    }
+
     static func parent(of element: UIElement) -> UIElement? {
         queue.sync { try? element.attribute(.parent) }
+    }
+
+    /// Returns a Boolean value that indicates whether the AX element at or near
+    /// the given point within `displayBounds` is a menu bar status item (`AXMenuExtra`).
+    static func isMenuExtra(
+        at point: CGPoint,
+        in displayBounds: CGRect,
+        isMenuExtraAtPoint: (CGPoint) -> Bool = { probePoint in
+            guard var element = element(at: probePoint) else {
+                return false
+            }
+            for _ in 0..<4 {
+                if isMenuExtraNode(
+                    role: role(for: element),
+                    subrole: subrole(for: element),
+                    bundleIdentifier: (try? element.pid()).flatMap {
+                        NSRunningApplication(processIdentifier: $0)?.bundleIdentifier
+                    }
+                ) {
+                    return true
+                }
+                guard let next = parent(of: element) else {
+                    break
+                }
+                element = next
+            }
+            return false
+        }
+    ) -> Bool {
+        guard displayBounds.width > 0 else {
+            return false
+        }
+        if point.x >= displayBounds.maxX - 24 {
+            return true
+        }
+        let probeY = displayBounds.minY + 14
+        for offsetX: CGFloat in [0, -10, 10] {
+            let probePoint = CGPoint(x: point.x + offsetX, y: probeY)
+            if displayBounds.contains(probePoint), isMenuExtraAtPoint(probePoint) {
+                return true
+            }
+        }
+        return false
+    }
+
+    /// Returns a Boolean value that indicates whether an element occupies menu-bar
+    /// space as a status item.
+    ///
+    /// MenuBarAgent's overflow disclosure buttons are plain `AXButton` nodes with no
+    /// `AXMenuExtra` subrole. Treating them as empty space would let a click on the
+    /// system's own expand button also toggle Ice's sections, hiding them again.
+    static func isMenuExtraNode(role: Role?, subrole: String?, bundleIdentifier: String?) -> Bool {
+        subrole == "AXMenuExtra" || (role == .button && bundleIdentifier == "com.apple.MenuBarAgent")
     }
 
     /// Returns the menu bar AX element near the given display origin.

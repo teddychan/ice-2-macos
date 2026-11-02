@@ -639,6 +639,10 @@ extension HIDEventManager {
         guard let mouseLocation = MouseHelpers.locationCoreGraphics else {
             return false
         }
+        if NativeMenuBarManager.usesNativeBackend {
+            return isMouseInsideIceIcon(appState: appState) ||
+                AXHelpers.isMenuExtra(at: mouseLocation, in: CGDisplayBounds(screen.displayID))
+        }
         let windowIDs = Bridging.getMenuBarWindowList(option: [.onScreen, .activeSpace, .itemsOnly])
         return windowIDs.contains { windowID in
             guard let bounds = Bridging.getWindowBounds(for: windowID) else {
