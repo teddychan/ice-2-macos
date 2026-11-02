@@ -7,9 +7,9 @@ Ice 2 is a macOS menu bar manager, a GPL-3.0 fork of Jordan Baird's Ice, built f
 ### Localization
 
 - Resolve every user-visible string through DragonKit's `L(_:)` (it returns `String`), with `.dragonLocalized()` at each window root. Never use SwiftUI `LocalizedStringKey` for app text: it resolves against the languages read at launch, so a Language picker change would only apply after a relaunch. That is why `IcePicker`, `IceSlider`, `IceMenu` and `IceGradientPicker` take `String`.
-- Use semantic keys (`app.general.showOnClick`), never English text as the key, so a copy edit doesn't become a rename across seven files.
+- Use semantic keys (`app.general.showOnClick`), never English text as the key, so a copy edit doesn't become a rename across eight files.
 - Read shared wording (OK/Cancel, Settings pane titles, Backup/Uninstall/Updates chrome) from the kit with `L("DragonKit.…")`. Never redefine a `DragonKit.*` key in `Ice/Resources/*.lproj`; conformance §R8 forbids it and the kit's table wins the lookup anyway.
-- Add every key to all seven `Ice/Resources/<lang>.lproj/Localizable.strings` files with matching format specifiers; `LocalizationCoverageTests` enforces this against the built bundle. The `.lproj` folders reach the app through the file-system synchronized group, so nothing in `project.pbxproj` names them — but a new locale must still be added to `knownRegions` and to `whats_new_path` in `.github/workflows/release.yml`.
+- Add every key to all eight `Ice/Resources/<lang>.lproj/Localizable.strings` files with matching format specifiers; `LocalizationCoverageTests` enforces this against the built bundle. The `.lproj` folders reach the app through the file-system synchronized group, so nothing in `project.pbxproj` names them — but a new locale must still be added to `knownRegions` and to `whats_new_path` in `.github/workflows/release.yml`.
 - Wrap tests that assert English copy in `withEnglish { }` (in `IceTests/LocalizedTextSupport.swift`), or they fail on a non-English Mac.
 
 ### Tests and conformance
