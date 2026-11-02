@@ -49,6 +49,7 @@
 "app.appearance.noShapeSelected" = "形状の種類が選択されていません";
 "app.appearance.panelTitle" = "メニューバーの外観";
 "app.appearance.removeBackground" = "メニューバーの背景を削除";
+"app.appearance.removeBackground.native" = "macOS 27 でメニューバーの背景を消すには、システム設定 > メニューバーで「メニューバーの背景を表示」をオフにしてください。";
 "app.appearance.reset.message" = "この操作は取り消せません。";
 "app.appearance.reset.title" = "メニューバーの外観をリセット";
 "app.appearance.roundCorners" = "画面の角を丸くする";

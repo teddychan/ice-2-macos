@@ -121,7 +121,11 @@ struct MenuBarAppearanceEditor: View {
 
     @ViewBuilder
     private var removesMenuBarBackgroundToggle: some View {
-        Toggle(L("app.appearance.removeBackground"), isOn: $appearanceManager.configuration.removesMenuBarBackground)
+        if NativeMenuBarManager.usesNativeBackend {
+            Text(L("app.appearance.removeBackground.native"))
+        } else {
+            Toggle(L("app.appearance.removeBackground"), isOn: $appearanceManager.configuration.removesMenuBarBackground)
+        }
     }
 
     @ViewBuilder

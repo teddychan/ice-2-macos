@@ -49,6 +49,7 @@
 "app.appearance.noShapeSelected" = "Aucun type de forme sélectionné";
 "app.appearance.panelTitle" = "Apparence de la barre des menus";
 "app.appearance.removeBackground" = "Supprimer l'arrière-plan de la barre des menus";
+"app.appearance.removeBackground.native" = "Pour supprimer l’arrière-plan de la barre des menus sous macOS 27, désactivez Afficher l’arrière-plan de la barre des menus dans Réglages Système > Barre des menus.";
 "app.appearance.reset.message" = "Cette action est irréversible.";
 "app.appearance.reset.title" = "Réinitialiser l'apparence de la barre des menus";
 "app.appearance.roundCorners" = "Arrondir les coins de l'écran";

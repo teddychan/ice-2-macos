@@ -49,6 +49,7 @@
 "app.appearance.noShapeSelected" = "No shape kind selected";
 "app.appearance.panelTitle" = "Menu Bar Appearance";
 "app.appearance.removeBackground" = "Remove menu bar background";
+"app.appearance.removeBackground.native" = "To remove the menu bar background on macOS 27, turn off Show menu bar background in System Settings > Menu Bar.";
 "app.appearance.reset.message" = "This action cannot be undone.";
 "app.appearance.reset.title" = "Reset Menu Bar Appearance";
 "app.appearance.roundCorners" = "Round screen corners";

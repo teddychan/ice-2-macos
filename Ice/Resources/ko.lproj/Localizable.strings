@@ -49,6 +49,7 @@
 "app.appearance.noShapeSelected" = "선택된 모양 종류가 없습니다";
 "app.appearance.panelTitle" = "메뉴 막대 모양";
 "app.appearance.removeBackground" = "메뉴 막대 배경 제거";
+"app.appearance.removeBackground.native" = "macOS 27에서 메뉴 막대 배경을 제거하려면 시스템 설정 > 메뉴 막대에서 메뉴 막대 배경 보기를 끄십시오.";
 "app.appearance.reset.message" = "이 동작은 실행 취소할 수 없습니다.";
 "app.appearance.reset.title" = "메뉴 막대 모양 재설정";
 "app.appearance.roundCorners" = "화면 모서리 둥글게";

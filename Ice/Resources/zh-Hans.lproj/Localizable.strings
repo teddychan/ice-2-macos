@@ -49,6 +49,7 @@
 "app.appearance.noShapeSelected" = "未选择形状类型";
 "app.appearance.panelTitle" = "菜单栏外观";
 "app.appearance.removeBackground" = "移除菜单栏背景";
+"app.appearance.removeBackground.native" = "要在 macOS 27 上移除菜单栏背景，请在“系统设置”>“菜单栏”中关闭“显示菜单栏背景”。";
 "app.appearance.reset.message" = "此操作无法撤销。";
 "app.appearance.reset.title" = "重置菜单栏外观";
 "app.appearance.roundCorners" = "圆角屏幕边角";
