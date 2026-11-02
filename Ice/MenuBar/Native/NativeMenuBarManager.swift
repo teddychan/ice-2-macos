@@ -38,7 +38,6 @@ final class NativeMenuBarManager: ObservableObject {
     private var pendingAssertion: AnyObject?
     private var configuration: NativeMenuBarPolicy.Configuration?
     private var generation = 0
-    private var needsFollowUpRefresh = false
     private var activationTimeout: Task<Void, Never>?
     private var cancellables = Set<AnyCancellable>()
     private let logger = Logger(category: "NativeMenuBar")
@@ -78,6 +77,8 @@ final class NativeMenuBarManager: ObservableObject {
         NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.willSleepNotification)
             .sink { [weak self] _ in self?.restore() }
             .store(in: &cancellables)
+        // No Space-change observer: assertions keep hiding across Spaces, and
+        // re-taking them there would flash every hidden item.
         NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.didWakeNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -85,22 +86,11 @@ final class NativeMenuBarManager: ObservableObject {
                 Task { await self?.refresh() }
             }
             .store(in: &cancellables)
-        NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.activeSpaceDidChangeNotification)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.synchronizeVisibility()
-                Task { await self?.refresh() }
-            }
-            .store(in: &cancellables)
         Task { await refresh() }
     }
 
     func refresh() async {
-        guard appState != nil else { return }
-        if isRefreshing {
-            needsFollowUpRefresh = true
-            return
-        }
+        guard !isRefreshing, appState != nil else { return }
         guard ICENativeMenuBarAvailable() else {
             failOpen(L("app.native.unavailable"))
             return
@@ -111,40 +101,37 @@ final class NativeMenuBarManager: ObservableObject {
         }
         isRefreshing = true
         defer { isRefreshing = false }
-        repeat {
-            needsFollowUpRefresh = false
-            let snapshot = await Task.detached(priority: .utility) { ICENativeMenuBarSnapshot() }.value
-            let discovered = snapshot.compactMap { row in
-                NativeMenuBarPolicy.item(bundle: row["bundle"], identifier: row["identifier"], name: row["name"] ?? "")
+        let snapshot = await Task.detached(priority: .utility) { ICENativeMenuBarSnapshot() }.value
+        let discovered = snapshot.compactMap { row in
+            NativeMenuBarPolicy.item(bundle: row["bundle"], identifier: row["identifier"], name: row["name"] ?? "")
+        }
+        let running = Set(NSWorkspace.shared.runningApplications.compactMap(\.bundleIdentifier))
+        // Hidden AX nodes disappear. Retain known rows while their app is running,
+        // and retain saved identities even when the app is not currently running.
+        var merged = Dictionary(items.filter { item in
+            !item.id.hasPrefix("bundle:") || running.contains(String(item.id.dropFirst(7))) || assignments[item.id] != nil
+        }.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        for item in discovered { merged[item.id] = item }
+        for id in assignments.keys where merged[id] == nil {
+            let name: String
+            if id.hasPrefix("bundle:") {
+                name = String(id.dropFirst(7))
+            } else if id.hasPrefix("system:"), let number = Int(id.dropFirst(7)), (0...8).contains(number) {
+                name = NativeMenuBarPolicy.systemNames[number]
+            } else {
+                continue
             }
-            let running = Set(NSWorkspace.shared.runningApplications.compactMap(\.bundleIdentifier))
-            // Hidden AX nodes disappear. Retain known rows while their app is running,
-            // and retain saved identities even when the app is not currently running.
-            var merged = Dictionary(items.filter { item in
-                !item.id.hasPrefix("bundle:") || running.contains(String(item.id.dropFirst(7))) || assignments[item.id] != nil
-            }.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-            for item in discovered { merged[item.id] = item }
-            for id in assignments.keys where merged[id] == nil {
-                let name: String
-                if id.hasPrefix("bundle:") {
-                    name = String(id.dropFirst(7))
-                } else if id.hasPrefix("system:"), let number = Int(id.dropFirst(7)), (0...8).contains(number) {
-                    name = NativeMenuBarPolicy.systemNames[number]
-                } else {
-                    continue
-                }
-                merged[id] = NativeMenuBarItem(id: id, name: name)
+            merged[id] = NativeMenuBarItem(id: id, name: name)
+        }
+        items = merged.values.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        for item in items where item.id.hasPrefix("bundle:") && appIcons[item.id] == nil {
+            let bundle = String(item.id.dropFirst(7))
+            if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundle) {
+                appIcons[item.id] = NSWorkspace.shared.icon(forFile: url.path)
+                appNames[item.id] = FileManager.default.displayName(atPath: url.path).replacingOccurrences(of: ".app", with: "")
             }
-            items = merged.values.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-            for item in items where item.id.hasPrefix("bundle:") && appIcons[item.id] == nil {
-                let bundle = String(item.id.dropFirst(7))
-                if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundle) {
-                    appIcons[item.id] = NSWorkspace.shared.icon(forFile: url.path)
-                    appNames[item.id] = FileManager.default.displayName(atPath: url.path).replacingOccurrences(of: ".app", with: "")
-                }
-            }
-            synchronizeVisibility()
-        } while needsFollowUpRefresh && appState != nil && ICENativeMenuBarAvailable() && AXIsProcessTrusted()
+        }
+        synchronizeVisibility()
     }
 
     func setSection(_ section: MenuBarSection.Name, for item: NativeMenuBarItem) {

@@ -14,16 +14,14 @@ enum ScreenCapture {
     /// Returns a Boolean value that indicates whether the app has screen
     /// capture permissions.
     static func checkPermissions() -> Bool {
-        if !NativeMenuBarManager.usesNativeBackend {
-            for windowID in Bridging.getMenuBarWindowList(option: [.itemsOnly, .activeSpace]) {
-                guard
-                    let window = WindowInfo(windowID: windowID),
-                    window.owningApplication != .current // Skip windows we own.
-                else {
-                    continue
-                }
-                return window.title != nil
+        for windowID in Bridging.getMenuBarWindowList(option: [.itemsOnly, .activeSpace]) {
+            guard
+                let window = WindowInfo(windowID: windowID),
+                window.owningApplication != .current // Skip windows we own.
+            else {
+                continue
             }
+            return window.title != nil
         }
         // CGPreflightScreenCaptureAccess() only returns an initial value,
         // but we can use it as a fallback.
