@@ -64,7 +64,13 @@ enum AXHelpers {
                 return false
             }
             for _ in 0..<4 {
-                if subrole(for: element) == "AXMenuExtra" {
+                if isMenuExtraNode(
+                    role: role(for: element),
+                    subrole: subrole(for: element),
+                    bundleIdentifier: (try? element.pid()).flatMap {
+                        NSRunningApplication(processIdentifier: $0)?.bundleIdentifier
+                    }
+                ) {
                     return true
                 }
                 guard let next = parent(of: element) else {
@@ -89,6 +95,16 @@ enum AXHelpers {
             }
         }
         return false
+    }
+
+    /// Returns a Boolean value that indicates whether an element occupies menu-bar
+    /// space as a status item.
+    ///
+    /// MenuBarAgent's overflow disclosure buttons are plain `AXButton` nodes with no
+    /// `AXMenuExtra` subrole. Treating them as empty space would let a click on the
+    /// system's own expand button also toggle Ice's sections, hiding them again.
+    static func isMenuExtraNode(role: Role?, subrole: String?, bundleIdentifier: String?) -> Bool {
+        subrole == "AXMenuExtra" || (role == .button && bundleIdentifier == "com.apple.MenuBarAgent")
     }
 
     /// Returns the menu bar AX element near the given display origin.

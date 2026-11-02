@@ -99,4 +99,13 @@ struct UtilityHelpersTests {
         // Empty display bounds fail closed.
         #expect(!AXHelpers.isMenuExtra(at: CGPoint(x: 100, y: 14), in: .zero, isMenuExtraAtPoint: { _ in true }))
     }
+
+    @Test func nativeOverflowButtonIsOccupiedMenuBarSpace() {
+        // MenuBarAgent's own disclosure buttons carry no AXMenuExtra subrole. A click
+        // on them must not also run Ice's empty-space show/hide action.
+        #expect(AXHelpers.isMenuExtraNode(role: .button, subrole: nil, bundleIdentifier: "com.apple.MenuBarAgent"))
+        #expect(AXHelpers.isMenuExtraNode(role: .menuItem, subrole: "AXMenuExtra", bundleIdentifier: "example.app"))
+        #expect(!AXHelpers.isMenuExtraNode(role: .window, subrole: nil, bundleIdentifier: "com.apple.MenuBarAgent"))
+        #expect(!AXHelpers.isMenuExtraNode(role: .button, subrole: nil, bundleIdentifier: "example.app"))
+    }
 }
