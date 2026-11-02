@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.16.2 - 2026-11-02
+
+Most of these fixes came from contributors: wutongyuonce, tomaszamoranoq, Bernhard Schandl (besbes)
+and Alikhan Idris (Usylli). Thank you.
+
+### Fixed
+
+- **Notification Center opens again on macOS 27 while items are hidden.** Clicking the date and
+  time did nothing while Ice 2 held its hiding assertion. Ice 2 now watches for that click, lets go
+  of the assertion, replays the click so Notification Center opens, and hides the items again once
+  it closes. Closes #137 and #135.
+- **Hidden items stay hidden when you switch Spaces on macOS 27.** Ice 2 used to drop and re-create
+  its hiding assertion on every Space change, so hidden items came back for about 0.75 seconds. The
+  assertion survives a Space switch, so Ice 2 now leaves it alone. Closes #149.
+- **Show on click ignores clicks on other menu bar items on macOS 27.** Clicking the clock, Control
+  Center or any status item no longer shows or hides sections. Ice 2 now asks Accessibility what is
+  under the pointer before treating a click as a click on empty menu bar space. Closes #142.
+- **No more 10 second freeze when switching apps with a menu bar appearance option on.** A loop
+  waiting for the menu bar window spun on the main thread on macOS 27, and overlay panels that were
+  no longer needed were never closed. Closes #147.
+- **No more multi-second stalls when another app stops responding.** Accessibility calls now time
+  out after 0.2 seconds instead of the system's 6, and moving the pointer over the menu bar keeps
+  one pending hover check instead of starting a new one on every move. Closes #148.
+- **Turning on Remove menu bar background no longer crashes Ice 2 on macOS 27.** The menu bar shape
+  was built from a rectangle in the wrong coordinate space. On macOS 27 the setting still has no
+  visible effect, because Ice 2 can't find the wallpaper window there yet (#154).
+- **The VPN item can be hidden on macOS 27,** and the Layout editor shows every SystemUIServer item
+  by its own name, such as VPN or Eject, instead of "SystemUIServer".
+- **The Input Menu has its own card in the Layout editor on macOS 27** and can be hidden. It used to
+  appear as a mislabeled Keyboard card that hid nothing.
+
+### Changed
+
+- **Sparkle 2.10.1.** The updater moves up from Sparkle 2.9.4, which was affected by two published
+  Sparkle security advisories.
+- **The macOS 27 Layout note now names the controls macOS removes.** While any items are hidden,
+  macOS may also remove Now Playing, Focus, AirDrop and Fast User Switching, and Ice 2 can't keep
+  them. Choose Show All Items to bring them back (#136, #138).
+
+### Internal
+
+- **Optional permissions are no longer polled every second.** Ice 2 no longer checks permissions
+  such as Screen Recording in the background once a second.
+
 ## 2.16.1 - 2026-09-28
 
 ### Fixed

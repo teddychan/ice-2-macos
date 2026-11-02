@@ -222,10 +222,14 @@
 "app.uninstall.item.state" = "Estado guardado de la aplicación";
 "app.updates.notification.body" = "%@ ha encontrado una versión más reciente.";
 "app.updates.notification.title" = "Hay una nueva actualización disponible";
-"app.whatsNew.changed1" = "Los reguladores de los ajustes son ahora reguladores estándar de macOS, con una marca por cada paso y el valor al lado.";
-"app.whatsNew.fixed1" = "En macOS 27, las secciones Oculta y Siempre oculta ya no dejan un hueco vacío en la barra de menús mientras sus elementos están ocultos, así que la separación no cambia cada vez que los muestras y los ocultas.";
-"app.whatsNew.fixed2" = "El editor de Disposición de macOS 27 ya está traducido. Antes aparecía en inglés en todos los demás idiomas de Ice 2.";
-"app.whatsNew.summary" = "Una actualización de mantenimiento para macOS 27. Las secciones ocultas ya no dejan un hueco en la barra de menús, el editor de Disposición ya está traducido y los reguladores de los ajustes usan el estilo estándar de macOS.";
+"app.whatsNew.changed1" = "Ice 2 ahora se actualiza con Sparkle 2.10.1, que incluye correcciones para dos problemas de seguridad.";
+"app.whatsNew.fixed1" = "En macOS 27, al hacer clic en la fecha y la hora vuelve a abrirse el Centro de notificaciones aunque haya elementos de la barra de menús ocultos.";
+"app.whatsNew.fixed2" = "En macOS 27, los elementos ocultos ya no reaparecen un instante en la barra de menús al cambiar de espacio.";
+"app.whatsNew.fixed3" = "Mostrar al hacer clic ya no muestra ni oculta elementos al hacer clic en el reloj, el Centro de control u otro elemento de la barra de menús.";
+"app.whatsNew.fixed4" = "Ice 2 ya no se queda bloqueado varios segundos al cambiar de app con una opción de apariencia de la barra de menús activada, ni cuando otra app deja de responder.";
+"app.whatsNew.fixed5" = "En macOS 27, activar Quitar el fondo de la barra de menús ya no hace que Ice 2 se cierre inesperadamente.";
+"app.whatsNew.fixed6" = "En macOS 27 ahora puedes ocultar el elemento de VPN y el Menú de entrada, y el editor de Disposición muestra cada elemento del sistema por su nombre.";
+"app.whatsNew.summary" = "Una actualización con correcciones, sobre todo para macOS 27. El Centro de notificaciones vuelve a abrirse con elementos ocultos, los elementos ocultos siguen ocultos al cambiar de espacio y se han corregido dos bloqueos y un cierre inesperado.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "Secciones de la barra de menús en macOS 27";

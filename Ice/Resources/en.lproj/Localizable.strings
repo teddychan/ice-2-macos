@@ -240,10 +240,14 @@
 "app.uninstall.item.state" = "Saved application state";
 "app.updates.notification.body" = "%@ found a newer version.";
 "app.updates.notification.title" = "A new update is available";
-"app.whatsNew.changed1" = "The sliders in Settings are now standard macOS sliders, with a tick mark for each step and the value shown next to them.";
-"app.whatsNew.fixed1" = "On macOS 27, the Hidden and Always-Hidden sections no longer leave an empty gap in the menu bar while their items are hidden, so the spacing stays the same each time you show and hide them.";
-"app.whatsNew.fixed2" = "The Layout editor on macOS 27 is now translated. It appeared in English in every other language Ice 2 supports.";
-"app.whatsNew.summary" = "A maintenance update for macOS 27. Hidden sections no longer leave a gap in the menu bar, the Layout editor is now translated, and the sliders in Settings use the standard macOS style.";
+"app.whatsNew.changed1" = "Ice 2 now updates itself with Sparkle 2.10.1, which includes fixes for two security issues.";
+"app.whatsNew.fixed1" = "On macOS 27, clicking the date and time opens Notification Center again while menu bar items are hidden.";
+"app.whatsNew.fixed2" = "On macOS 27, hidden items no longer flash back into the menu bar when you switch Spaces.";
+"app.whatsNew.fixed3" = "Show on click no longer shows or hides items when you click the clock, Control Center or another menu bar item.";
+"app.whatsNew.fixed4" = "Ice 2 no longer freezes for several seconds when you switch apps with a menu bar appearance option turned on, or when another app stops responding.";
+"app.whatsNew.fixed5" = "On macOS 27, turning on Remove menu bar background no longer makes Ice 2 crash.";
+"app.whatsNew.fixed6" = "On macOS 27, you can now hide the VPN item and the Input Menu, and the Layout editor shows each system item by name.";
+"app.whatsNew.summary" = "A bug fix update, mostly for macOS 27. Notification Center opens again while items are hidden, hidden items stay hidden when you switch Spaces, and two freezes and a crash are gone.";
 
 // Native section editor
 "app.native.editor.title" = "Organize your menu bar";
