@@ -80,17 +80,15 @@ class Permission: ObservableObject, Identifiable {
     /// Sets up the internal observers for the permission.
     private func configureCancellables() {
         // Only poll while a required permission is missing (e.g. during onboarding).
-        // Optional permissions (such as Screen Recording) may be intentionally left
-        // ungranted, and `AppPermissions` already re-checks all permissions on app
-        // activation—so polling optional permissions on a 1s timer would run forever.
+        // Once granted, the timer stops itself; later changes are picked up on
+        // app activation via `AppPermissions`. An optional permission the user
+        // never grants would otherwise be polled every second for the app's life.
         guard isRequired, !hasPermission else {
             return
         }
         startPollingTimer()
     }
 
-    /// Starts the 1-second polling timer until the permission is granted or
-    /// `stopCheck()` is called.
     private func startPollingTimer() {
         guard timerCancellable == nil, !hasPermission else {
             return

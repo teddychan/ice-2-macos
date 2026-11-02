@@ -35,8 +35,9 @@ invents window IDs. macOS 26 and earlier continue to use the legacy backend.
   on older macOS. Keep legacy profiles if moving between OS versions.
 * Assertion replacements activate before the old assertion is released. Generation
   checks ignore stale callbacks. Failure or timeout restores all sections. Quit
-  and sleep invalidate both active and pending assertions; wake and Space changes
-  refresh discovery and restore the requested section state.
+  and sleep invalidate both active and pending assertions; wake refreshes discovery
+  and restores the requested section state. Assertions keep hiding across Space
+  changes, so a Space change leaves them alone.
 
 ## Limitations shown in the app
 

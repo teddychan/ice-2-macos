@@ -80,7 +80,6 @@ final class AppState: ObservableObject {
     ///   If `false`, prompts the user to grant permissions.
     func performSetup(hasPermissions: Bool) {
         if hasPermissions {
-            permissions.stopAllChecks()
             Task {
                 logger.debug("Setting up app state")
                 await setupTask.value
