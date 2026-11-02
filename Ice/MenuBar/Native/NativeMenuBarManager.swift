@@ -422,10 +422,9 @@ extension NativeMenuBarManager {
         var events = [CGEvent?]()
         switch gesture {
         case .click(let point):
-            events.append(CGEvent(mouseEventSource: source, mouseType: .leftMouseDown,
-                                  mouseCursorPosition: point, mouseButton: .left))
-            events.append(CGEvent(mouseEventSource: source, mouseType: .leftMouseUp,
-                                  mouseCursorPosition: point, mouseButton: .left))
+            for type in [CGEventType.leftMouseDown, .leftMouseUp] {
+                events.append(CGEvent(mouseEventSource: source, mouseType: type, mouseCursorPosition: point, mouseButton: .left))
+            }
         case .key(let keyCode, let flags):
             for keyDown in [true, false] {
                 let event = CGEvent(keyboardEventSource: source, virtualKey: keyCode, keyDown: keyDown)
