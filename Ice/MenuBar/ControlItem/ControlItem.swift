@@ -514,11 +514,12 @@ final class ControlItem {
     ) -> NSMenuItem {
         let item = NSMenuItem(title: title, action: action, keyEquivalent: keyEquivalent)
         item.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)
+        item.keepImageVisible()
         return item
     }
 
     /// Creates a menu to show under the control item.
-    private func createMenu(with appState: AppState) -> NSMenu {
+    func createMenu(with appState: AppState) -> NSMenu {
         func hotkey(withAction action: HotkeyAction) -> Hotkey? {
             appState.settings.hotkeys.hotkey(withAction: action)
         }
