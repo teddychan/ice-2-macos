@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.16.3 - 2026-11-03
+
+### Added
+
+- **Russian.** Ice 2 and its shared Settings panes are now available in Russian, translated by
+  shendrykau ([#132](https://github.com/teddychan/ice-2-macos/issues/132)). The language picker in Settings ▸ General lists it.
+
+### Fixed
+
+- **Error alerts follow the language you chose.** The alerts shown when a menu bar item can't be
+  moved, when a layout profile can't be applied, or when apps fail to relaunch after an item
+  spacing change were always in English. All 12 of those strings now go through the app's
+  translations, in every language Ice 2 supports.
+- **Show on hover works again on macOS 27.2.** There the status item window is taller than the menu
+  bar and sticks out above the top of the screen, so Ice 2 never treated the pointer as being over
+  the menu bar. It now checks the middle of the Ice icon instead of its top edge. Contributed by
+  Bernhard Schandl (besbes) in [#157](https://github.com/teddychan/ice-2-macos/pull/157).
+
+### Changed
+
+- **Remove menu bar background points to the system setting on macOS 27.** macOS 27 has its own
+  Show menu bar background switch in System Settings ▸ Menu Bar, and Ice 2's switch had no effect
+  there. On macOS 27 the Appearance pane now shows a note pointing to the system setting in its
+  place ([#154](https://github.com/teddychan/ice-2-macos/issues/154), [#168](https://github.com/teddychan/ice-2-macos/pull/168)). macOS 26 and earlier keep the switch.
+
+### Internal
+
+- **DragonKit 4.2.0**, which adds Russian to the shared language picker and the kit's own strings
+  ([#169](https://github.com/teddychan/ice-2-macos/pull/169)). The DragonKit conformance check passes again.
+
 ## 2.16.2 - 2026-11-02
 
 Most of these fixes came from contributors: wutongyuonce, tomaszamoranoq, Bernhard Schandl (besbes)

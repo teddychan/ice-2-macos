@@ -235,14 +235,11 @@
 "app.uninstall.item.state" = "已儲存的應用程式狀態";
 "app.updates.notification.body" = "%@ 找到了更新的版本。";
 "app.updates.notification.title" = "有新的更新可用";
-"app.whatsNew.changed1" = "Ice 2 現在使用 Sparkle 2.10.1 進行更新，其中包含兩個安全問題的修正。";
-"app.whatsNew.fixed1" = "在 macOS 27 上，即使選單列項目處於隱藏狀態，點按日期和時間也能再次打開通知中心。";
-"app.whatsNew.fixed2" = "在 macOS 27 上，切換空間時，隱藏的項目不會再短暫出現在選單列中。";
-"app.whatsNew.fixed3" = "「點按時顯示」在你點按時鐘、控制中心或其他選單列項目時，不會再顯示或隱藏項目。";
-"app.whatsNew.fixed4" = "在開啟選單列外觀選項的情況下切換 App，或其他 App 停止回應時，Ice 2 不會再卡住數秒。";
-"app.whatsNew.fixed5" = "在 macOS 27 上，開啟「移除選單列背景」不會再導致 Ice 2 當機。";
-"app.whatsNew.fixed6" = "在 macOS 27 上，現在可以隱藏 VPN 項目和輸入法選單，版面編輯器也會依名稱顯示每個系統項目。";
-"app.whatsNew.summary" = "這是主要針對 macOS 27 的錯誤修正更新。隱藏項目時通知中心可以再次打開，切換空間時隱藏的項目保持隱藏，另外修正了兩處卡頓和一次當機。";
+"app.whatsNew.added1" = "Ice 2 現已支援俄文。";
+"app.whatsNew.changed1" = "在 macOS 27 上，「移除選單列背景」開關改為一則提示，指向「系統設定」>「選單列」中作用相同的「顯示選單列背景」。";
+"app.whatsNew.fixed1" = "錯誤訊息（例如無法移動選單列項目或無法套用版面設定檔時）現在會以你選擇的語言顯示，而不是總是顯示英文。";
+"app.whatsNew.fixed2" = "在 macOS 27.2 上，將指標停在選單列的空白處時，「停留時顯示」再次生效。";
+"app.whatsNew.summary" = "Ice 2 現已支援俄文，錯誤訊息會以你選擇的語言顯示，「停留時顯示」在 macOS 27.2 上也再次生效。";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27 上的選單列區段";
