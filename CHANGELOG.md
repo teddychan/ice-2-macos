@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.17.0 - 2026-11-03
+
+### Fixed
+
+- **The icons in the Ice 2 menu show again on macOS 27.** macOS 27 hides a menu item's icon unless
+  the item asks to keep it, so the menu you get by right-clicking the Ice icon showed text only.
+  Search Menu Bar Items and the items that show or hide the Hidden and Always-Hidden sections keep
+  their icons now, and About, Settings, Check for Updates and Quit get theirs back
+  ([#173](https://github.com/teddychan/ice-2-macos/pull/173)).
+
+### Internal
+
+- **DragonKit 4.3.0**, which keeps the icons on its shared menu items visible on macOS 27 and adds
+  `NSMenuItem.keepImageVisible()`, which Ice 2 now calls for its own menu items
+  ([#173](https://github.com/teddychan/ice-2-macos/pull/173)).
+
 ## 2.16.3 - 2026-11-03
 
 ### Added

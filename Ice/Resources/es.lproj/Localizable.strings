@@ -235,11 +235,8 @@
 "app.uninstall.item.state" = "Estado guardado de la aplicación";
 "app.updates.notification.body" = "%@ ha encontrado una versión más reciente.";
 "app.updates.notification.title" = "Hay una nueva actualización disponible";
-"app.whatsNew.added1" = "Ice 2 ya está disponible en ruso.";
-"app.whatsNew.changed1" = "En macOS 27, el interruptor Quitar el fondo de la barra de menús se sustituye por una nota que remite a Mostrar fondo de la barra de menús en Ajustes del Sistema > Barra de menús, que hace lo mismo.";
-"app.whatsNew.fixed1" = "Los mensajes de error, por ejemplo cuando no se puede mover un elemento de la barra de menús o aplicar un perfil de disposición, ahora aparecen en el idioma que elegiste en lugar de siempre en inglés.";
-"app.whatsNew.fixed2" = "En macOS 27.2, Mostrar al pasar el cursor vuelve a funcionar al apuntar a una zona vacía de la barra de menús.";
-"app.whatsNew.summary" = "Ice 2 ya habla ruso, los mensajes de error siguen el idioma que elegiste y Mostrar al pasar el cursor vuelve a funcionar en macOS 27.2.";
+"app.whatsNew.fixed1" = "En macOS 27, el menú de Ice 2 vuelve a mostrar sus iconos, desde Buscar elementos de la barra de menús hasta Salir de Ice 2.";
+"app.whatsNew.summary" = "Una pequeña actualización para macOS 27 que recupera los iconos del menú de Ice 2.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "Secciones de la barra de menús en macOS 27";

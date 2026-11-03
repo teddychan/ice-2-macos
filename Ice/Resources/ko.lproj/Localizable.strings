@@ -235,11 +235,8 @@
 "app.uninstall.item.state" = "저장된 응용 프로그램 상태";
 "app.updates.notification.body" = "%@에서 새 버전을 찾았습니다.";
 "app.updates.notification.title" = "새로운 업데이트가 있습니다";
-"app.whatsNew.added1" = "이제 Ice 2를 러시아어로 사용할 수 있습니다.";
-"app.whatsNew.changed1" = "macOS 27에서는 메뉴 막대 배경 제거 스위치 대신, 같은 기능을 하는 시스템 설정 > 메뉴 막대의 메뉴 막대 배경 보기를 안내하는 메모가 표시됩니다.";
-"app.whatsNew.fixed1" = "메뉴 막대 항목을 이동할 수 없거나 레이아웃 프로필을 적용할 수 없을 때와 같은 오류 메시지가 항상 영어가 아니라 선택한 언어로 표시됩니다.";
-"app.whatsNew.fixed2" = "macOS 27.2에서 메뉴 막대의 빈 부분에 포인터를 올렸을 때 ‘포인터를 올리면 표시’가 다시 작동합니다.";
-"app.whatsNew.summary" = "Ice 2가 러시아어를 지원하고, 오류 메시지가 선택한 언어로 표시되며, macOS 27.2에서 ‘포인터를 올리면 표시’가 다시 작동합니다.";
+"app.whatsNew.fixed1" = "macOS 27에서 Ice 2 메뉴의 ‘메뉴 막대 항목 검색’부터 ‘Ice 2 종료’까지 아이콘이 다시 표시됩니다.";
+"app.whatsNew.summary" = "macOS 27에서 Ice 2 메뉴의 아이콘이 다시 표시되도록 하는 작은 업데이트입니다.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27의 메뉴 막대 섹션";
