@@ -235,11 +235,8 @@
 "app.uninstall.item.state" = "已儲存的應用程式狀態";
 "app.updates.notification.body" = "%@ 找到了更新的版本。";
 "app.updates.notification.title" = "有新的更新可用";
-"app.whatsNew.added1" = "Ice 2 現已支援俄文。";
-"app.whatsNew.changed1" = "在 macOS 27 上，「移除選單列背景」開關改為一則提示，指向「系統設定」>「選單列」中作用相同的「顯示選單列背景」。";
-"app.whatsNew.fixed1" = "錯誤訊息（例如無法移動選單列項目或無法套用版面設定檔時）現在會以你選擇的語言顯示，而不是總是顯示英文。";
-"app.whatsNew.fixed2" = "在 macOS 27.2 上，將指標停在選單列的空白處時，「停留時顯示」再次生效。";
-"app.whatsNew.summary" = "Ice 2 現已支援俄文，錯誤訊息會以你選擇的語言顯示，「停留時顯示」在 macOS 27.2 上也再次生效。";
+"app.whatsNew.fixed1" = "在 macOS 27 上，Ice 2 的選單再次顯示圖像，從「搜尋選單列項目」到「結束 Ice 2」都有。";
+"app.whatsNew.summary" = "針對 macOS 27 的小更新，讓 Ice 2 選單中的圖像重新顯示。";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27 上的選單列區段";

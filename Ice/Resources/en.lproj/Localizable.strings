@@ -253,11 +253,8 @@
 "app.uninstall.item.state" = "Saved application state";
 "app.updates.notification.body" = "%@ found a newer version.";
 "app.updates.notification.title" = "A new update is available";
-"app.whatsNew.added1" = "Ice 2 is now available in Russian.";
-"app.whatsNew.changed1" = "On macOS 27, the Remove menu bar background switch is replaced by a note pointing to Show menu bar background in System Settings > Menu Bar, which does the same thing.";
-"app.whatsNew.fixed1" = "Error messages, such as when a menu bar item can't be moved or a layout profile can't be applied, now appear in the language you chose instead of always in English.";
-"app.whatsNew.fixed2" = "On macOS 27.2, Show on hover works again when you point at an empty part of the menu bar.";
-"app.whatsNew.summary" = "Ice 2 now speaks Russian, error messages follow the language you chose, and Show on hover works again on macOS 27.2.";
+"app.whatsNew.fixed1" = "On macOS 27, Ice 2's menu shows its icons again, from Search Menu Bar Items down to Quit Ice 2.";
+"app.whatsNew.summary" = "A small update for macOS 27 that brings back the icons in Ice 2's menu.";
 
 // Native section editor
 "app.native.editor.title" = "Organize your menu bar";

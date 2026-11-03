@@ -31,17 +31,9 @@ enum WhatsNewConfig {
                 // so nothing is left behind for `whats_new_path` in release.yml to gate on — it
                 // diffs the text at these keys, not the key names themselves.
                 //
-                // Russian is the one addition. The DragonKit 4.2.0 update behind it has no entry
-                // here; CHANGELOG.md lists it.
-                ChangeSection(kind: .added, entries: [
-                    L("app.whatsNew.added1"),
-                ]),
+                // The DragonKit 4.3.0 update behind this fix has no entry here; CHANGELOG.md lists it.
                 ChangeSection(kind: .fixed, entries: [
                     L("app.whatsNew.fixed1"),
-                    L("app.whatsNew.fixed2"),
-                ]),
-                ChangeSection(kind: .changed, entries: [
-                    L("app.whatsNew.changed1"),
                 ]),
             ]
         )
