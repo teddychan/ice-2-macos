@@ -235,14 +235,11 @@
 "app.uninstall.item.state" = "저장된 응용 프로그램 상태";
 "app.updates.notification.body" = "%@에서 새 버전을 찾았습니다.";
 "app.updates.notification.title" = "새로운 업데이트가 있습니다";
-"app.whatsNew.changed1" = "Ice 2가 이제 Sparkle 2.10.1로 업데이트되며, 여기에는 두 가지 보안 문제에 대한 수정이 포함되어 있습니다.";
-"app.whatsNew.fixed1" = "macOS 27에서 메뉴 막대 항목을 숨긴 상태에서도 날짜와 시간을 클릭하면 알림 센터가 다시 열립니다.";
-"app.whatsNew.fixed2" = "macOS 27에서 데스크탑 공간을 전환할 때 숨긴 항목이 메뉴 막대에 잠깐 나타나지 않습니다.";
-"app.whatsNew.fixed3" = "클릭 시 표시가 시계, 제어 센터 또는 다른 메뉴 막대 항목을 클릭할 때 더 이상 항목을 보이거나 숨기지 않습니다.";
-"app.whatsNew.fixed4" = "메뉴 막대 모양 옵션을 켠 상태에서 앱을 전환하거나 다른 앱이 응답하지 않을 때 Ice 2가 몇 초 동안 멈추지 않습니다.";
-"app.whatsNew.fixed5" = "macOS 27에서 메뉴 막대 배경 제거를 켜도 Ice 2가 충돌하지 않습니다.";
-"app.whatsNew.fixed6" = "macOS 27에서 이제 VPN 항목과 입력 메뉴를 숨길 수 있으며, 레이아웃 편집기에 각 시스템 항목이 이름으로 표시됩니다.";
-"app.whatsNew.summary" = "주로 macOS 27을 위한 버그 수정 업데이트입니다. 항목을 숨긴 상태에서도 알림 센터가 다시 열리고, 데스크탑 공간을 전환해도 숨긴 항목이 숨겨진 채로 유지되며, 두 가지 멈춤 현상과 한 가지 충돌이 수정되었습니다.";
+"app.whatsNew.added1" = "이제 Ice 2를 러시아어로 사용할 수 있습니다.";
+"app.whatsNew.changed1" = "macOS 27에서는 메뉴 막대 배경 제거 스위치 대신, 같은 기능을 하는 시스템 설정 > 메뉴 막대의 메뉴 막대 배경 보기를 안내하는 메모가 표시됩니다.";
+"app.whatsNew.fixed1" = "메뉴 막대 항목을 이동할 수 없거나 레이아웃 프로필을 적용할 수 없을 때와 같은 오류 메시지가 항상 영어가 아니라 선택한 언어로 표시됩니다.";
+"app.whatsNew.fixed2" = "macOS 27.2에서 메뉴 막대의 빈 부분에 포인터를 올렸을 때 ‘포인터를 올리면 표시’가 다시 작동합니다.";
+"app.whatsNew.summary" = "Ice 2가 러시아어를 지원하고, 오류 메시지가 선택한 언어로 표시되며, macOS 27.2에서 ‘포인터를 올리면 표시’가 다시 작동합니다.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27의 메뉴 막대 섹션";

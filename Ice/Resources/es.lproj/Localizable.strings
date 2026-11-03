@@ -235,14 +235,11 @@
 "app.uninstall.item.state" = "Estado guardado de la aplicación";
 "app.updates.notification.body" = "%@ ha encontrado una versión más reciente.";
 "app.updates.notification.title" = "Hay una nueva actualización disponible";
-"app.whatsNew.changed1" = "Ice 2 ahora se actualiza con Sparkle 2.10.1, que incluye correcciones para dos problemas de seguridad.";
-"app.whatsNew.fixed1" = "En macOS 27, al hacer clic en la fecha y la hora vuelve a abrirse el Centro de notificaciones aunque haya elementos de la barra de menús ocultos.";
-"app.whatsNew.fixed2" = "En macOS 27, los elementos ocultos ya no reaparecen un instante en la barra de menús al cambiar de espacio.";
-"app.whatsNew.fixed3" = "Mostrar al hacer clic ya no muestra ni oculta elementos al hacer clic en el reloj, el Centro de control u otro elemento de la barra de menús.";
-"app.whatsNew.fixed4" = "Ice 2 ya no se queda bloqueado varios segundos al cambiar de app con una opción de apariencia de la barra de menús activada, ni cuando otra app deja de responder.";
-"app.whatsNew.fixed5" = "En macOS 27, activar Quitar el fondo de la barra de menús ya no hace que Ice 2 se cierre inesperadamente.";
-"app.whatsNew.fixed6" = "En macOS 27 ahora puedes ocultar el elemento de VPN y el Menú de entrada, y el editor de Disposición muestra cada elemento del sistema por su nombre.";
-"app.whatsNew.summary" = "Una actualización con correcciones, sobre todo para macOS 27. El Centro de notificaciones vuelve a abrirse con elementos ocultos, los elementos ocultos siguen ocultos al cambiar de espacio y se han corregido dos bloqueos y un cierre inesperado.";
+"app.whatsNew.added1" = "Ice 2 ya está disponible en ruso.";
+"app.whatsNew.changed1" = "En macOS 27, el interruptor Quitar el fondo de la barra de menús se sustituye por una nota que remite a Mostrar fondo de la barra de menús en Ajustes del Sistema > Barra de menús, que hace lo mismo.";
+"app.whatsNew.fixed1" = "Los mensajes de error, por ejemplo cuando no se puede mover un elemento de la barra de menús o aplicar un perfil de disposición, ahora aparecen en el idioma que elegiste en lugar de siempre en inglés.";
+"app.whatsNew.fixed2" = "En macOS 27.2, Mostrar al pasar el cursor vuelve a funcionar al apuntar a una zona vacía de la barra de menús.";
+"app.whatsNew.summary" = "Ice 2 ya habla ruso, los mensajes de error siguen el idioma que elegiste y Mostrar al pasar el cursor vuelve a funcionar en macOS 27.2.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "Secciones de la barra de menús en macOS 27";
