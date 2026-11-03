@@ -27,3 +27,4 @@ Ice 2 is a macOS menu bar manager, a GPL-3.0 fork of Jordan Baird's Ice, built f
 
 - Adopting a new DragonKit version gets a minor version bump, even when nothing user-visible changes. Record it under `### Internal` in `CHANGELOG.md`, never as `### Fixed`, and don't invent user-visible benefits.
 - Don't add an iCloud ubiquity container, CloudKit or `NSUbiquitousKeyValueStore`. Ice 2 ships Developer ID only and cannot be sandboxed (it drives the menu bar through Accessibility), so those containers are unavailable to real users. Cross-Mac settings sync works by pointing the Backup & Restore folder at a synced folder such as iCloud Drive.
+- `SUFeedURL` in `App/Info.plist` and the support link in `Ice/Settings/AboutConfig.swift` name the pre-rename repo `teddychan/ice-2` on purpose. DragonKit CONFORMANCE §R15 requires the support repo to equal the page slug, and GitHub redirects the old URLs, so leave both until DragonKit accepts the `-macos` suffix.
