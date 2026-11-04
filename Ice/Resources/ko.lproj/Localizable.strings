@@ -235,8 +235,7 @@
 "app.uninstall.item.state" = "저장된 응용 프로그램 상태";
 "app.updates.notification.body" = "%@에서 새 버전을 찾았습니다.";
 "app.updates.notification.title" = "새로운 업데이트가 있습니다";
-"app.whatsNew.fixed1" = "macOS 27에서 Ice 2 메뉴의 ‘메뉴 막대 항목 검색’부터 ‘Ice 2 종료’까지 아이콘이 다시 표시됩니다.";
-"app.whatsNew.summary" = "macOS 27에서 Ice 2 메뉴의 아이콘이 다시 표시되도록 하는 작은 업데이트입니다.";
+"app.whatsNew.summary" = "유지보수 업데이트입니다. 업데이트 확인이 이제 앱의 현재 웹 주소를 사용합니다. Ice 2의 다른 부분은 바뀌지 않습니다.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27의 메뉴 막대 섹션";

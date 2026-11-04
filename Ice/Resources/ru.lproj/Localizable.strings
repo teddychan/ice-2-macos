@@ -242,8 +242,7 @@
 "app.uninstall.item.state" = "Сохранённое состояние приложения";
 "app.updates.notification.body" = "%@: найдена новая версия.";
 "app.updates.notification.title" = "Доступно обновление";
-"app.whatsNew.fixed1" = "В macOS 27 в меню Ice 2 снова видны значки, от «Поиск элементов строки меню» до «Завершить Ice 2».";
-"app.whatsNew.summary" = "Небольшое обновление для macOS 27, которое возвращает значки в меню Ice 2.";
+"app.whatsNew.summary" = "Плановое обновление. Проверка обновлений теперь использует текущий веб-адрес приложения. Больше в Ice 2 ничего не меняется.";
 
 // Native section editor
 "app.native.editor.title" = "Упорядочьте строку меню";

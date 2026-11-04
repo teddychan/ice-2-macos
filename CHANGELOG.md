@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.17.1 - 2026-11-04
+
+### Internal
+
+- **Update checks use the app's current web address.** The repository that hosts Ice 2 was renamed
+  to `ice-2-macos`, and the update feed address in the app now points there instead of at the old
+  name ([#176](https://github.com/teddychan/ice-2-macos/pull/176)). Nothing else changes in the app.
+
 ## 2.17.0 - 2026-11-03
 
 ### Fixed

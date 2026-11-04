@@ -235,8 +235,7 @@
 "app.uninstall.item.state" = "已存储的应用程序状态";
 "app.updates.notification.body" = "%@ 找到了更新的版本。";
 "app.updates.notification.title" = "有新的更新可用";
-"app.whatsNew.fixed1" = "在 macOS 27 上，Ice 2 的菜单再次显示图标，从“搜索菜单栏项目”到“退出 Ice 2”都有。";
-"app.whatsNew.summary" = "针对 macOS 27 的小更新，让 Ice 2 菜单中的图标重新显示。";
+"app.whatsNew.summary" = "这是一次维护更新。检查更新现在使用应用当前的网址。Ice 2 的其他部分没有变化。";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27 上的菜单栏区段";

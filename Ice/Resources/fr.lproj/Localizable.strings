@@ -235,8 +235,7 @@
 "app.uninstall.item.state" = "État enregistré de l'application";
 "app.updates.notification.body" = "%@ a trouvé une version plus récente.";
 "app.updates.notification.title" = "Une nouvelle mise à jour est disponible";
-"app.whatsNew.fixed1" = "Sur macOS 27, le menu d'Ice 2 affiche à nouveau ses icônes, de Rechercher des éléments de la barre des menus jusqu'à Quitter Ice 2.";
-"app.whatsNew.summary" = "Une petite mise à jour pour macOS 27 qui rétablit les icônes du menu d'Ice 2.";
+"app.whatsNew.summary" = "Une mise à jour de maintenance. La recherche de mises à jour utilise désormais l'adresse web actuelle de l'app. Rien d'autre ne change dans Ice 2.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "Sections de la barre des menus sous macOS 27";
