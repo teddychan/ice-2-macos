@@ -235,8 +235,7 @@
 "app.uninstall.item.state" = "Estado guardado de la aplicación";
 "app.updates.notification.body" = "%@ ha encontrado una versión más reciente.";
 "app.updates.notification.title" = "Hay una nueva actualización disponible";
-"app.whatsNew.fixed1" = "En macOS 27, el menú de Ice 2 vuelve a mostrar sus iconos, desde Buscar elementos de la barra de menús hasta Salir de Ice 2.";
-"app.whatsNew.summary" = "Una pequeña actualización para macOS 27 que recupera los iconos del menú de Ice 2.";
+"app.whatsNew.summary" = "Una actualización de mantenimiento. Las búsquedas de actualizaciones ahora usan la dirección web actual de la app. Nada más cambia en Ice 2.";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "Secciones de la barra de menús en macOS 27";

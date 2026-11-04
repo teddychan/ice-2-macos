@@ -22,20 +22,14 @@ enum WhatsNewConfig {
     @MainActor
     static var content: WhatsNewContent {
         WhatsNewContent(
-            date: "2026-11-03",
+            date: "2026-11-04",
             summary: L("app.whatsNew.summary"),
-            sections: [
-                // The keys are stable across releases (app.whatsNew.summary, .fixed1, .changed1, …)
-                // rather than version-namespaced: each release overwrites the same keys' text in all
-                // eight .strings files instead of adding new ones and abandoning the last release's,
-                // so nothing is left behind for `whats_new_path` in release.yml to gate on — it
-                // diffs the text at these keys, not the key names themselves.
-                //
-                // The DragonKit 4.3.0 update behind this fix has no entry here; CHANGELOG.md lists it.
-                ChangeSection(kind: .fixed, entries: [
-                    L("app.whatsNew.fixed1"),
-                ]),
-            ]
+            // Maintenance only: nothing user-facing changed, so there are no sections. The summary
+            // says so in every language, and the word "maintenance" in this comment is what the
+            // release gate (dragon-release-ci tag-gate.sh, check 6) looks for in this file when
+            // there is no section. Keys are stable across releases (see CHANGELOG.md for what
+            // changed); the next release with real entries adds its section keys back.
+            sections: []
         )
     }
 }

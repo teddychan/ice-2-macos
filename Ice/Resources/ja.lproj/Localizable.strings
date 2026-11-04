@@ -235,8 +235,7 @@
 "app.uninstall.item.state" = "保存されたアプリケーションの状態";
 "app.updates.notification.body" = "%@ が新しいバージョンを見つけました。";
 "app.updates.notification.title" = "新しいアップデートがあります";
-"app.whatsNew.fixed1" = "macOS 27 で、Ice 2 のメニューの「メニューバー項目を検索」から「Ice 2 を終了」までのアイコンが再び表示されるようになりました。";
-"app.whatsNew.summary" = "macOS 27 で Ice 2 のメニューのアイコンが再び表示されるようになる、小さなアップデートです。";
+"app.whatsNew.summary" = "メンテナンスアップデートです。アップデートの確認が、アプリの現在のウェブアドレスを使うようになりました。Ice 2 のそれ以外の動作は変わりません。";
 
 /* macOS 27 native menu bar. */
 "app.native.title" = "macOS 27 のメニューバーのセクション";

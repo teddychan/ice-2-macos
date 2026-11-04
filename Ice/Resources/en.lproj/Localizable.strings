@@ -253,8 +253,7 @@
 "app.uninstall.item.state" = "Saved application state";
 "app.updates.notification.body" = "%@ found a newer version.";
 "app.updates.notification.title" = "A new update is available";
-"app.whatsNew.fixed1" = "On macOS 27, Ice 2's menu shows its icons again, from Search Menu Bar Items down to Quit Ice 2.";
-"app.whatsNew.summary" = "A small update for macOS 27 that brings back the icons in Ice 2's menu.";
+"app.whatsNew.summary" = "A maintenance update. Update checks now use the app's current web address. Nothing else changes in Ice 2.";
 
 // Native section editor
 "app.native.editor.title" = "Organize your menu bar";
