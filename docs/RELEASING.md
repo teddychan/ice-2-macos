@@ -8,7 +8,7 @@ repo**, and bumps the Homebrew cask `teddychan/tap/ice-2`.
 
 The app-owned feed is the one the app reads — `SUFeedURL` in
 `App/Info.plist` is
-`https://raw.githubusercontent.com/teddychan/ice-2/main/docs/ice-2/appcast.xml`.
+`https://raw.githubusercontent.com/teddychan/ice-2-macos/main/docs/ice-2/appcast.xml`.
 The same appcast was also copied to `teddychan/www.dragonapp.com`
 (`https://www.dragonapp.com/ice-2/appcast.xml`) during the v2.14.3–v2.15.0
 migration, as a **temporary mirror** for installs still on v2.14.3 or older.
@@ -49,7 +49,7 @@ step then picks the newest Xcode on the image.
    - The feed the app actually reads — prints X.Y.Z:
 
      ```bash
-     curl -s https://raw.githubusercontent.com/teddychan/ice-2/main/docs/ice-2/appcast.xml | grep sparkle:shortVersionString
+     curl -s https://raw.githubusercontent.com/teddychan/ice-2-macos/main/docs/ice-2/appcast.xml | grep sparkle:shortVersionString
      ```
 
      Check this URL, not `https://www.dragonapp.com/ice-2/appcast.xml`: that

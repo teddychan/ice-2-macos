@@ -26,7 +26,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/teddychan/ice-2/main/docs/ice-2/appcast.xml</string>
+	<string>https://raw.githubusercontent.com/teddychan/ice-2-macos/main/docs/ice-2/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>p+F/ivF5bAYcmuNuCMNHcRv123A6LHFpCBagFm7Adu8=</string>
 	<!-- The default for scheduled background update checks. Two jobs: it stops Sparkle
