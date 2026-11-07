@@ -36,3 +36,5 @@
 "app.system.sound" = "Sound";
 "app.system.wifi" = "Wi-Fi";
 "app.system.screenMirroring" = "Screen Mirroring";
+"app.iceBar.title" = "Ice Bar";
+"app.iceBar.empty" = "No hidden items. Choose items to hide in Settings.";

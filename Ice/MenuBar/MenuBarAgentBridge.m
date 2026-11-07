@@ -182,3 +182,48 @@ BOOL ICEMenuBarAgentElementHasIdentifier(CGPoint point, NSString *identifier) {
     CFRelease(element);
     return found;
 }
+
+static AXUIElementRef ICEFindItem(AXUIElementRef element, pid_t agentPID, NSString *bundle,
+                                  NSArray<NSString *> *identifiers, NSUInteger depth, NSUInteger *budget) {
+    if (depth > 4 || *budget == 0) return NULL;
+    (*budget)--;
+    pid_t pid = 0;
+    if (AXUIElementGetPid(element, &pid) == kAXErrorSuccess && pid > 0 && pid != agentPID) {
+        NSString *owner = [NSRunningApplication runningApplicationWithProcessIdentifier:pid].bundleIdentifier;
+        return bundle && [owner isEqualToString:bundle] ? (AXUIElementRef)CFRetain(element) : NULL;
+    }
+    id identifier = ICEAttribute(element, kAXIdentifierAttribute);
+    if ([identifier isKindOfClass:NSString.class] && [identifiers containsObject:identifier]) {
+        return (AXUIElementRef)CFRetain(element);
+    }
+    for (id child in ICEChildren(element)) {
+        AXUIElementRef found = ICEFindItem((__bridge AXUIElementRef)child, agentPID, bundle, identifiers, depth + 1, budget);
+        if (found) return found;
+    }
+    return NULL;
+}
+
+pid_t ICEMenuBarAgentPress(NSString *bundle, NSArray<NSString *> *identifiers) {
+    if (!AXIsProcessTrusted()) return 0;
+    NSRunningApplication *agent = [NSRunningApplication
+        runningApplicationsWithBundleIdentifier:@"com.apple.MenuBarAgent"].firstObject;
+    if (!agent) return 0;
+    AXUIElementRef root = AXUIElementCreateApplication(agent.processIdentifier);
+    AXUIElementSetMessagingTimeout(root, 0.1);
+    AXUIElementRef item = NULL;
+    NSUInteger budget = 256;
+    for (id window in ICEChildren(root)) {
+        item = ICEFindItem((__bridge AXUIElementRef)window, agent.processIdentifier, bundle, identifiers, 0, &budget);
+        if (item) break;
+    }
+    CFRelease(root);
+    if (!item) return 0;
+    pid_t pid = 0;
+    AXUIElementGetPid(item, &pid);
+    // The owning app runs its menu inside the press handler, so the call only returns once
+    // the menu closes, as kAXErrorCannotComplete after the timeout. The menu is open either way.
+    AXUIElementSetMessagingTimeout(item, 0.25);
+    AXUIElementPerformAction(item, kAXPressAction);
+    CFRelease(item);
+    return pid;
+}

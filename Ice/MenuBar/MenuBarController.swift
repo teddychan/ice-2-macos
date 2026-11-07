@@ -27,6 +27,9 @@ final class MenuBarController {
     @ObservationIgnored private var generation = 0
     @ObservationIgnored private var activationTimeout: Task<Void, Never>?
     @ObservationIgnored private var isRefreshing = false
+    /// The hidden item shown while its menu is open, from the Ice Bar.
+    @ObservationIgnored private var revealing: String?
+    @ObservationIgnored private var revealTask: Task<Void, Never>?
     @ObservationIgnored private var cancellables = Set<AnyCancellable>()
     @ObservationIgnored private let logger = Logger(category: "MenuBar")
 
@@ -91,7 +94,7 @@ final class MenuBarController {
     }
 
     /// Brings the assertion in line with the hidden items.
-    func synchronize(revealing: String? = nil) {
+    func synchronize() {
         // Notification Center is open; the bridge re-synchronizes when it closes.
         guard !isSuspendedForNotificationCenter else {
             return
@@ -109,6 +112,89 @@ final class MenuBarController {
             runningBundles: Set(NSWorkspace.shared.runningApplications.compactMap(\.bundleIdentifier)),
             revealing: revealing
         ))
+    }
+
+    // MARK: Reveal
+
+    /// Opens a hidden item's menu from the Ice Bar: allows the item (it reappears in about
+    /// 65 ms), presses it in MenuBarAgent's tree so its own menu opens at its place in the
+    /// menu bar, and hides it again once that menu closes.
+    func reveal(_ item: MenuBarItem) {
+        revealTask?.cancel()
+        revealing = item.id
+        synchronize()
+        revealTask = Task { [weak self] in
+            await self?.pressRevealedItem(item)
+            guard let self, !Task.isCancelled else {
+                return
+            }
+            self.revealing = nil
+            self.synchronize()
+        }
+    }
+
+    private func pressRevealedItem(_ item: MenuBarItem) async {
+        let bundle = item.bundleIdentifier
+        let identifiers = item.systemIdentifiers
+        // The item needs a moment to reappear; retry until it is in the tree.
+        let deadline = ContinuousClock.now + .milliseconds(1500)
+        var owner: pid_t = 0
+        while owner == 0, ContinuousClock.now < deadline, !Task.isCancelled {
+            try? await Task.sleep(for: .milliseconds(80))
+            owner = await Task.detached(priority: .userInitiated) {
+                ICEMenuBarAgentPress(bundle, identifiers)
+            }.value
+        }
+        guard owner != 0 else {
+            logger.notice("Could not find \(item.id, privacy: .public) to open its menu")
+            return
+        }
+        // A system item's menu can belong to Control Center rather than the element's owner.
+        var owners: Set<pid_t> = [owner]
+        if item.systemNumber != nil {
+            owners.formUnion(NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.controlcenter")
+                .map(\.processIdentifier))
+        }
+        await waitForMenuToClose(ownedBy: owners)
+    }
+
+    /// Waits up to two seconds for a menu to open, then for as long as it stays open (at most
+    /// two minutes, so an item never stays shown for good).
+    private func waitForMenuToClose(ownedBy owners: Set<pid_t>) async {
+        var opened = false
+        let start = ContinuousClock.now
+        while !Task.isCancelled {
+            let open = Self.hasMenuWindow(ownedBy: owners)
+            if open {
+                opened = true
+            }
+            let elapsed = ContinuousClock.now - start
+            if opened ? !open : elapsed > .seconds(2) {
+                return
+            }
+            if elapsed > .seconds(120) {
+                return
+            }
+            try? await Task.sleep(for: .milliseconds(150))
+        }
+    }
+
+    /// Whether one of `owners` has a window at menu level or above on screen. Window owners
+    /// and levels need no Screen Recording permission.
+    private static func hasMenuWindow(ownedBy owners: Set<pid_t>) -> Bool {
+        guard let windows = CGWindowListCopyWindowInfo([.optionOnScreenOnly], kCGNullWindowID) as? [[String: Any]] else {
+            return false
+        }
+        let menuLevel = Int(CGWindowLevelForKey(.popUpMenuWindow))
+        return windows.contains { window in
+            guard
+                let pid = window[kCGWindowOwnerPID as String] as? pid_t, owners.contains(pid),
+                let layer = window[kCGWindowLayer as String] as? Int
+            else {
+                return false
+            }
+            return layer >= menuLevel
+        }
     }
 
     private func apply(_ desired: HidingPolicy.Configuration?) {

@@ -81,9 +81,9 @@ final class SettingsModel {
         listedItems.filter { settings.isHidden($0.id) }
     }
 
-    /// Applies a drop in the Ice Bar: `item` moves to just before `target`.
-    func move(_ item: MenuBarItem, before target: MenuBarItem) {
-        settings.move(item.id, before: target.id, within: hiddenItems.map(\.id))
+    /// Applies a drop in the Ice Bar: `item` takes `target`'s place.
+    func move(_ item: MenuBarItem, onto target: MenuBarItem) {
+        settings.move(item.id, onto: target.id, within: hiddenItems.map(\.id))
     }
 
     var launchAtLogin: Bool {

@@ -85,16 +85,18 @@ extension IceSettings {
         }
     }
 
-    /// Moves `id` to just before `target` within the part `visible` (in its current order).
-    mutating func move(_ id: String, before target: String, within visible: [String]) {
-        guard id != target, let from = visible.firstIndex(of: id) else {
+    /// Moves `id` into `target`'s place within the part `visible` (in its current order), as a
+    /// drop onto `target` does: items between them shift one place toward where `id` was.
+    mutating func move(_ id: String, onto target: String, within visible: [String]) {
+        guard
+            id != target,
+            let from = visible.firstIndex(of: id),
+            let to = visible.firstIndex(of: target)
+        else {
             return
         }
         var arrangement = visible
         arrangement.remove(at: from)
-        guard let to = arrangement.firstIndex(of: target) else {
-            return
-        }
         arrangement.insert(id, at: to)
         reorder(arrangement)
     }
