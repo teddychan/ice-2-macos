@@ -11,11 +11,12 @@
 	<key>DragonCommitDate</key>
 	<string>$(DRAGON_COMMIT_DATE)</string>
 	<!-- 3.x drives macOS 27's MenuBarAgent and runs on nothing older; 2.x stays the release for
-	     macOS 26 and earlier. Stated here rather than through MACOSX_DEPLOYMENT_TARGET, which stays
-	     26.0 because release CI builds with the macOS 26 SDK. Sparkle's generate_appcast copies this
-	     value into the appcast, so older Macs are never offered 3.x. -->
+	     macOS 26 and earlier. The value comes from ICE_MINIMUM_SYSTEM_VERSION: 27.0 in Release, so the
+	     shipped app and the appcast (Sparkle's generate_appcast copies it) require macOS 27, and 26.0
+	     in Debug, only so the unit tests can host on CI's macOS 26 runners (no macOS 27 image exists).
+	     MACOSX_DEPLOYMENT_TARGET stays 26.0 because release CI builds with the macOS 26 SDK. -->
 	<key>LSMinimumSystemVersion</key>
-	<string>27.0</string>
+	<string>$(ICE_MINIMUM_SYSTEM_VERSION)</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>SUFeedURL</key>
