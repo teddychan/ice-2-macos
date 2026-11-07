@@ -46,3 +46,5 @@
 "app.whatsNew.added1" = "Ice アイコンをクリックすると Ice Bar が開きます。項目をクリックするとそのメニューが開きます。";
 "app.whatsNew.added2" = "Ice Bar または設定で項目をドラッグすると順番を変更できます。";
 "app.whatsNew.removed1" = "常に非表示の項目、ホットキー、レイアウトプロファイル、スペーサー、検索、メニューバーのスタイル、言語の選択はなくなりました。Ice 2 は Mac の言語を使います。";
+"app.system.inputMenu" = "入力メニュー";
+"app.system.screenSharing" = "画面共有";

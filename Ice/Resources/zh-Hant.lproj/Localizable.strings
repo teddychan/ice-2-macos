@@ -46,3 +46,5 @@
 "app.whatsNew.added1" = "按一下 Ice 圖示即可打開 Ice Bar。按一下其中的項目即可打開它的選單。";
 "app.whatsNew.added2" = "在 Ice Bar 或設定中拖移項目即可更改順序。";
 "app.whatsNew.removed1" = "「永遠隱藏」項目、快速鍵、佈局描述檔、間隔、搜尋、選單列樣式和語言選擇已移除。Ice 2 現在使用你 Mac 的語言。";
+"app.system.inputMenu" = "輸入法選單";
+"app.system.screenSharing" = "螢幕共享";

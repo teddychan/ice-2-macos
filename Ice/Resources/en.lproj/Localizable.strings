@@ -46,3 +46,5 @@
 "app.whatsNew.added1" = "Click the Ice icon to open the Ice Bar. Click an item there to open its menu.";
 "app.whatsNew.added2" = "Drag items in the Ice Bar or in Settings to change their order.";
 "app.whatsNew.removed1" = "Always hidden items, hotkeys, layout profiles, spacers, search, menu bar styling and the language picker are gone. Ice 2 now uses your Mac's language.";
+"app.system.inputMenu" = "Input Menu";
+"app.system.screenSharing" = "Screen Sharing";

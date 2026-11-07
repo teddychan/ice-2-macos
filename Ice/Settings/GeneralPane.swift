@@ -28,7 +28,11 @@ private struct GeneralPaneView: View {
             DragonSection(LocalizedStringKey(L("app.general.startup"))) {
                 Toggle(L("app.general.launchAtLogin"), isOn: $model.launchAtLogin)
             }
-            DragonSection(LocalizedStringKey(L("app.general.items"))) {
+            // The note is the section's footer: wrapping the section in a modifier hides it from
+            // the Form, which then draws the header inside the box.
+            DragonSection {
+                Text(L("app.general.items"))
+            } content: {
                 if let message = menuBar.errorMessage {
                     Label(message, systemImage: "exclamationmark.triangle")
                         .foregroundStyle(.secondary)
@@ -41,8 +45,9 @@ private struct GeneralPaneView: View {
                     ItemRow(item: item, model: model)
                 }
                 .onMove { model.moveListed(fromOffsets: $0, toOffset: $1) }
+            } footer: {
+                Text(L("app.general.items.note"))
             }
-            .dragonAnnotation(LocalizedStringKey(L("app.general.items.note")))
         }
     }
 }
