@@ -22,7 +22,7 @@ enum WhatsNewConfig {
     @MainActor
     static var content: WhatsNewContent {
         WhatsNewContent(
-            date: "2026-11-04",
+            date: "2026-11-07",
             summary: L("app.whatsNew.summary"),
             // Maintenance only: nothing user-facing changed, so there are no sections. The summary
             // says so in every language, and the word "maintenance" in this comment is what the

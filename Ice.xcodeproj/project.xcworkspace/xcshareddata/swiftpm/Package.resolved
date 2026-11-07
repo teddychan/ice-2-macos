@@ -1,15 +1,6 @@
 {
-  "originHash" : "da0365c6af9305707c20fdd66f1dc3a9884726cd382704bf25865b1702c0596d",
+  "originHash" : "00b2504cbda7d4775e64dbf7220fb156d6e264965c2fe0c4e2c1fb301ac4fcbb",
   "pins" : [
-    {
-      "identity" : "axswift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tmandry/AXSwift",
-      "state" : {
-        "revision" : "81dcc36aced905d6464cc25e35f8d13184bbf21c",
-        "version" : "0.3.2"
-      }
-    },
     {
       "identity" : "dragon-kit",
       "kind" : "remoteSourceControl",
@@ -17,24 +8,6 @@
       "state" : {
         "revision" : "68721320a7904ad316c93be50787fea357d7c1d0",
         "version" : "4.3.0"
-      }
-    },
-    {
-      "identity" : "ifrit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ukushu/Ifrit",
-      "state" : {
-        "revision" : "3f961f6d39cd2188305671f2ec65914d297571d0",
-        "version" : "2.0.6"
-      }
-    },
-    {
-      "identity" : "semaphore",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/groue/Semaphore",
-      "state" : {
-        "revision" : "2543679282aa6f6c8ecf2138acd613ed20790bc2",
-        "version" : "0.1.0"
       }
     },
     {

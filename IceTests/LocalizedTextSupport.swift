@@ -159,25 +159,6 @@ struct LocalizationCoverageTests {
         }
     }
 
-    @Test func errorAlertsFollowTheChosenLanguage() {
-        // `NSAlert(error:)` and `LocalizedErrorWrapper` read the nonisolated `LocalizedError`
-        // properties, which `L(_:)` cannot be called from directly. Until #132 they were English
-        // literals, so a failed profile apply, spacing relaunch or item move showed an English
-        // alert in every language. `localizedErrorText(_:)` routes them through `L(_:)`.
-        let previous = LocalizationManager.shared.language
-        defer { LocalizationManager.shared.setLanguage(previous) }
-        let error = MenuBarLayoutProfilesSettings.ApplyError.missingAppState
-
-        LocalizationManager.shared.setLanguage(.en)
-        #expect(error.errorDescription == "Ice 2 is not ready to apply layout profiles.")
-        LocalizationManager.shared.setLanguage(.ru)
-        #expect(error.errorDescription == "Ice 2 пока не может применять профили расположения.")
-        #expect(
-            String(format: localizedErrorText("app.error.moveItem.itemNotMovable"), "Wi-Fi")
-                == "«Wi-Fi» нельзя переместить"
-        )
-    }
-
     @Test func noTranslationClaimsAKitOwnedKey() throws {
         // The app-side half of §R8. `L(_:)` resolves DragonKit's module bundle first, so a
         // `DragonKit.` key here could never win — it would be dead weight that reads as

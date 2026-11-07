@@ -105,9 +105,6 @@ enum AboutConfig {
                 //
                 // The notice documents keep DragonKit, and must: MIT requires the notice to
                 // travel with copies, and the Built-with row carries a version, not a licence.
-                Attribution(name: "AXSwift", license: "MIT"),
-                Attribution(name: "Ifrit", license: "MIT"),
-                Attribution(name: "Semaphore", license: "MIT"),
                 Attribution(name: "Sparkle", license: "MIT"),
             ]
         )

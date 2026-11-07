@@ -3,108 +3,113 @@
 //  Ice
 //
 
-import OSLog
+import AppKit
+import DragonKit
 import SwiftUI
 
+@main
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    /// The shared app state.
-    let appState = AppState()
+    static func main() {
+        let app = NSApplication.shared
+        let delegate = AppDelegate()
+        app.delegate = delegate
+        app.run()
+    }
 
-    // MARK: NSApplicationDelegate Methods
+    private let model = SettingsModel()
+    private let updates = UpdatesManager()
+    private let selection = SettingsSelection()
+    private var statusItem: NSStatusItem?
+
+    private lazy var settingsController = DragonSettingsWindowController(
+        title: String(format: L("app.settings.windowTitle"), Constants.displayName),
+        rootView: SettingsRoot(
+            panes: { [model, updates, selection] in
+                SettingsPanes.panes(model: model, updater: updates.updater, selection: selection)
+            },
+            selection: selection
+        )
+    )
+
+    /// Whether the app is the host of a unit test run, which needs no menu bar presence.
+    private var isTestHost: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
-
-        // Initial chore work.
-        NSSplitViewItem.swizzle()
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Hide the main menu's items to add additional space to the
-        // menu bar when we are the focused app.
-        for item in NSApp.mainMenu?.items ?? [] {
-            item.isHidden = true
-        }
-
-        // Allow hiding the mouse while the app is in the background
-        // to make menu bar item movement less jarring.
-        Bridging.setConnectionProperty(true, forKey: "SetsCursorInBackground")
-
-        #if DEBUG
-        // Don't perform setup if running as a preview.
-        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+        guard !isTestHost else {
             return
         }
-        #endif
-
-        // Don't perform setup when running unit tests. AppState is still
-        // constructed eagerly (a read-only, non-prompting permission probe),
-        // but this skips the heavy menu-bar wiring (status items, EventTaps,
-        // timers) so the test host stays inert. Mirrors the preview guard above.
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
-            return
-        }
-
-        // Depending on the permissions state, either perform setup
-        // or prompt to grant permissions.
-        switch appState.permissions.permissionsState {
-        case .hasAll:
-            appState.permissions.logger.debug("Passed all permissions checks")
-            appState.performSetup(hasPermissions: true)
-        case .hasRequired:
-            appState.permissions.logger.debug("Passed required permissions checks")
-            appState.performSetup(hasPermissions: true)
-        case .missing:
-            appState.permissions.logger.debug("Failed required permissions checks")
-            appState.performSetup(hasPermissions: false)
+        model.reconcileLoginItem()
+        updates.showUpdatesPane = { [weak self] in self?.showSettings(pane: "updates") }
+        updates.performSetup()
+        installStatusItem()
+        if !AXIsProcessTrusted() {
+            showSettings(pane: "permissions")
         }
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {
-        Logger.default.debug("Handling reopen")
-        openSettingsWindow()
+        showSettings(pane: nil)
         return true
     }
 
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        if
-            sender.isActive,
-            sender.activationPolicy() != .accessory,
-            appState.navigationState.isAppFrontmost
-        {
-            Logger.default.debug("All windows closed - deactivating with accessory activation policy")
-            appState.deactivate(withPolicy: .accessory)
+    // MARK: Ice icon
+
+    private func installStatusItem() {
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        // Per-bundle-id autosave name, so the release and debug builds keep separate slots.
+        item.autosaveName = "IceIcon-\(Constants.bundleIdentifier)"
+        if let button = item.button {
+            let image = NSImage(named: "DotFill")
+            image?.isTemplate = true
+            image?.accessibilityDescription = Constants.displayName
+            button.image = image
+            button.target = self
+            button.action = #selector(iconClicked(_:))
+            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
-        return false
+        statusItem = item
     }
 
-    func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
-        return true
+    @objc private func iconClicked(_ sender: NSStatusBarButton) {
+        let event = NSApp.currentEvent
+        if event?.type == .rightMouseUp || event?.modifierFlags.contains(.control) == true {
+            showAppMenu()
+        }
     }
 
-    func applicationWillTerminate(_ notification: Notification) {
-        appState.menuBarManager.nativeManager.restore()
-        // Keep the (possibly synced) backup folder current on quit. Best-effort:
-        // a failure here must never block termination.
-        guard SettingsBackup.automaticBackupEnabled() else {
+    /// The standard Dragon app menu, shown from a right-click on the Ice icon.
+    private func showAppMenu() {
+        guard let statusItem else {
             return
         }
-        do {
-            try SettingsBackup.performBackup(date: Date())
-        } catch {
-            Logger.default.error("Automatic backup on quit failed - \(error.localizedDescription)")
-        }
+        statusItem.menu = DragonAppMenu.menu(DragonAppMenu.Config(
+            appName: Constants.displayName,
+            onAbout: { [weak self] in self?.showSettings(pane: "about") },
+            onSettings: { [weak self] in self?.showSettings(pane: nil) },
+            // A debug build has no route to the production appcast at all.
+            onCheckForUpdates: UpdatesManager.updatingIsDisabled
+                ? nil
+                : { [weak self] in self?.updates.checkForUpdates() }
+        ))
+        statusItem.button?.performClick(nil)
+        statusItem.menu = nil
     }
 
-    // MARK: Other Methods
+    // MARK: Settings
 
-    /// Opens the settings window and activates the app.
-    @objc func openSettingsWindow() {
-        // Delay makes this more reliable for some reason.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [appState] in
-            appState.activate(withPolicy: .regular)
-            appState.openWindow(.settings)
+    /// Opens Settings, on `pane` when given, otherwise on the last pane shown.
+    private func showSettings(pane: String?) {
+        if let pane {
+            selection.paneID = pane
         }
+        NSApp.activate()
+        settingsController.show()
     }
 }

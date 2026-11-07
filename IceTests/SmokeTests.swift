@@ -11,14 +11,8 @@ import Testing
 /// Proves the test target links against the Ice app host and that
 /// `@testable import Ice_2` resolves the app's internal types.
 struct SmokeTests {
-    @Test func iceModuleIsImportable() {
-        #expect(MenuBarSection.Name.allCases.count == 3)
-    }
-
-    /// The tests run *inside* the app host, so `UserDefaults.standard` — and every
-    /// `.standard` seam the app still reads directly, like `ControlItem`'s storage
-    /// wrapper and `SettingsBackup`'s default arguments — resolves to whatever domain
-    /// the host bundle claims. If that were the release id, a test run would read and
+    /// The tests run *inside* the app host, so `UserDefaults.standard` and the settings suite
+    /// (`<bundle id>.settings`) resolve to whatever domain the host bundle claims. If that were the release id, a test run would read and
     /// write the settings of the Ice 2 the user actually has installed.
     ///
     /// The Debug configuration therefore builds the app as `com.dragonapp.ice.debug`,
@@ -32,28 +26,8 @@ struct SmokeTests {
         #expect(Bundle.main.bundleIdentifier == "com.dragonapp.ice.debug")
     }
 
-    /// The XPC service name the app connects to has to be the identifier the embedded service
-    /// bundle actually registers under, and both have to be namespaced per build.
-    ///
-    /// `MenuBarItemService.name` was the literal `com.dragonapp.ice.MenuBarItemService`, so the
-    /// debug build and an installed release asked launchd for one name and could not be trusted
-    /// to run side by side. Deriving it from `Bundle.main` fixes the client, but only if the XPC
-    /// target's `PRODUCT_BUNDLE_IDENTIFIER` moves with it — the two live in different files and
-    /// a mismatch is silent at build time and fatal at runtime (no service, so every menu bar
-    /// item loses its source PID). Reading the embedded bundle checks the pair together.
-    @Test func serviceNameMatchesTheEmbeddedServiceBundleIdentifier() throws {
-        #expect(MenuBarItemService.name == "com.dragonapp.ice.debug.MenuBarItemService")
-
-        let url = Bundle.main.bundleURL
-            .appending(path: "Contents/XPCServices/MenuBarItemService.xpc")
-        let service = try #require(Bundle(url: url), "the app must embed the XPC service")
-        #expect(service.bundleIdentifier == MenuBarItemService.name)
-    }
-
-    /// Every site that acts on another running application asks this one predicate whether the
-    /// app is one of ours: `applyOffset()` quits and relaunches every app with a menu bar item,
-    /// and a relaunch is a terminate, which the lifecycle spec forbids the debug build from
-    /// doing to the installed release. `MenuBarTriggerSettings` asks it too.
+    /// Ice never lists or hides itself, and that covers the other build too: hiding the
+    /// installed release from the debug build would leave the user without a way back.
     @Test func everyIceBuildIsRecognizedAsOurOwn() {
         #expect(Constants.isIceBundleID("com.dragonapp.ice"))
         #expect(Constants.isIceBundleID("com.dragonapp.ice.debug"))

@@ -31,7 +31,7 @@ struct UninstallConfigTests {
         // must say "Ice 2 Debug" so the sheet for a destructive, unrecoverable action
         // can't be mistaken for the installed release's. Asserted against the bundle
         // rather than a literal so it holds for both builds.
-        #expect(config.appName == Bundle.main.displayName)
+        #expect(config.appName == Constants.displayName)
         #expect(config.appName == "Ice 2 Debug") // the test host is the Debug build
     }
 
@@ -92,7 +92,7 @@ struct UninstallConfigTests {
         // They're safe structurally rather than by luck: the default folder is under ~/Documents
         // and a configured one can be anywhere (Dropbox, iCloud Drive), while every cleanup path
         // is pinned inside ~/Library. This asserts the two can't overlap.
-        let defaultFolder = SettingsBackup.defaultFolder()
+        let defaultFolder = DragonBackup.defaultFolder(appName: Constants.displayName)
         for url in config.extraCleanupPaths {
             #expect(defaultFolder.path != url.path)
             #expect(!defaultFolder.path.hasPrefix(url.path + "/"))

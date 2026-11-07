@@ -39,7 +39,7 @@ if test.nil?
   scheme.save_as(PROJECT, 'Ice', true)
 end
 
-# Sync every IceTests/*.swift file into the target (add missing ones only).
+# Sync every IceTests/*.swift file into the target: add new files, drop deleted ones.
 group = project.main_group['IceTests'] || project.main_group.new_group('IceTests', 'IceTests')
 already = test.source_build_phase.files_references.map { |r| r.real_path.to_s }
 Dir.glob('IceTests/*.swift').sort.each do |path|
@@ -47,6 +47,12 @@ Dir.glob('IceTests/*.swift').sort.each do |path|
   next if already.include?(abs)
   file_ref = group.new_file(File.basename(path))
   test.add_file_references([file_ref])
+end
+test.source_build_phase.files.dup.each do |build_file|
+  ref = build_file.file_ref
+  next if ref.nil? || File.exist?(ref.real_path.to_s)
+  build_file.remove_from_project
+  ref.remove_from_project
 end
 
 project.save
