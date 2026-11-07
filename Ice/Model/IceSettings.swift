@@ -137,9 +137,8 @@ extension IceSettings {
 // MARK: Backup
 
 extension IceSettings {
-    /// What a backup holds, one line per stored setting, for Backup & Restore to list once
-    /// DragonKit's `BackupConfig` takes it (#184). A test keeps this in step with the stored
-    /// properties.
+    /// What a backup holds, one line per stored setting, listed in Backup & Restore under
+    /// "A backup saves". A test keeps this in step with the stored properties.
     static let backupContentKeys: [(property: String, key: String)] = [
         ("launchAtLogin", "app.backup.contents.launchAtLogin"),
         ("language", "app.backup.contents.language"),

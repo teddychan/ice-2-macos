@@ -31,6 +31,7 @@ enum SettingsPanes {
                 appName: Constants.displayName,
                 suiteName: SettingsModel.suiteName,
                 appVersion: DragonAbout.versionString(),
+                contents: IceSettings.backupContentKeys.map { L($0.key) },
                 relaunch: relaunch
             ))),
             AnySettingsPane(WhatsNewSettingsPane(content: WhatsNewConfig.content)),
