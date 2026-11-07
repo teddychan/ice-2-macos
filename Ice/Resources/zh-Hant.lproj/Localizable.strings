@@ -38,3 +38,6 @@
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "沒有隱藏的項目。可以在設定中選擇要隱藏的項目。";
 "app.uninstall.item.settings" = "設定，包括隱藏的項目及其順序";
+"app.backup.contents.launchAtLogin" = "登入時啟動";
+"app.backup.contents.hidden" = "哪些選單列項目顯示、哪些隱藏";
+"app.backup.contents.order" = "Ice Bar 中項目的順序";

@@ -38,3 +38,6 @@
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "Скрытых объектов нет. Выберите, что скрыть, в настройках.";
 "app.uninstall.item.settings" = "Настройки, включая скрытые объекты и их порядок";
+"app.backup.contents.launchAtLogin" = "Запускать при входе в систему";
+"app.backup.contents.hidden" = "Какие объекты строки меню показаны, а какие скрыты";
+"app.backup.contents.order" = "Порядок объектов в Ice Bar";
