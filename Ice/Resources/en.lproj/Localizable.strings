@@ -45,6 +45,8 @@
 "app.whatsNew.changed2" = "Ice 2 3.0 needs macOS 27 or later. Macs on macOS 26 or earlier stay on Ice 2 2.17.";
 "app.whatsNew.added1" = "Click the Ice icon to open the Ice Bar. Click an item there to open its menu.";
 "app.whatsNew.added2" = "Drag items in the Ice Bar or in Settings to change their order.";
-"app.whatsNew.removed1" = "Always hidden items, hotkeys, layout profiles, spacers, search, menu bar styling and the language picker are gone. Ice 2 now uses your Mac's language.";
+"app.whatsNew.removed1" = "Always hidden items, hotkeys, layout profiles, spacers, search and menu bar styling are gone.";
 "app.system.inputMenu" = "Input Menu";
 "app.system.screenSharing" = "Screen Sharing";
+"app.general.language" = "Language";
+"app.backup.contents.language" = "Language";

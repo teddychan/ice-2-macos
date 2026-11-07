@@ -3,6 +3,7 @@
 //  Ice
 //
 
+import DragonKit
 import Foundation
 
 /// Every setting Ice 2 has, stored as one value in a `DragonSettingsStore` suite so that
@@ -10,6 +11,10 @@ import Foundation
 struct IceSettings: Codable, Equatable, Sendable {
     /// Whether Ice opens at login. Applied to the system login item on launch and on change.
     var launchAtLogin = false
+
+    /// The language chosen in Settings (a `DragonLanguage` raw value), or nil to follow the Mac.
+    /// DragonKit keeps the live choice outside this suite; this copy is what a backup carries.
+    var language: String?
 
     /// The ids of hidden items (see ``MenuBarItem/id``). Every other item is shown.
     var hidden: Set<String> = []
@@ -19,6 +24,21 @@ struct IceSettings: Codable, Equatable, Sendable {
 
     /// The last name seen for each item, so an app that isn't running stays readable.
     var names: [String: String] = [:]
+}
+
+// MARK: Language
+
+extension IceSettings {
+    /// Settles the stored language with DragonKit's current one at launch, returning the
+    /// language to switch to, if any. A stored choice wins, so a restored backup brings its
+    /// language back. With none stored, the current choice (one made in 2.x, say) is kept.
+    mutating func settleLanguage(current: DragonLanguage) -> DragonLanguage? {
+        if let stored = language.flatMap(DragonLanguage.init(rawValue:)) {
+            return stored == current ? nil : stored
+        }
+        language = current == .system ? nil : current.rawValue
+        return nil
+    }
 }
 
 // MARK: Items
@@ -119,6 +139,7 @@ extension IceSettings {
     /// properties.
     static let backupContentKeys: [(property: String, key: String)] = [
         ("launchAtLogin", "app.backup.contents.launchAtLogin"),
+        ("language", "app.backup.contents.language"),
         ("hidden", "app.backup.contents.hidden"),
         ("order", "app.backup.contents.order"),
     ]

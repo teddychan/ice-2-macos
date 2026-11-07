@@ -101,6 +101,19 @@ final class SettingsModel {
         settings.move(item.id, onto: target.id, within: hiddenItems.map(\.id))
     }
 
+    /// Brings DragonKit's language in line with the stored one. Called at launch, before any
+    /// window shows.
+    func settleLanguage() {
+        if let language = settings.settleLanguage(current: LocalizationManager.shared.language) {
+            LocalizationManager.shared.setLanguage(language)
+        }
+    }
+
+    /// Records a choice made in the language picker, which has already applied it.
+    func languageChanged(to language: DragonLanguage) {
+        settings.language = language == .system ? nil : language.rawValue
+    }
+
     var launchAtLogin: Bool {
         get { settings.launchAtLogin }
         set {

@@ -47,11 +47,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
-        // 3.x has no language picker, so a language chosen in 2.x would otherwise stick with
-        // no way to change it. Ice follows the Mac's language.
-        if LocalizationManager.shared.language != .system {
-            LocalizationManager.shared.setLanguage(.system)
-        }
+        model.settleLanguage()
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
