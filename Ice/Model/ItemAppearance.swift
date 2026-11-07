@@ -28,8 +28,14 @@ enum ItemAppearance {
         return image
     }
 
+    /// Apple background agents whose process names mean nothing to a person.
+    private static let agentNameKeys = [
+        "com.apple.TextInputMenuAgent": "app.system.inputMenu",
+        "com.apple.SSMenuAgent": "app.system.screenSharing",
+    ]
+
     static func name(for item: MenuBarItem) -> String {
-        if let key = item.systemNameKey {
+        if let key = item.systemNameKey ?? item.bundleIdentifier.flatMap({ agentNameKeys[$0] }) {
             return L(key)
         }
         if !item.name.isEmpty {

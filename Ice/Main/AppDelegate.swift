@@ -14,7 +14,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let app = NSApplication.shared
         let delegate = AppDelegate()
         app.delegate = delegate
-        app.run()
+        // `NSApplication.delegate` is weak and Swift may release a local after its last use,
+        // so keep the delegate alive for as long as the app runs.
+        withExtendedLifetime(delegate) {
+            app.run()
+        }
     }
 
     private let model = SettingsModel()
