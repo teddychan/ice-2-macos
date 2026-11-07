@@ -54,6 +54,15 @@ extension IceSettings {
         }
     }
 
+    /// What the Ice Bar shows: the hidden items, in order, that still have something to open.
+    /// Hidden items are absent from MenuBarAgent's tree, so for an app the sign is that it is
+    /// running; a system item is always there.
+    func iceBarItems(discovered: [MenuBarItem], runningBundles: Set<String>) -> [MenuBarItem] {
+        listedItems(discovered: discovered).filter { item in
+            hidden.contains(item.id) && item.bundleIdentifier.map(runningBundles.contains) ?? true
+        }
+    }
+
     func isHidden(_ id: String) -> Bool {
         hidden.contains(id)
     }
@@ -105,8 +114,9 @@ extension IceSettings {
 // MARK: Backup
 
 extension IceSettings {
-    /// What a backup holds, one line per stored setting, shown in Backup & Restore. A test
-    /// keeps this in step with the stored properties.
+    /// What a backup holds, one line per stored setting, for Backup & Restore to list once
+    /// DragonKit's `BackupConfig` takes it (#184). A test keeps this in step with the stored
+    /// properties.
     static let backupContentKeys: [(property: String, key: String)] = [
         ("launchAtLogin", "app.backup.contents.launchAtLogin"),
         ("hidden", "app.backup.contents.hidden"),

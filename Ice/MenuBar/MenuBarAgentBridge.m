@@ -167,10 +167,13 @@ NSArray<NSDictionary<NSString *, NSString *> *> *ICEMenuBarAgentSnapshot(void) {
 
 BOOL ICEMenuBarAgentElementHasIdentifier(CGPoint point, NSString *identifier) {
     AXUIElementRef systemWide = AXUIElementCreateSystemWide();
+    // Called on the main thread for clicks in the menu bar: a hung app must not stall it.
+    AXUIElementSetMessagingTimeout(systemWide, 0.1);
     AXUIElementRef element = NULL;
     AXError error = AXUIElementCopyElementAtPosition(systemWide, point.x, point.y, &element);
     CFRelease(systemWide);
     if (error != kAXErrorSuccess || !element) return NO;
+    AXUIElementSetMessagingTimeout(element, 0.1);
     // A click can land on the item itself or on the padding of the group that holds it.
     BOOL found = [ICEAttribute(element, kAXIdentifierAttribute) isEqual:identifier];
     for (id child in found ? @[] : ICEChildren(element)) {

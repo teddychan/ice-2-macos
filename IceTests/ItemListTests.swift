@@ -74,4 +74,18 @@ struct ItemListTests {
         #expect(!settings.isHidden(wifi.id))
         #expect(settings.hidden.isEmpty)
     }
+
+    @Test func theIceBarLeavesOutHiddenAppsThatAreNotRunning() {
+        var settings = IceSettings()
+        settings.merge(discovered: [dropbox, stats, wifi])
+        settings.setHidden(true, for: dropbox.id)
+        settings.setHidden(true, for: stats.id)
+        settings.setHidden(true, for: wifi.id)
+
+        // Hidden items are absent from MenuBarAgent's tree, so "running" is the only sign an
+        // app still has an item to open. System items are always there.
+        let ids = settings.iceBarItems(discovered: [], runningBundles: ["eu.exelban.Stats"]).map(\.id)
+
+        #expect(ids == [stats.id, wifi.id])
+    }
 }
