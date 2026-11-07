@@ -5,6 +5,7 @@
 
 import DragonKit
 import Foundation
+import SwiftUI
 
 /// The observable owner of ``IceSettings``: every change is saved to the settings suite and its
 /// side effect applied.
@@ -66,6 +67,23 @@ final class SettingsModel {
 
     func setHidden(_ isHidden: Bool, for item: MenuBarItem) {
         settings.setHidden(isHidden, for: item.id)
+    }
+
+    /// Applies a drag in the Settings list.
+    func moveListed(fromOffsets source: IndexSet, toOffset destination: Int) {
+        var arrangement = listedItems.map(\.id)
+        arrangement.move(fromOffsets: source, toOffset: destination)
+        settings.reorder(arrangement)
+    }
+
+    /// The hidden items, in order: what the Ice Bar shows.
+    var hiddenItems: [MenuBarItem] {
+        listedItems.filter { settings.isHidden($0.id) }
+    }
+
+    /// Applies a drop in the Ice Bar: `item` moves to just before `target`.
+    func move(_ item: MenuBarItem, before target: MenuBarItem) {
+        settings.move(item.id, before: target.id, within: hiddenItems.map(\.id))
     }
 
     var launchAtLogin: Bool {

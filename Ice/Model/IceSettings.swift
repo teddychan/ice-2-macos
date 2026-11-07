@@ -66,3 +66,36 @@ extension IceSettings {
         }
     }
 }
+
+// MARK: Order
+
+extension IceSettings {
+    /// Applies a new arrangement of part of the order (the Settings list or the Ice Bar's
+    /// hidden items): the part's items are rearranged within the places they already hold, and
+    /// every other item stays where it was. Ignored unless `arrangement` rearranges exactly the
+    /// items of a part.
+    mutating func reorder(_ arrangement: [String]) {
+        let part = Set(arrangement)
+        let slots = order.indices.filter { part.contains(order[$0]) }
+        guard part.count == arrangement.count, slots.count == arrangement.count else {
+            return
+        }
+        for (slot, id) in zip(slots, arrangement) {
+            order[slot] = id
+        }
+    }
+
+    /// Moves `id` to just before `target` within the part `visible` (in its current order).
+    mutating func move(_ id: String, before target: String, within visible: [String]) {
+        guard id != target, let from = visible.firstIndex(of: id) else {
+            return
+        }
+        var arrangement = visible
+        arrangement.remove(at: from)
+        guard let to = arrangement.firstIndex(of: target) else {
+            return
+        }
+        arrangement.insert(id, at: to)
+        reorder(arrangement)
+    }
+}
