@@ -86,6 +86,13 @@ extension IceSettings {
         }
     }
 
+    /// Forgets an item's saved state. If discovered again, it starts as a new, shown item.
+    mutating func remove(_ id: String) {
+        hidden.remove(id)
+        order.removeAll { $0 == id }
+        names.removeValue(forKey: id)
+    }
+
     func isHidden(_ id: String) -> Bool {
         hidden.contains(id)
     }

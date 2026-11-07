@@ -26,6 +26,7 @@
 "app.general.items" = "選單列項目";
 "app.general.items.show" = "顯示";
 "app.general.items.hide" = "隱藏";
+"app.general.items.remove" = "移除記錄";
 "app.general.items.empty" = "尚未找到選單列項目。";
 "app.general.items.note" = "隱藏的項目都放在 Ice Bar 裡。按一下 Ice 圖示即可打開。拖移可更改順序。提示：按住 Command 鍵把隱藏的 App 拖到選單列中 Ice 圖示旁邊，它們的選單就會在附近打開。";
 "app.system.battery" = "電池";

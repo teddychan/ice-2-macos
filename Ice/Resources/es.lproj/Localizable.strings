@@ -26,6 +26,7 @@
 "app.general.items" = "Elementos de la barra de menús";
 "app.general.items.show" = "Mostrar";
 "app.general.items.hide" = "Ocultar";
+"app.general.items.remove" = "Eliminar ajustes guardados";
 "app.general.items.empty" = "Aún no se han encontrado elementos en la barra de menús.";
 "app.general.items.note" = "Los elementos ocultos esperan en la Ice Bar. Haz clic en el icono de Ice para abrirla. Arrastra para cambiar el orden. Consejo: arrastra con Comando las apps ocultas junto al icono de Ice en la barra de menús para que sus menús se abran cerca.";
 "app.system.battery" = "Batería";

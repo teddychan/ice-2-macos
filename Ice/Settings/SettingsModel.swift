@@ -88,6 +88,10 @@ final class SettingsModel {
         settings.setHidden(isHidden, for: item.id)
     }
 
+    func remove(_ item: MenuBarItem) {
+        settings.remove(item.id)
+    }
+
     /// Applies a drag in the Settings list.
     func moveListed(fromOffsets source: IndexSet, toOffset destination: Int) {
         var arrangement = listedItems.map(\.id)

@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.1.0 - Unreleased
+
+### Added
+
+- Remove an app's saved settings from its context menu in Settings, including after uninstalling it.
+
+### Internal
+
+- Update DragonKit to 4.5.0 to satisfy conformance R10.
+
 ## 3.0.0 - 2026-11-07
 
 Ice 2 is rebuilt for macOS 27, where the system draws every menu bar item in one window. It needs

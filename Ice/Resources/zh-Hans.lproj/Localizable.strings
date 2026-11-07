@@ -26,6 +26,7 @@
 "app.general.items" = "菜单栏项目";
 "app.general.items.show" = "显示";
 "app.general.items.hide" = "隐藏";
+"app.general.items.remove" = "移除记录";
 "app.general.items.empty" = "还没有找到菜单栏项目。";
 "app.general.items.note" = "隐藏的项目都放在 Ice Bar 里。点按 Ice 图标即可打开。拖移可更改顺序。提示：按住 Command 键把隐藏的 App 拖到菜单栏中 Ice 图标旁边，它们的菜单就会在附近打开。";
 "app.system.battery" = "电池";
