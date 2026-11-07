@@ -26,6 +26,7 @@
 "app.general.items" = "メニューバー項目";
 "app.general.items.show" = "表示";
 "app.general.items.hide" = "非表示";
+"app.general.items.remove" = "保存した設定を削除";
 "app.general.items.empty" = "メニューバー項目はまだ見つかっていません。";
 "app.general.items.note" = "非表示の項目は Ice Bar にまとまります。Ice アイコンをクリックすると開きます。ドラッグで順番を変更できます。ヒント：非表示のアプリを command キーを押しながらメニューバーの Ice アイコンの隣にドラッグすると、そのメニューが近くに開きます。";
 "app.system.battery" = "バッテリー";

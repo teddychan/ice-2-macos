@@ -75,6 +75,37 @@ struct ItemListTests {
         #expect(settings.hidden.isEmpty)
     }
 
+    @MainActor
+    @Test func removingAnAbsentAppForgetsItsSavedStateAndAllowsAFreshReturn() {
+        let (defaults, suite) = ScratchDefaults.make(label: "RemoveItem")
+        defer { ScratchDefaults.destroy(suite) }
+        let model = SettingsModel(suiteName: suite, legacyDefaults: defaults)
+        model.update(discovered: [dropbox, stats, wifi])
+        model.setHidden(true, for: dropbox)
+        model.setHidden(true, for: stats)
+        model.update(discovered: [stats, wifi])
+        #expect(model.listedItems.map(\.id) == [dropbox.id, stats.id, wifi.id])
+        var hiddenChanges = 0
+        model.onHiddenChange = { hiddenChanges += 1 }
+
+        model.remove(dropbox)
+        model.remove(dropbox)
+
+        #expect(model.listedItems.map(\.id) == [stats.id, wifi.id])
+        #expect(model.settings.hidden == [stats.id])
+        #expect(model.settings.order == [stats.id, wifi.id])
+        #expect(model.settings.names == [stats.id: stats.name])
+        #expect(hiddenChanges == 1, "removing a hidden app updates hiding once")
+        let reloaded = SettingsModel(suiteName: suite, legacyDefaults: defaults)
+        #expect(reloaded.settings == model.settings, "the removed record stays gone after relaunch")
+
+        reloaded.update(discovered: [dropbox, stats, wifi])
+
+        #expect(!reloaded.isHidden(dropbox), "a rediscovered app starts as Show")
+        #expect(reloaded.settings.order == [stats.id, wifi.id, dropbox.id])
+        #expect(reloaded.settings.names[dropbox.id] == dropbox.name)
+    }
+
     @Test func theIceBarLeavesOutHiddenAppsThatAreNotRunning() {
         var settings = IceSettings()
         settings.merge(discovered: [dropbox, stats, wifi])

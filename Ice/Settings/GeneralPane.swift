@@ -95,6 +95,13 @@ private struct ItemRow: View {
             .labelsHidden()
             .fixedSize()
         }
+        .contextMenu {
+            if item.bundleIdentifier != nil {
+                Button(L("app.general.items.remove"), role: .destructive) {
+                    model.remove(item)
+                }
+            }
+        }
     }
 }
 

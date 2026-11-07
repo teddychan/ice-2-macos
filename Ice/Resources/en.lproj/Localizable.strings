@@ -26,6 +26,7 @@
 "app.general.items" = "Menu Bar Items";
 "app.general.items.show" = "Show";
 "app.general.items.hide" = "Hide";
+"app.general.items.remove" = "Remove Saved Settings";
 "app.general.items.empty" = "No menu bar items found yet.";
 "app.general.items.note" = "Hidden items wait in the Ice Bar. Click the Ice icon to open it. Drag to change the order. Tip: Command-drag hidden apps next to the Ice icon in the menu bar so their menus open close by.";
 "app.system.battery" = "Battery";

@@ -26,6 +26,7 @@
 "app.general.items" = "Éléments de la barre des menus";
 "app.general.items.show" = "Afficher";
 "app.general.items.hide" = "Masquer";
+"app.general.items.remove" = "Supprimer les réglages enregistrés";
 "app.general.items.empty" = "Aucun élément de la barre des menus trouvé pour l’instant.";
 "app.general.items.note" = "Les éléments masqués attendent dans la Ice Bar. Cliquez sur l’icône d’Ice pour l’ouvrir. Faites glisser pour changer l’ordre. Astuce : faites glisser les apps masquées avec Commande à côté de l’icône d’Ice dans la barre des menus pour que leurs menus s’ouvrent tout près.";
 "app.system.battery" = "Batterie";
