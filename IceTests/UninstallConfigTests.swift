@@ -41,13 +41,19 @@ struct UninstallConfigTests {
         withEnglish {
             #expect(config.checklistItems == [
                 "The app and its login item",
-                "Settings, layout profiles, and hotkeys",
+                "Settings, including which items are hidden and their order",
                 "Saved application state",
                 // The caches/support folders `extraCleanupPaths` adds are deleted, so the
                 // confirmation has to say so — the sheet must not under-report the damage.
                 "Caches and support files",
             ])
         }
+    }
+
+    @Test func wipesTheSettingsSuite() {
+        // Every 3.x setting lives in its own suite so Backup & Restore captures exactly it;
+        // uninstalling has to remove that suite too, or a reinstall finds the old setup.
+        #expect(config.suiteNames == [SettingsModel.suiteName])
     }
 
     @Test func everyChecklistKeyActuallyResolves() {
@@ -133,9 +139,8 @@ struct UninstallConfigTests {
     }
 
     @Test func deletesNothingBeyondTheBundlesOwnFolders() {
-        // Ice 2's settings live in `UserDefaults.standard` (`Defaults.store`), i.e. the
-        // bundle-id domain the uninstaller already wipes — so no extra suites.
-        #expect(config.suiteNames.isEmpty)
+        // The one extra suite is the settings suite (see `wipesTheSettingsSuite`).
+        #expect(config.suiteNames.allSatisfy { $0.hasPrefix(Constants.bundleIdentifier + ".") })
         // Ice 2 keeps no separate user data — its settings *are* its data, always removed —
         // so there is no optional "also delete data" choice to opt into.
         #expect(config.optionalDataToggle == nil)

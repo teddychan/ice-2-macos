@@ -15,7 +15,6 @@
 "app.updates.notification.title" = "新しいアップデートがあります";
 "app.updates.notification.body" = "%@ が新しいバージョンを見つけました。";
 "app.uninstall.item.app" = "App とそのログイン項目";
-"app.uninstall.item.settings" = "設定、レイアウトプロファイル、ホットキー";
 "app.uninstall.item.state" = "保存されたアプリケーションの状態";
 "app.uninstall.item.caches" = "キャッシュとサポートファイル";
 "app.settings.windowTitle" = "%@ 設定";
@@ -38,3 +37,4 @@
 "app.system.screenMirroring" = "画面ミラーリング";
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "非表示の項目はありません。設定で非表示にする項目を選べます。";
+"app.uninstall.item.settings" = "設定（非表示の項目とその順番を含む）";

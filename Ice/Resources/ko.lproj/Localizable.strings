@@ -15,7 +15,6 @@
 "app.updates.notification.title" = "새로운 업데이트가 있습니다";
 "app.updates.notification.body" = "%@에서 새 버전을 찾았습니다.";
 "app.uninstall.item.app" = "앱과 로그인 항목";
-"app.uninstall.item.settings" = "설정, 레이아웃 프로파일 및 단축키";
 "app.uninstall.item.state" = "저장된 응용 프로그램 상태";
 "app.uninstall.item.caches" = "캐시 및 지원 파일";
 "app.settings.windowTitle" = "%@ 설정";
@@ -38,3 +37,4 @@
 "app.system.screenMirroring" = "화면 미러링";
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "숨긴 항목이 없습니다. 설정에서 숨길 항목을 선택하세요.";
+"app.uninstall.item.settings" = "숨긴 항목과 그 순서를 포함한 설정";

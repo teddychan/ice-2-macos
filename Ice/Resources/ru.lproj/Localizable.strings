@@ -15,7 +15,6 @@
 "app.updates.notification.title" = "Доступно обновление";
 "app.updates.notification.body" = "%@: найдена новая версия.";
 "app.uninstall.item.app" = "Приложение и его объект входа";
-"app.uninstall.item.settings" = "Настройки, профили расположения и горячие клавиши";
 "app.uninstall.item.state" = "Сохранённое состояние приложения";
 "app.uninstall.item.caches" = "Кэши и вспомогательные файлы";
 "app.settings.windowTitle" = "Настройки %@";
@@ -38,3 +37,4 @@
 "app.system.screenMirroring" = "Повтор экрана";
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "Скрытых объектов нет. Выберите, что скрыть, в настройках.";
+"app.uninstall.item.settings" = "Настройки, включая скрытые объекты и их порядок";
