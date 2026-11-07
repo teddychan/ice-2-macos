@@ -101,3 +101,15 @@ extension IceSettings {
         reorder(arrangement)
     }
 }
+
+// MARK: Backup
+
+extension IceSettings {
+    /// What a backup holds, one line per stored setting, shown in Backup & Restore. A test
+    /// keeps this in step with the stored properties.
+    static let backupContentKeys: [(property: String, key: String)] = [
+        ("launchAtLogin", "app.backup.contents.launchAtLogin"),
+        ("hidden", "app.backup.contents.hidden"),
+        ("order", "app.backup.contents.order"),
+    ]
+}

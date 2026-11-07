@@ -38,3 +38,6 @@
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "No hay elementos ocultos. Elige cuáles ocultar en Ajustes.";
 "app.uninstall.item.settings" = "Ajustes, incluidos los elementos ocultos y su orden";
+"app.backup.contents.launchAtLogin" = "Abrir al iniciar sesión";
+"app.backup.contents.hidden" = "Qué elementos de la barra de menús se muestran y cuáles se ocultan";
+"app.backup.contents.order" = "El orden de los elementos en la Ice Bar";

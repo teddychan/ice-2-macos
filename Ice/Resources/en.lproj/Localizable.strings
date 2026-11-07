@@ -38,3 +38,6 @@
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "No hidden items. Choose items to hide in Settings.";
 "app.uninstall.item.settings" = "Settings, including which items are hidden and their order";
+"app.backup.contents.launchAtLogin" = "Launch at login";
+"app.backup.contents.hidden" = "Which menu bar items are shown and which are hidden";
+"app.backup.contents.order" = "The order of items in the Ice Bar";

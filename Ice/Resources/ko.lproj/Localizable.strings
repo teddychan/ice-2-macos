@@ -38,3 +38,6 @@
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "숨긴 항목이 없습니다. 설정에서 숨길 항목을 선택하세요.";
 "app.uninstall.item.settings" = "숨긴 항목과 그 순서를 포함한 설정";
+"app.backup.contents.launchAtLogin" = "로그인 시 실행";
+"app.backup.contents.hidden" = "표시하는 메뉴 막대 항목과 숨기는 항목";
+"app.backup.contents.order" = "Ice Bar의 항목 순서";

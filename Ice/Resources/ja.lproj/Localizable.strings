@@ -38,3 +38,6 @@
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "非表示の項目はありません。設定で非表示にする項目を選べます。";
 "app.uninstall.item.settings" = "設定（非表示の項目とその順番を含む）";
+"app.backup.contents.launchAtLogin" = "ログイン時に起動";
+"app.backup.contents.hidden" = "表示するメニューバー項目と非表示にする項目";
+"app.backup.contents.order" = "Ice Bar の項目の順番";

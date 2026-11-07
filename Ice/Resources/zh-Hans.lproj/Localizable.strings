@@ -38,3 +38,6 @@
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "没有隐藏的项目。可以在设置中选择要隐藏的项目。";
 "app.uninstall.item.settings" = "设置，包括隐藏的项目及其顺序";
+"app.backup.contents.launchAtLogin" = "登录时启动";
+"app.backup.contents.hidden" = "哪些菜单栏项目显示、哪些隐藏";
+"app.backup.contents.order" = "Ice Bar 中项目的顺序";

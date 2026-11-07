@@ -38,3 +38,6 @@
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "Aucun élément masqué. Choisissez les éléments à masquer dans les Réglages.";
 "app.uninstall.item.settings" = "Réglages, y compris les éléments masqués et leur ordre";
+"app.backup.contents.launchAtLogin" = "Lancer à l'ouverture de session";
+"app.backup.contents.hidden" = "Les éléments de la barre des menus affichés et ceux masqués";
+"app.backup.contents.order" = "L’ordre des éléments dans la Ice Bar";
