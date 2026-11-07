@@ -13,6 +13,7 @@
 		4F39C511C359280B5EA9D9A8 /* IceBarPlacementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C03C25FA861EF6D1B3E4FD5 /* IceBarPlacementTests.swift */; };
 		532D0E5212D395B68CA7F31E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC782BAB2CBAE725214BC3D2 /* Cocoa.framework */; };
 		58AB34D95A7DF7474565BA28 /* AcknowledgementsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C0D62701AD4D98A47CC601 /* AcknowledgementsTests.swift */; };
+		602A9379E55ADEB13F3A7AF6 /* LegacyMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E042EC71E414A58DCEBC7D34 /* LegacyMigrationTests.swift */; };
 		7F422E4CF391B78A9E9AAE28 /* IceSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCB17009C2AF0AD0DCD52BF /* IceSettingsTests.swift */; };
 		8A4701F562051CB7CE2B866A /* MenuBarItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4329AA4E86AC85CC0D4510BC /* MenuBarItemTests.swift */; };
 		A1B2C3D40000000000000002 /* LocalizedTextSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000001 /* LocalizedTextSupport.swift */; };
@@ -48,6 +49,7 @@
 		BC782BAB2CBAE725214BC3D2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		C4E01B7739AD62F08C15D4B3 /* UninstallConfigTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UninstallConfigTests.swift; sourceTree = "<group>"; };
 		CB2AE797978FB78F28AC099A /* OrderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OrderTests.swift; sourceTree = "<group>"; };
+		E042EC71E414A58DCEBC7D34 /* LegacyMigrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LegacyMigrationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -145,6 +147,7 @@
 				7EBF3180E5BC228C9FF4BE90 /* HidingPolicyTests.swift */,
 				CB2AE797978FB78F28AC099A /* OrderTests.swift */,
 				2C03C25FA861EF6D1B3E4FD5 /* IceBarPlacementTests.swift */,
+				E042EC71E414A58DCEBC7D34 /* LegacyMigrationTests.swift */,
 			);
 			name = IceTests;
 			path = IceTests;
@@ -298,6 +301,7 @@
 				35AC89EDEEAB5335AA74D75C /* HidingPolicyTests.swift in Sources */,
 				A8025D68AE167639B24B8271 /* OrderTests.swift in Sources */,
 				4F39C511C359280B5EA9D9A8 /* IceBarPlacementTests.swift in Sources */,
+				602A9379E55ADEB13F3A7AF6 /* LegacyMigrationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
