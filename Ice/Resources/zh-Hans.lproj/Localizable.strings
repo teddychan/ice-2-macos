@@ -15,7 +15,6 @@
 "app.updates.notification.title" = "有新的更新可用";
 "app.updates.notification.body" = "%@ 找到了更新的版本。";
 "app.uninstall.item.app" = "App 及其登录项";
-"app.uninstall.item.settings" = "设置、布局描述文件和快捷键";
 "app.uninstall.item.state" = "已存储的应用程序状态";
 "app.uninstall.item.caches" = "缓存和支持文件";
 "app.settings.windowTitle" = "%@ 设置";
@@ -38,3 +37,4 @@
 "app.system.screenMirroring" = "屏幕镜像";
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "没有隐藏的项目。可以在设置中选择要隐藏的项目。";
+"app.uninstall.item.settings" = "设置，包括隐藏的项目及其顺序";

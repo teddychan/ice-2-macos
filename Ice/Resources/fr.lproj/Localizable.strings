@@ -15,7 +15,6 @@
 "app.updates.notification.title" = "Une nouvelle mise à jour est disponible";
 "app.updates.notification.body" = "%@ a trouvé une version plus récente.";
 "app.uninstall.item.app" = "L'app et son élément d'ouverture de session";
-"app.uninstall.item.settings" = "Réglages, profils de disposition et raccourcis";
 "app.uninstall.item.state" = "État enregistré de l'application";
 "app.uninstall.item.caches" = "Caches et fichiers de prise en charge";
 "app.settings.windowTitle" = "Réglages de %@";
@@ -38,3 +37,4 @@
 "app.system.screenMirroring" = "Recopie de l’écran";
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "Aucun élément masqué. Choisissez les éléments à masquer dans les Réglages.";
+"app.uninstall.item.settings" = "Réglages, y compris les éléments masqués et leur ordre";

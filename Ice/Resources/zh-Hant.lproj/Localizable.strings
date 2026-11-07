@@ -15,7 +15,6 @@
 "app.updates.notification.title" = "有新的更新可用";
 "app.updates.notification.body" = "%@ 找到了更新的版本。";
 "app.uninstall.item.app" = "App 及其登入項目";
-"app.uninstall.item.settings" = "設定、版面描述檔和快速鍵";
 "app.uninstall.item.state" = "已儲存的應用程式狀態";
 "app.uninstall.item.caches" = "快取和支援檔案";
 "app.settings.windowTitle" = "%@ 設定";
@@ -38,3 +37,4 @@
 "app.system.screenMirroring" = "螢幕鏡像輸出";
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "沒有隱藏的項目。可以在設定中選擇要隱藏的項目。";
+"app.uninstall.item.settings" = "設定，包括隱藏的項目及其順序";

@@ -15,7 +15,6 @@
 "app.updates.notification.title" = "A new update is available";
 "app.updates.notification.body" = "%@ found a newer version.";
 "app.uninstall.item.app" = "The app and its login item";
-"app.uninstall.item.settings" = "Settings, layout profiles, and hotkeys";
 "app.uninstall.item.state" = "Saved application state";
 "app.uninstall.item.caches" = "Caches and support files";
 "app.settings.windowTitle" = "%@ Settings";
@@ -38,3 +37,4 @@
 "app.system.screenMirroring" = "Screen Mirroring";
 "app.iceBar.title" = "Ice Bar";
 "app.iceBar.empty" = "No hidden items. Choose items to hide in Settings.";
+"app.uninstall.item.settings" = "Settings, including which items are hidden and their order";

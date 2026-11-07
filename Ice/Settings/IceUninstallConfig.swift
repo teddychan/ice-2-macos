@@ -64,6 +64,8 @@ enum IceUninstallConfig {
         return UninstallConfig(
             appName: Constants.displayName,
             bundleID: bundleID,
+            // Every setting lives in this one suite (see `SettingsModel`).
+            suiteNames: [SettingsModel.suiteName],
             // Resolved here, not keyed: `UninstallConfig` is built fresh each time the pane
             // renders and the kit shows these strings as-is (its own doc comment says to
             // localize them in the app), so `L(_:)` reads the language selected right now.
