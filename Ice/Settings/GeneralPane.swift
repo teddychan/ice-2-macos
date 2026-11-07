@@ -40,6 +40,7 @@ private struct GeneralPaneView: View {
                 ForEach(model.listedItems) { item in
                     ItemRow(item: item, model: model)
                 }
+                .onMove { model.moveListed(fromOffsets: $0, toOffset: $1) }
             }
             .dragonAnnotation(LocalizedStringKey(L("app.general.items.note")))
         }
@@ -52,6 +53,9 @@ private struct ItemRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
+            Image(systemName: "line.3.horizontal")
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
             ItemIcon(item: item, size: 20)
             Text(ItemAppearance.name(for: item))
             Spacer()
