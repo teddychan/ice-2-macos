@@ -36,11 +36,23 @@ final class SettingsModel {
     /// Called when the hidden set changes, so the menu bar follows.
     @ObservationIgnored var onHiddenChange: () -> Void = {}
 
-    init(suiteName: String = SettingsModel.suiteName) {
+    /// - Parameter legacyDefaults: where 2.x kept its settings, read once on a first launch.
+    init(suiteName: String = SettingsModel.suiteName, legacyDefaults: UserDefaults = .standard) {
         let store = DragonSettingsStore(suiteName: suiteName, defaultValue: IceSettings())
         self.store = store
-        self.settings = store.load()
+        let isFirstLaunch = UserDefaults(suiteName: suiteName)?.object(forKey: Self.storeKey) == nil
+        if isFirstLaunch, let migrated = LegacyMigration.settings(
+            fromNativeSections: legacyDefaults.data(forKey: LegacyMigration.nativeSectionsKey)
+        ) {
+            self.settings = migrated
+            store.save(migrated)
+        } else {
+            self.settings = store.load()
+        }
     }
+
+    /// The key `DragonSettingsStore` saves under by default.
+    private static let storeKey = "settings.v1"
 
     /// Applies the stored login item preference to the system, so a restored backup or a
     /// login item removed in System Settings comes back in line.
