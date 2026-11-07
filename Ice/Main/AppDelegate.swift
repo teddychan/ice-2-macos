@@ -18,6 +18,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private let model = SettingsModel()
+    private lazy var menuBar = MenuBarController(model: model)
     private let updates = UpdatesManager()
     private let selection = SettingsSelection()
     private var statusItem: NSStatusItem?
@@ -25,8 +26,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private lazy var settingsController = DragonSettingsWindowController(
         title: String(format: L("app.settings.windowTitle"), Constants.displayName),
         rootView: SettingsRoot(
-            panes: { [model, updates, selection] in
-                SettingsPanes.panes(model: model, updater: updates.updater, selection: selection)
+            panes: { [model, menuBar, updates, selection] in
+                SettingsPanes.panes(model: model, menuBar: menuBar, updater: updates.updater, selection: selection)
             },
             selection: selection
         )
@@ -49,9 +50,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         updates.showUpdatesPane = { [weak self] in self?.showSettings(pane: "updates") }
         updates.performSetup()
         installStatusItem()
+        menuBar.start()
         if !AXIsProcessTrusted() {
             showSettings(pane: "permissions")
         }
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        // Quitting must never leave items hidden with no Ice to show them again.
+        menuBar.restore()
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {

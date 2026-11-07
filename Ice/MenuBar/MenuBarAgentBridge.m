@@ -11,7 +11,7 @@
 
 // Runtime selectors and AX tree shape verified by our standalone prototype on
 // 27.0 (26A428). Research: https://github.com/fif7y/pelmet (GPL-3.0).
-BOOL ICENativeMenuBarAvailable(void) {
+BOOL ICEMenuBarAgentAvailable(void) {
     static void *framework;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
@@ -25,7 +25,7 @@ BOOL ICENativeMenuBarAvailable(void) {
         [assertion instancesRespondToSelector:NSSelectorFromString(@"invalidate")];
 }
 
-void ICENativeMenuBarInvalidate(id assertion) {
+void ICEMenuBarAgentInvalidate(id assertion) {
     @try {
         SEL selector = NSSelectorFromString(@"invalidate");
         if ([assertion respondsToSelector:selector]) {
@@ -36,9 +36,9 @@ void ICENativeMenuBarInvalidate(id assertion) {
     }
 }
 
-id ICENativeMenuBarActivate(NSArray<NSNumber *> *systemItems, NSArray<NSString *> *bundles,
+id ICEMenuBarAgentActivate(NSArray<NSNumber *> *systemItems, NSArray<NSString *> *bundles,
                           void (^completion)(NSError *)) {
-    if (!ICENativeMenuBarAvailable()) return nil;
+    if (!ICEMenuBarAgentAvailable()) return nil;
     id assertion = nil;
     @try {
         id configuration = ((id (*)(id, SEL, id, id))objc_msgSend)(
@@ -50,7 +50,7 @@ id ICENativeMenuBarActivate(NSArray<NSNumber *> *systemItems, NSArray<NSString *
             NSSelectorFromString(@"activateWithConfiguration:completionHandler:"), configuration, completion);
         return assertion;
     } @catch (NSException *exception) {
-        ICENativeMenuBarInvalidate(assertion);
+        ICEMenuBarAgentInvalidate(assertion);
         NSLog(@"Ice native menu bar activation failed: %@", exception.reason);
         return nil;
     }
@@ -137,7 +137,7 @@ static void ICECollect(AXUIElementRef element, pid_t agentPID, NSUInteger depth,
     }
 }
 
-NSArray<NSDictionary<NSString *, NSString *> *> *ICENativeMenuBarSnapshot(void) {
+NSArray<NSDictionary<NSString *, NSString *> *> *ICEMenuBarAgentSnapshot(void) {
     if (!AXIsProcessTrusted()) return @[];
     NSRunningApplication *agent = [NSRunningApplication
         runningApplicationsWithBundleIdentifier:@"com.apple.MenuBarAgent"].firstObject;
@@ -163,4 +163,22 @@ NSArray<NSDictionary<NSString *, NSString *> *> *ICENativeMenuBarSnapshot(void) 
         [rows addObject:clean];
     }
     return rows;
+}
+
+BOOL ICEMenuBarAgentElementHasIdentifier(CGPoint point, NSString *identifier) {
+    AXUIElementRef systemWide = AXUIElementCreateSystemWide();
+    AXUIElementRef element = NULL;
+    AXError error = AXUIElementCopyElementAtPosition(systemWide, point.x, point.y, &element);
+    CFRelease(systemWide);
+    if (error != kAXErrorSuccess || !element) return NO;
+    // A click can land on the item itself or on the padding of the group that holds it.
+    BOOL found = [ICEAttribute(element, kAXIdentifierAttribute) isEqual:identifier];
+    for (id child in found ? @[] : ICEChildren(element)) {
+        if ([ICEAttribute((__bridge AXUIElementRef)child, kAXIdentifierAttribute) isEqual:identifier]) {
+            found = YES;
+            break;
+        }
+    }
+    CFRelease(element);
+    return found;
 }
