@@ -4,12 +4,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 NS_ASSUME_NONNULL_BEGIN
-BOOL ICENativeMenuBarAvailable(void);
-id _Nullable ICENativeMenuBarActivate(NSArray<NSNumber *> *systemItems,
+BOOL ICEMenuBarAgentAvailable(void);
+id _Nullable ICEMenuBarAgentActivate(NSArray<NSNumber *> *systemItems,
                                     NSArray<NSString *> *bundles,
                                     void (^completion)(NSError * _Nullable));
-void ICENativeMenuBarInvalidate(id _Nullable assertion);
-NSArray<NSDictionary<NSString *, NSString *> *> *ICENativeMenuBarSnapshot(void);
+void ICEMenuBarAgentInvalidate(id _Nullable assertion);
+NSArray<NSDictionary<NSString *, NSString *> *> *ICEMenuBarAgentSnapshot(void);
+/// Whether the accessibility element at `point` (or one of its children) has `identifier`.
+BOOL ICEMenuBarAgentElementHasIdentifier(CGPoint point, NSString *identifier);
 NS_ASSUME_NONNULL_END

@@ -20,11 +20,12 @@ final class SettingsSelection {
 enum SettingsPanes {
     static func panes(
         model: SettingsModel,
+        menuBar: MenuBarController,
         updater: DragonUpdater,
         selection: SettingsSelection
     ) -> [AnySettingsPane] {
         [
-            AnySettingsPane(GeneralPane(model: model)),
+            AnySettingsPane(GeneralPane(model: model, menuBar: menuBar)),
             AnySettingsPane(PermissionsSettingsPane(permissions: [.accessibility()])),
             AnySettingsPane(BackupSettingsPane(config: BackupConfig(
                 appName: Constants.displayName,
