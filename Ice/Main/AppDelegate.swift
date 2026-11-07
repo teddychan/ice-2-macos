@@ -61,6 +61,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menuBar.start()
         if !AXIsProcessTrusted() {
             showSettings(pane: "permissions")
+        } else if !model.showInMenuBar {
+            // Never trap the user: with the icon hidden, Settings is the only way back in.
+            showSettings(pane: GeneralPane.paneID)
         }
     }
 
@@ -89,7 +92,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             button.action = #selector(iconClicked(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
+        item.isVisible = model.showInMenuBar
         statusItem = item
+        model.onShowInMenuBarChange = { [weak self] in self?.showInMenuBarChanged() }
+    }
+
+    /// Shows or hides the Ice icon to match the setting. The Ice Bar hangs off the icon, so it
+    /// closes with it.
+    private func showInMenuBarChanged() {
+        statusItem?.isVisible = model.showInMenuBar
+        if !model.showInMenuBar {
+            iceBar.hide()
+        }
     }
 
     @objc private func iconClicked(_ sender: NSStatusBarButton) {

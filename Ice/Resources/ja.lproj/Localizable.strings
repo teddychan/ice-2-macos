@@ -49,4 +49,8 @@
 "app.system.inputMenu" = "入力メニュー";
 "app.system.screenSharing" = "画面共有";
 "app.general.language" = "言語";
+"app.general.menuBar" = "メニューバー";
+"app.general.showInMenuBar" = "メニューバーに表示";
+"app.general.showInMenuBarHint" = "Ice アイコンを非表示にしている間は Ice Bar を開けず、非表示の項目も非表示のままです。アイコンが非表示の状態で Ice 2 が起動すると、再び表示できるように設定が開きます。";
 "app.backup.contents.language" = "言語";
+"app.backup.contents.showInMenuBar" = "メニューバーに表示";

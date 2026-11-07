@@ -18,6 +18,6 @@ struct BackupContentsTests {
     }
 
     @Test func linesFollowTheSettingsOrder() {
-        #expect(IceSettings.backupContentKeys.map(\.property) == ["launchAtLogin", "language", "hidden", "order"])
+        #expect(IceSettings.backupContentKeys.map(\.property) == ["launchAtLogin", "language", "showInMenuBar", "hidden", "order"])
     }
 }

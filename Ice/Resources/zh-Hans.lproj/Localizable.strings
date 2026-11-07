@@ -49,4 +49,8 @@
 "app.system.inputMenu" = "输入法菜单";
 "app.system.screenSharing" = "屏幕共享";
 "app.general.language" = "语言";
+"app.general.menuBar" = "菜单栏";
+"app.general.showInMenuBar" = "在菜单栏中显示";
+"app.general.showInMenuBarHint" = "Ice 图标隐藏时，无法打开 Ice Bar，隐藏的项目也会保持隐藏。如果 Ice 2 启动时图标处于隐藏状态，会打开设置以便你重新开启。";
 "app.backup.contents.language" = "语言";
+"app.backup.contents.showInMenuBar" = "在菜单栏中显示";

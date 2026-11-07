@@ -49,4 +49,8 @@
 "app.system.inputMenu" = "Меню ввода";
 "app.system.screenSharing" = "Общий экран";
 "app.general.language" = "Язык";
+"app.general.menuBar" = "Строка меню";
+"app.general.showInMenuBar" = "Показывать в строке меню";
+"app.general.showInMenuBarHint" = "Пока значок Ice скрыт, Ice Bar не открыть, а скрытые объекты остаются скрытыми. Если Ice 2 запускается со скрытым значком, открываются Настройки, чтобы его можно было снова включить.";
 "app.backup.contents.language" = "Язык";
+"app.backup.contents.showInMenuBar" = "Показывать в строке меню";

@@ -27,6 +27,9 @@ final class SettingsModel {
             if settings.hidden != oldValue.hidden {
                 onHiddenChange()
             }
+            if settings.showInMenuBar != oldValue.showInMenuBar {
+                onShowInMenuBarChange()
+            }
         }
     }
 
@@ -36,13 +39,17 @@ final class SettingsModel {
     /// Called when the hidden set changes, so the menu bar follows.
     @ObservationIgnored var onHiddenChange: () -> Void = {}
 
+    /// Called when "Show in menu bar" changes, so the Ice icon follows.
+    @ObservationIgnored var onShowInMenuBarChange: () -> Void = {}
+
     /// - Parameter legacyDefaults: where 2.x kept its settings, read once on a first launch.
     init(suiteName: String = SettingsModel.suiteName, legacyDefaults: UserDefaults = .standard) {
         let store = DragonSettingsStore(suiteName: suiteName, defaultValue: IceSettings(), key: Self.storeKey)
         self.store = store
         let isFirstLaunch = UserDefaults(suiteName: suiteName)?.object(forKey: Self.storeKey) == nil
         if isFirstLaunch, let migrated = LegacyMigration.settings(
-            fromNativeSections: legacyDefaults.data(forKey: LegacyMigration.nativeSectionsKey)
+            fromNativeSections: legacyDefaults.data(forKey: LegacyMigration.nativeSectionsKey),
+            showIceIcon: LegacyMigration.showIceIcon(in: legacyDefaults)
         ) {
             self.settings = migrated
             store.save(migrated)
@@ -112,6 +119,11 @@ final class SettingsModel {
     /// Records a choice made in the language picker, which has already applied it.
     func languageChanged(to language: DragonLanguage) {
         settings.language = language == .system ? nil : language.rawValue
+    }
+
+    var showInMenuBar: Bool {
+        get { settings.showInMenuBar }
+        set { settings.showInMenuBar = newValue }
     }
 
     var launchAtLogin: Bool {

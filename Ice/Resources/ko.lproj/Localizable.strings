@@ -49,4 +49,8 @@
 "app.system.inputMenu" = "입력 메뉴";
 "app.system.screenSharing" = "화면 공유";
 "app.general.language" = "언어";
+"app.general.menuBar" = "메뉴 막대";
+"app.general.showInMenuBar" = "메뉴 막대에 표시";
+"app.general.showInMenuBarHint" = "Ice 아이콘이 숨겨져 있는 동안에는 Ice Bar를 열 수 없고 숨긴 항목도 계속 숨겨집니다. 아이콘이 숨겨진 상태로 Ice 2가 시작되면 다시 켤 수 있도록 설정이 열립니다.";
 "app.backup.contents.language" = "언어";
+"app.backup.contents.showInMenuBar" = "메뉴 막대에 표시";
