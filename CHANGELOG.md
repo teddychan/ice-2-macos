@@ -1,5 +1,43 @@
 # Changelog
 
+## 3.0.0 - 2026-11-07
+
+Ice 2 is rebuilt for macOS 27, where the system draws every menu bar item in one window. It needs
+macOS 27 or later. Macs on macOS 26 or earlier stay on 2.17.1 and are not offered this update
+([#179](https://github.com/teddychan/ice-2-macos/issues/179)).
+
+### Changed
+
+- **Each menu bar item is either shown or hidden.** Choose Show or Hide for each item in
+  Settings ▸ General. On macOS 27 the choice covers a whole app, so all of an app's icons are shown
+  or hidden together. New apps start as shown
+  ([#181](https://github.com/teddychan/ice-2-macos/issues/181)).
+- **Your setup carries over from 2.x.** Visible items stay shown, and hidden and always-hidden items
+  become hidden. Your "Show Ice 2 icon" choice and your language carry over too
+  ([#185](https://github.com/teddychan/ice-2-macos/issues/185)).
+
+### Added
+
+- **The Ice Bar.** Click the Ice icon to see your hidden items in a panel under it. Click one to
+  open its menu: the item shows in the menu bar while its menu is open, then hides again
+  ([#183](https://github.com/teddychan/ice-2-macos/issues/183)).
+- **One order for the Ice Bar and Settings.** Drag items in either place to change it
+  ([#182](https://github.com/teddychan/ice-2-macos/issues/182)).
+- **Backup & Restore lists what a backup holds**: launch at login, language, Show in menu bar,
+  which items are hidden, and their order
+  ([#184](https://github.com/teddychan/ice-2-macos/issues/184)).
+
+### Removed
+
+- Always-hidden items, hotkeys, layout profiles, spacers, search, menu bar styling, showing hidden
+  items on hover, click or scroll, automatic rehiding, item spacing, the Ice icon choices and the
+  background helper. Ice 2 no longer asks for Screen Recording permission.
+
+### Internal
+
+- **DragonKit 4.4.0**, which lists what a backup holds and makes Uninstall always remove the app's
+  settings ([#180](https://github.com/teddychan/ice-2-macos/issues/180)).
+
 ## 2.17.1 - 2026-11-04
 
 ### Internal
