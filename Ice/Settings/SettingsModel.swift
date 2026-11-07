@@ -14,7 +14,7 @@ import SwiftUI
 final class SettingsModel {
     /// A dedicated suite, distinct from the app's own defaults domain, so a backup holds the
     /// settings and nothing else.
-    nonisolated static var suiteName: String { Constants.bundleIdentifier + ".settings" }
+    nonisolated static var suiteName: String { DragonSettingsSuite.standardName(for: Constants.bundleIdentifier) }
 
     @ObservationIgnored private let store: DragonSettingsStore<IceSettings>
 
