@@ -1,7 +1,5 @@
 included:
   - Ice
-  - Shared
-  - MenuBarItemService
 
 disabled_rules:
   - cyclomatic_complexity

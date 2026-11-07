@@ -41,3 +41,8 @@
 "app.backup.contents.launchAtLogin" = "ログイン時に起動";
 "app.backup.contents.hidden" = "表示するメニューバー項目と非表示にする項目";
 "app.backup.contents.order" = "Ice Bar の項目の順番";
+"app.whatsNew.changed1" = "メニューバーの各項目の「表示」「非表示」は、設定の「一般」で選べます。";
+"app.whatsNew.changed2" = "Ice 2 3.0 には macOS 27 以降が必要です。macOS 26 以前の Mac は Ice 2 2.17 のままです。";
+"app.whatsNew.added1" = "Ice アイコンをクリックすると Ice Bar が開きます。項目をクリックするとそのメニューが開きます。";
+"app.whatsNew.added2" = "Ice Bar または設定で項目をドラッグすると順番を変更できます。";
+"app.whatsNew.removed1" = "常に非表示の項目、ホットキー、レイアウトプロファイル、スペーサー、検索、メニューバーのスタイル、言語の選択はなくなりました。Ice 2 は Mac の言語を使います。";

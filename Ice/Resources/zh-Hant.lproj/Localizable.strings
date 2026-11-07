@@ -41,3 +41,8 @@
 "app.backup.contents.launchAtLogin" = "登入時啟動";
 "app.backup.contents.hidden" = "哪些選單列項目顯示、哪些隱藏";
 "app.backup.contents.order" = "Ice Bar 中項目的順序";
+"app.whatsNew.changed1" = "在設定的「一般」中，為每個選單列項目選擇顯示或隱藏。";
+"app.whatsNew.changed2" = "Ice 2 3.0 需要 macOS 27 或以上版本。macOS 26 或更早版本的 Mac 會繼續使用 Ice 2 2.17。";
+"app.whatsNew.added1" = "按一下 Ice 圖示即可打開 Ice Bar。按一下其中的項目即可打開它的選單。";
+"app.whatsNew.added2" = "在 Ice Bar 或設定中拖移項目即可更改順序。";
+"app.whatsNew.removed1" = "「永遠隱藏」項目、快速鍵、佈局描述檔、間隔、搜尋、選單列樣式和語言選擇已移除。Ice 2 現在使用你 Mac 的語言。";
