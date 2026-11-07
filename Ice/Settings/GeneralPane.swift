@@ -32,6 +32,15 @@ private struct GeneralPaneView: View {
             } footer: {
                 EmptyView()
             }
+            // DragonKit's picker, called bare: Ice ships every language the kit does, and
+            // CONFORMANCE §R13 requires the offered set to equal the shipped set.
+            DragonSection {
+                Text(L("app.general.language"))
+            } content: {
+                LanguagePicker(onChange: { model.languageChanged(to: $0) })
+            } footer: {
+                EmptyView()
+            }
             // The note is the section's footer: wrapping the section in a modifier hides it from
             // the Form, which then draws the header inside the box.
             DragonSection {

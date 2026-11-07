@@ -45,6 +45,8 @@
 "app.whatsNew.changed2" = "Ice 2 3.0 需要 macOS 27 或更高版本。macOS 26 或更早版本的 Mac 会继续使用 Ice 2 2.17。";
 "app.whatsNew.added1" = "点按 Ice 图标即可打开 Ice Bar。点按其中的项目即可打开它的菜单。";
 "app.whatsNew.added2" = "在 Ice Bar 或设置中拖移项目即可更改顺序。";
-"app.whatsNew.removed1" = "“始终隐藏”项目、快捷键、布局描述文件、间隔、搜索、菜单栏样式和语言选择已移除。Ice 2 现在使用你 Mac 的语言。";
+"app.whatsNew.removed1" = "“始终隐藏”项目、快捷键、布局描述文件、间隔、搜索和菜单栏样式已移除。";
 "app.system.inputMenu" = "输入法菜单";
 "app.system.screenSharing" = "屏幕共享";
+"app.general.language" = "语言";
+"app.backup.contents.language" = "语言";
