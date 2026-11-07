@@ -2,19 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UTExportedTypeDeclarations</key>
-	<array>
-		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>com.dragonapp.ice.section-assignment</string>
-			<key>UTTypeDescription</key>
-			<string>Ice section assignment</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-			</array>
-		</dict>
-	</array>
 	<!-- The commit this build came from, which DragonKit renders after the build number:
 	     "v2.13.0 (1346) · 2026-Aug-09 12:00:00 UTC". The release workflow passes
 	     `git log -1 --format=%cI` as the DRAGON_COMMIT_DATE build setting; mapping it here is
@@ -23,6 +10,12 @@
 	     build, and DragonKit then shows no timestamp at all rather than a misleading one. -->
 	<key>DragonCommitDate</key>
 	<string>$(DRAGON_COMMIT_DATE)</string>
+	<!-- 3.x drives macOS 27's MenuBarAgent and runs on nothing older; 2.x stays the release for
+	     macOS 26 and earlier. Stated here rather than through MACOSX_DEPLOYMENT_TARGET, which stays
+	     26.0 because release CI builds with the macOS 26 SDK. Sparkle's generate_appcast copies this
+	     value into the appcast, so older Macs are never offered 3.x. -->
+	<key>LSMinimumSystemVersion</key>
+	<string>27.0</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>SUFeedURL</key>

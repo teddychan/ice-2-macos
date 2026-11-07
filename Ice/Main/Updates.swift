@@ -18,8 +18,9 @@ import UserNotifications
 /// notification for an update a background check found.
 @MainActor
 final class UpdatesManager {
-    /// The shared app state.
-    private(set) weak var appState: AppState?
+    /// Brings the Updates pane forward before a manual check, so Sparkle's result appears
+    /// over it.
+    var showUpdatesPane: () -> Void = {}
 
     /// The underlying updater. The Updates settings pane observes this directly.
     ///
@@ -58,8 +59,7 @@ final class UpdatesManager {
     }
 
     /// Performs the initial setup of the manager.
-    func performSetup(with appState: AppState) {
-        self.appState = appState
+    func performSetup() {
         guard !Self.updatingIsDisabled else {
             // Not even `updater.start()`: a debug build must never read the production appcast.
             Logger.default.notice("Debug build - skipping updater setup")
@@ -89,12 +89,8 @@ final class UpdatesManager {
             Logger.default.notice("Debug build - ignoring check for updates")
             return
         }
-        guard let appState else {
-            return
-        }
-        // Activate the app in case an alert needs to be displayed.
-        appState.activate(withPolicy: .regular)
-        appState.openWindow(.settings)
+        // Bring the app forward in case an alert needs to be displayed.
+        showUpdatesPane()
         updater.checkForUpdates()
     }
 

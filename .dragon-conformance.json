@@ -1,13 +1,19 @@
 {
   "app": "Ice 2",
-  "sources": ["Ice", "Shared", "MenuBarItemService"],
-  "strings": ["Ice/Resources/*.lproj/Localizable.strings"],
+  "sources": [
+    "Ice"
+  ],
+  "strings": [
+    "Ice/Resources/*.lproj/Localizable.strings"
+  ],
   "pin": {
     "file": "Ice.xcodeproj/project.pbxproj",
     "pattern": "dragon-kit\";[^}]*minimumVersion = ([0-9.]+)"
   },
   "paneOrder": {
-    "file": "Ice/Main/Navigation/NavigationIdentifiers/SettingsNavigationIdentifier.swift"
+    "file": "Ice/Settings/SettingsPanes.swift"
   },
-  "traits": ["sparkle"]
+  "traits": [
+    "sparkle"
+  ]
 }
