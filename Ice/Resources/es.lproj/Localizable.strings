@@ -36,3 +36,5 @@
 "app.system.sound" = "Sonido";
 "app.system.wifi" = "Wi-Fi";
 "app.system.screenMirroring" = "Duplicar pantalla";
+"app.iceBar.title" = "Ice Bar";
+"app.iceBar.empty" = "No hay elementos ocultos. Elige cuáles ocultar en Ajustes.";

@@ -36,3 +36,5 @@
 "app.system.sound" = "Звук";
 "app.system.wifi" = "Wi-Fi";
 "app.system.screenMirroring" = "Повтор экрана";
+"app.iceBar.title" = "Ice Bar";
+"app.iceBar.empty" = "Скрытых объектов нет. Выберите, что скрыть, в настройках.";

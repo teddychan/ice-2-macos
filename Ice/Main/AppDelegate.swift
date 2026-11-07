@@ -22,6 +22,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let updates = UpdatesManager()
     private let selection = SettingsSelection()
     private var statusItem: NSStatusItem?
+    private lazy var iceBar = IceBarPanel(model: model) { [menuBar] item in
+        menuBar.reveal(item)
+    }
 
     private lazy var settingsController = DragonSettingsWindowController(
         title: String(format: L("app.settings.windowTitle"), Constants.displayName),
@@ -87,7 +90,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func iconClicked(_ sender: NSStatusBarButton) {
         let event = NSApp.currentEvent
         if event?.type == .rightMouseUp || event?.modifierFlags.contains(.control) == true {
+            iceBar.hide()
             showAppMenu()
+        } else {
+            // macOS 27 reports the status item's window frame as zero, so the click location
+            // is the best measure of where the icon is.
+            iceBar.toggle(anchorX: NSEvent.mouseLocation.x)
         }
     }
 

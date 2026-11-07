@@ -36,3 +36,5 @@
 "app.system.sound" = "聲音";
 "app.system.wifi" = "Wi-Fi";
 "app.system.screenMirroring" = "螢幕鏡像輸出";
+"app.iceBar.title" = "Ice Bar";
+"app.iceBar.empty" = "沒有隱藏的項目。可以在設定中選擇要隱藏的項目。";

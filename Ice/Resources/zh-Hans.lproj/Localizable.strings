@@ -36,3 +36,5 @@
 "app.system.sound" = "声音";
 "app.system.wifi" = "无线局域网";
 "app.system.screenMirroring" = "屏幕镜像";
+"app.iceBar.title" = "Ice Bar";
+"app.iceBar.empty" = "没有隐藏的项目。可以在设置中选择要隐藏的项目。";

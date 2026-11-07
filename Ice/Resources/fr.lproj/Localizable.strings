@@ -36,3 +36,5 @@
 "app.system.sound" = "Son";
 "app.system.wifi" = "Wi-Fi";
 "app.system.screenMirroring" = "Recopie de l’écran";
+"app.iceBar.title" = "Ice Bar";
+"app.iceBar.empty" = "Aucun élément masqué. Choisissez les éléments à masquer dans les Réglages.";

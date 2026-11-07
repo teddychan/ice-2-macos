@@ -40,20 +40,30 @@ struct OrderTests {
         #expect(settings.order == ["a", "b", "c"])
     }
 
-    @Test func movingOneItemBeforeAnother() {
+    @Test func droppingAnItemOntoAnEarlierOneTakesItsPlace() {
         var settings = IceSettings()
         settings.order = ["a", "x", "b", "c"]
 
         // Dropping c onto a in the Ice Bar (which shows a, b, c) puts c first.
-        settings.move("c", before: "a", within: ["a", "b", "c"])
+        settings.move("c", onto: "a", within: ["a", "b", "c"])
 
         #expect(settings.order == ["c", "x", "a", "b"])
     }
 
-    @Test func movingAnItemOntoItselfChangesNothing() {
+    @Test func droppingAnItemOntoALaterOneTakesItsPlace() {
         var settings = IceSettings()
         settings.order = ["a", "b", "c"]
-        settings.move("b", before: "b", within: ["a", "b", "c"])
+
+        // Dropping a onto c puts a last, which "before c" never could.
+        settings.move("a", onto: "c", within: ["a", "b", "c"])
+
+        #expect(settings.order == ["b", "c", "a"])
+    }
+
+    @Test func droppingAnItemOntoItselfChangesNothing() {
+        var settings = IceSettings()
+        settings.order = ["a", "b", "c"]
+        settings.move("b", onto: "b", within: ["a", "b", "c"])
         #expect(settings.order == ["a", "b", "c"])
     }
 }

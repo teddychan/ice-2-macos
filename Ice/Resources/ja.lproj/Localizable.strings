@@ -36,3 +36,5 @@
 "app.system.sound" = "サウンド";
 "app.system.wifi" = "Wi-Fi";
 "app.system.screenMirroring" = "画面ミラーリング";
+"app.iceBar.title" = "Ice Bar";
+"app.iceBar.empty" = "非表示の項目はありません。設定で非表示にする項目を選べます。";

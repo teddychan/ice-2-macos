@@ -36,3 +36,5 @@
 "app.system.sound" = "사운드";
 "app.system.wifi" = "Wi-Fi";
 "app.system.screenMirroring" = "화면 미러링";
+"app.iceBar.title" = "Ice Bar";
+"app.iceBar.empty" = "숨긴 항목이 없습니다. 설정에서 숨길 항목을 선택하세요.";
