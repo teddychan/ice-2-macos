@@ -41,3 +41,8 @@
 "app.backup.contents.launchAtLogin" = "로그인 시 실행";
 "app.backup.contents.hidden" = "표시하는 메뉴 막대 항목과 숨기는 항목";
 "app.backup.contents.order" = "Ice Bar의 항목 순서";
+"app.whatsNew.changed1" = "설정의 일반에서 메뉴 막대 항목마다 보기 또는 숨기기를 선택하세요.";
+"app.whatsNew.changed2" = "Ice 2 3.0에는 macOS 27 이상이 필요합니다. macOS 26 이하의 Mac은 Ice 2 2.17을 계속 사용합니다.";
+"app.whatsNew.added1" = "Ice 아이콘을 클릭하면 Ice Bar가 열립니다. 항목을 클릭하면 해당 메뉴가 열립니다.";
+"app.whatsNew.added2" = "Ice Bar나 설정에서 항목을 드래그해 순서를 바꿀 수 있습니다.";
+"app.whatsNew.removed1" = "항상 숨김 항목, 단축키, 레이아웃 프로파일, 간격, 검색, 메뉴 막대 스타일, 언어 선택이 없어졌습니다. Ice 2는 이제 Mac의 언어를 사용합니다.";

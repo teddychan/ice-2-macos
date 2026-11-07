@@ -29,7 +29,19 @@ enum WhatsNewConfig {
             // release gate (dragon-release-ci tag-gate.sh, check 6) looks for in this file when
             // there is no section. Keys are stable across releases (see CHANGELOG.md for what
             // changed); the next release with real entries adds its section keys back.
-            sections: []
+            sections: [
+                ChangeSection(kind: .changed, entries: [
+                    L("app.whatsNew.changed1"),
+                    L("app.whatsNew.changed2"),
+                ]),
+                ChangeSection(kind: .added, entries: [
+                    L("app.whatsNew.added1"),
+                    L("app.whatsNew.added2"),
+                ]),
+                ChangeSection(kind: .removed, entries: [
+                    L("app.whatsNew.removed1"),
+                ]),
+            ]
         )
     }
 }

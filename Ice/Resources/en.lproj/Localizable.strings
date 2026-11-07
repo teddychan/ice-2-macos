@@ -41,3 +41,8 @@
 "app.backup.contents.launchAtLogin" = "Launch at login";
 "app.backup.contents.hidden" = "Which menu bar items are shown and which are hidden";
 "app.backup.contents.order" = "The order of items in the Ice Bar";
+"app.whatsNew.changed1" = "Choose Show or Hide for each menu bar item in Settings, General.";
+"app.whatsNew.changed2" = "Ice 2 3.0 needs macOS 27 or later. Macs on macOS 26 or earlier stay on Ice 2 2.17.";
+"app.whatsNew.added1" = "Click the Ice icon to open the Ice Bar. Click an item there to open its menu.";
+"app.whatsNew.added2" = "Drag items in the Ice Bar or in Settings to change their order.";
+"app.whatsNew.removed1" = "Always hidden items, hotkeys, layout profiles, spacers, search, menu bar styling and the language picker are gone. Ice 2 now uses your Mac's language.";
