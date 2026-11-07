@@ -80,7 +80,8 @@ rm -rf ~/Library/Application\ Support/com.dragonapp.ice \
   icons are shown or hidden together.
 - The Ice Bar: click the Ice icon to see the hidden items, and click one to open its menu.
 - One order for the Ice Bar and Settings; drag in either to change it.
-- Launch at login, and Settings in eight languages.
+- Launch at login, Settings in eight languages, and a switch to hide the Ice icon from the
+  menu bar.
 - Updates through [Sparkle](https://sparkle-project.org).
 - Back up and restore every setting to a folder you choose.
 
@@ -125,8 +126,9 @@ updating keeps working.
 ### Can I back up, restore, or sync my settings?
 
 Yes. Open **Settings ▸ Backup & Restore** and choose a backup folder. **Back Up Now** saves
-every setting: launch at login, the language, which items are shown or hidden, and their order. Restore any
-backup with one click; Ice 2 relaunches to apply it.
+every setting: launch at login, the language, whether the Ice icon shows in the menu bar, which
+items are shown or hidden, and their order. Restore any backup with one click; Ice 2 relaunches
+to apply it.
 
 To **sync across Macs** or move to a new Mac, point the backup folder at a synced location such
 as Dropbox, iCloud Drive, or Google Drive, then restore the backup on the other Mac.

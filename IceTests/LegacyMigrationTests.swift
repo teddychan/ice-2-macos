@@ -8,7 +8,8 @@ import Testing
 @testable import Ice_2
 
 /// Upgrading from 2.x on macOS 27 keeps the user's setup: 2.x's `NativeMenuBarSections` maps
-/// visible to Show and hidden or always-hidden to Hide. Nothing else from 2.x carries over.
+/// visible to Show and hidden or always-hidden to Hide, and a hidden Ice icon stays hidden.
+/// Nothing else from 2.x carries over.
 struct LegacyMigrationTests {
     private func data(_ sections: [String: String]) -> Data {
         try! JSONEncoder().encode(sections)
@@ -56,6 +57,42 @@ struct LegacyMigrationTests {
         #expect(LegacyMigration.settings(fromNativeSections: data([:])) == nil)
         #expect(LegacyMigration.settings(fromNativeSections: data(["system:2": "hidden"])) == nil)
     }
+
+    @Test func aHiddenIceIconStaysHidden() throws {
+        let settings = try #require(LegacyMigration.settings(
+            fromNativeSections: data(["bundle:com.getdropbox.dropbox": "hidden"]),
+            showIceIcon: false
+        ))
+        #expect(!settings.showInMenuBar)
+        #expect(settings.hidden == ["bundle:com.getdropbox.dropbox"])
+    }
+
+    @Test func aHiddenIceIconIsCarriedOverWithoutSections() throws {
+        // A 2.x user who never ran 2.16 or later on macOS 27 has no sections, only the icon.
+        let settings = try #require(LegacyMigration.settings(fromNativeSections: nil, showIceIcon: false))
+        #expect(!settings.showInMenuBar)
+        #expect(settings.hidden.isEmpty)
+        #expect(settings.order.isEmpty)
+    }
+
+    @Test func aShownIceIconIsTheDefault() throws {
+        #expect(LegacyMigration.settings(fromNativeSections: nil, showIceIcon: true) == nil)
+        let settings = try #require(LegacyMigration.settings(
+            fromNativeSections: data(["system:6": "hidden"]),
+            showIceIcon: true
+        ))
+        #expect(settings.showInMenuBar)
+    }
+
+    @Test func the2xIconSettingIsReadAsABool() {
+        let (legacy, suite) = ScratchDefaults.make(label: "Legacy")
+        defer { ScratchDefaults.destroy(suite) }
+        #expect(LegacyMigration.showIceIcon(in: legacy) == nil, "never set in 2.x")
+        legacy.set(false, forKey: "ShowIceIcon")
+        #expect(LegacyMigration.showIceIcon(in: legacy) == false)
+        legacy.set("no", forKey: "ShowIceIcon")
+        #expect(LegacyMigration.showIceIcon(in: legacy) == nil, "not a value 2.x wrote")
+    }
 }
 
 /// The model runs the migration once: on a first 3.x launch with no 3.x settings.
@@ -85,5 +122,28 @@ struct FirstLaunchMigrationTests {
         let model = SettingsModel(suiteName: suite, legacyDefaults: legacy)
 
         #expect(model.settings.hidden == ["system:6"])
+    }
+
+    @Test func aFirstLaunchKeepsAnIconHiddenIn2x() {
+        let (legacy, legacySuite) = ScratchDefaults.make(label: "Legacy")
+        let (_, suite) = ScratchDefaults.make(label: "Settings")
+        defer { ScratchDefaults.destroy(legacySuite); ScratchDefaults.destroy(suite) }
+        legacy.set(false, forKey: "ShowIceIcon")
+
+        let model = SettingsModel(suiteName: suite, legacyDefaults: legacy)
+
+        #expect(!model.showInMenuBar)
+        #expect(!SettingsModel(suiteName: suite, legacyDefaults: UserDefaults(suiteName: suite)!).showInMenuBar,
+                "the carried-over setting was saved")
+    }
+
+    @Test func aLater3xLaunchIgnoresThe2xIcon() {
+        let (legacy, legacySuite) = ScratchDefaults.make(label: "Legacy")
+        let (defaults, suite) = ScratchDefaults.make(label: "Settings")
+        defer { ScratchDefaults.destroy(legacySuite); ScratchDefaults.destroy(suite) }
+        legacy.set(false, forKey: "ShowIceIcon")
+        defaults.set(Data(#"{"showInMenuBar":true}"#.utf8), forKey: "settings.v1")
+
+        #expect(SettingsModel(suiteName: suite, legacyDefaults: legacy).showInMenuBar)
     }
 }

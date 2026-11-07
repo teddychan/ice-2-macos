@@ -16,6 +16,9 @@ struct IceSettings: Codable, Equatable, Sendable {
     /// DragonKit keeps the live choice outside this suite; this copy is what a backup carries.
     var language: String?
 
+    /// Whether the Ice icon is in the menu bar. With it hidden, Settings is the way back in.
+    var showInMenuBar = true
+
     /// The ids of hidden items (see ``MenuBarItem/id``). Every other item is shown.
     var hidden: Set<String> = []
 
@@ -140,6 +143,7 @@ extension IceSettings {
     static let backupContentKeys: [(property: String, key: String)] = [
         ("launchAtLogin", "app.backup.contents.launchAtLogin"),
         ("language", "app.backup.contents.language"),
+        ("showInMenuBar", "app.backup.contents.showInMenuBar"),
         ("hidden", "app.backup.contents.hidden"),
         ("order", "app.backup.contents.order"),
     ]

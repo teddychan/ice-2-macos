@@ -49,4 +49,8 @@
 "app.system.inputMenu" = "Menú de teclado";
 "app.system.screenSharing" = "Compartir pantalla";
 "app.general.language" = "Idioma";
+"app.general.menuBar" = "Barra de menús";
+"app.general.showInMenuBar" = "Mostrar en la barra de menús";
+"app.general.showInMenuBarHint" = "Mientras el icono de Ice está oculto, no puedes abrir la Ice Bar y los elementos ocultos siguen ocultos. Si Ice 2 se abre con el icono oculto, se abren los Ajustes para que puedas volver a activarlo.";
 "app.backup.contents.language" = "Idioma";
+"app.backup.contents.showInMenuBar" = "Mostrar en la barra de menús";

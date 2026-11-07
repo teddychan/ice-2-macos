@@ -6,7 +6,7 @@
 import DragonKit
 import SwiftUI
 
-/// The General pane: Startup, then the menu bar items.
+/// The General pane: Startup, Language, the Ice icon, then the menu bar items.
 struct GeneralPane: SettingsPane {
     static let paneID = "general"
 
@@ -40,6 +40,13 @@ private struct GeneralPaneView: View {
                 LanguagePicker(onChange: { model.languageChanged(to: $0) })
             } footer: {
                 EmptyView()
+            }
+            DragonSection {
+                Text(L("app.general.menuBar"))
+            } content: {
+                Toggle(L("app.general.showInMenuBar"), isOn: $model.showInMenuBar)
+            } footer: {
+                Text(L("app.general.showInMenuBarHint"))
             }
             // The note is the section's footer: wrapping the section in a modifier hides it from
             // the Form, which then draws the header inside the box.

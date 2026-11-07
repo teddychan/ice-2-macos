@@ -49,4 +49,8 @@
 "app.system.inputMenu" = "Input Menu";
 "app.system.screenSharing" = "Screen Sharing";
 "app.general.language" = "Language";
+"app.general.menuBar" = "Menu Bar";
+"app.general.showInMenuBar" = "Show in menu bar";
+"app.general.showInMenuBarHint" = "While the Ice icon is hidden, you can't open the Ice Bar, and hidden items stay hidden. If Ice 2 starts with the icon hidden, Settings opens so you can turn it back on.";
 "app.backup.contents.language" = "Language";
+"app.backup.contents.showInMenuBar" = "Show in menu bar";

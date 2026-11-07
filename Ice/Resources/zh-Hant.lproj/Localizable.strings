@@ -49,4 +49,8 @@
 "app.system.inputMenu" = "輸入法選單";
 "app.system.screenSharing" = "螢幕共享";
 "app.general.language" = "語言";
+"app.general.menuBar" = "選單列";
+"app.general.showInMenuBar" = "在選單列中顯示";
+"app.general.showInMenuBarHint" = "Ice 圖示隱藏時，無法打開 Ice Bar，隱藏的項目也會保持隱藏。如果 Ice 2 啟動時圖示處於隱藏狀態，會打開設定以便你重新開啟。";
 "app.backup.contents.language" = "語言";
+"app.backup.contents.showInMenuBar" = "在選單列中顯示";

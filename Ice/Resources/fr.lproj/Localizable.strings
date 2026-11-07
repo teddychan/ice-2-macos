@@ -49,4 +49,8 @@
 "app.system.inputMenu" = "Menu de saisie";
 "app.system.screenSharing" = "Partage d’écran";
 "app.general.language" = "Langue";
+"app.general.menuBar" = "Barre des menus";
+"app.general.showInMenuBar" = "Afficher dans la barre des menus";
+"app.general.showInMenuBarHint" = "Tant que l’icône d’Ice est masquée, vous ne pouvez pas ouvrir la Ice Bar et les éléments masqués restent masqués. Si Ice 2 démarre avec l’icône masquée, les Réglages s’ouvrent pour que vous puissiez la réactiver.";
 "app.backup.contents.language" = "Langue";
+"app.backup.contents.showInMenuBar" = "Afficher dans la barre des menus";
