@@ -4,7 +4,7 @@
 //
 
 import DragonKit
-import Foundation
+import AppKit
 import SwiftUI
 
 /// The observable owner of ``IceSettings``: every change is saved to the settings suite and its
@@ -38,7 +38,7 @@ final class SettingsModel {
 
     /// - Parameter legacyDefaults: where 2.x kept its settings, read once on a first launch.
     init(suiteName: String = SettingsModel.suiteName, legacyDefaults: UserDefaults = .standard) {
-        let store = DragonSettingsStore(suiteName: suiteName, defaultValue: IceSettings())
+        let store = DragonSettingsStore(suiteName: suiteName, defaultValue: IceSettings(), key: Self.storeKey)
         self.store = store
         let isFirstLaunch = UserDefaults(suiteName: suiteName)?.object(forKey: Self.storeKey) == nil
         if isFirstLaunch, let migrated = LegacyMigration.settings(
@@ -51,7 +51,7 @@ final class SettingsModel {
         }
     }
 
-    /// The key `DragonSettingsStore` saves under by default.
+    /// The key the settings are saved under in the suite.
     private static let storeKey = "settings.v1"
 
     /// Applies the stored login item preference to the system, so a restored backup or a
@@ -88,9 +88,12 @@ final class SettingsModel {
         settings.reorder(arrangement)
     }
 
-    /// The hidden items, in order: what the Ice Bar shows.
+    /// What the Ice Bar shows: the hidden items, in order, whose app is running.
     var hiddenItems: [MenuBarItem] {
-        listedItems.filter { settings.isHidden($0.id) }
+        settings.iceBarItems(
+            discovered: discovered,
+            runningBundles: Set(NSWorkspace.shared.runningApplications.compactMap(\.bundleIdentifier))
+        )
     }
 
     /// Applies a drop in the Ice Bar: `item` takes `target`'s place.

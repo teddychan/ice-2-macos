@@ -82,7 +82,7 @@ final class IceBarPanel: NSPanel {
         ))
     }
 
-    /// Closes on a click in another app or on Escape. A click on the Ice icon toggles instead.
+    /// Closes on a click anywhere else or on Escape. A click on the Ice icon toggles instead.
     private func installMonitors() {
         removeMonitors()
         if let monitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown], handler: { [weak self] _ in
@@ -90,12 +90,23 @@ final class IceBarPanel: NSPanel {
         }) {
             monitors.append(monitor)
         }
-        if let monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown, handler: { [weak self] event in
-            guard event.keyCode == 53 else { // Escape
+        if let monitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .leftMouseDown, .rightMouseDown], handler: { [weak self] event in
+            guard let self else {
                 return event
             }
-            self?.hide()
-            return nil
+            if event.type == .keyDown {
+                guard event.keyCode == 53 else { // Escape
+                    return event
+                }
+                hide()
+                return nil
+            }
+            // A click in another of Ice's windows, such as Settings. Not the Ice icon's own
+            // window: its click toggles the Ice Bar, which would reopen it right away.
+            if let window = event.window, window !== self, !window.className.contains("StatusBar") {
+                hide()
+            }
+            return event
         }) {
             monitors.append(monitor)
         }

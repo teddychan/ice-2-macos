@@ -25,8 +25,12 @@ private struct GeneralPaneView: View {
 
     var body: some View {
         DragonForm {
-            DragonSection(LocalizedStringKey(L("app.general.startup"))) {
+            DragonSection {
+                Text(L("app.general.startup"))
+            } content: {
                 Toggle(L("app.general.launchAtLogin"), isOn: $model.launchAtLogin)
+            } footer: {
+                EmptyView()
             }
             // The note is the section's footer: wrapping the section in a modifier hides it from
             // the Form, which then draws the header inside the box.

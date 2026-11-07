@@ -24,11 +24,8 @@ enum WhatsNewConfig {
         WhatsNewContent(
             date: "2026-11-07",
             summary: L("app.whatsNew.summary"),
-            // Maintenance only: nothing user-facing changed, so there are no sections. The summary
-            // says so in every language, and the word "maintenance" in this comment is what the
-            // release gate (dragon-release-ci tag-gate.sh, check 6) looks for in this file when
-            // there is no section. Keys are stable across releases (see CHANGELOG.md for what
-            // changed); the next release with real entries adds its section keys back.
+            // Keys are stable across releases (see CHANGELOG.md for what changed); each release
+            // rewrites the strings behind them in every language.
             sections: [
                 ChangeSection(kind: .changed, entries: [
                     L("app.whatsNew.changed1"),
