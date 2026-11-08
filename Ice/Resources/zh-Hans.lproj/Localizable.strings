@@ -19,7 +19,7 @@
 "app.uninstall.item.caches" = "缓存和支持文件";
 "app.settings.windowTitle" = "%@ 设置";
 "app.general.startup" = "启动";
-"app.whatsNew.summary" = "Ice 2 为 macOS 27 重新打造。菜单栏中的每个项目要么显示，要么隐藏，隐藏的项目都放在 Ice 图标下方的 Ice Bar 里。";
+"app.whatsNew.summary" = "维护更新。";
 "app.menuBar.unavailable" = "此版本的 macOS 无法隐藏项目，已全部显示。";
 "app.menuBar.needsAccessibility" = "Ice 2 需要“辅助功能”权限才能隐藏菜单栏项目。在你允许之前，所有项目都会显示。";
 "app.menuBar.timeout" = "macOS 未确认隐藏，因此已全部显示。Ice 2 会再试一次。";
@@ -41,7 +41,7 @@
 "app.backup.contents.launchAtLogin" = "登录时启动";
 "app.backup.contents.hidden" = "哪些菜单栏项目显示、哪些隐藏";
 "app.backup.contents.order" = "Ice Bar 中项目的顺序";
-"app.whatsNew.changed1" = "在设置的“通用”中，为每个菜单栏项目选择显示或隐藏。";
+"app.whatsNew.changed1" = "设置使用的共用工具包已更新至 DragonKit 4.5.1。";
 "app.whatsNew.changed2" = "Ice 2 3.0 需要 macOS 27 或更高版本。macOS 26 或更早版本的 Mac 会继续使用 Ice 2 2.17。";
 "app.whatsNew.added1" = "点按 Ice 图标即可打开 Ice Bar。点按其中的项目即可打开它的菜单。";
 "app.whatsNew.added2" = "在 Ice Bar 或设置中拖移项目即可更改顺序。";

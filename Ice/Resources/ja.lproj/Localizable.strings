@@ -19,7 +19,7 @@
 "app.uninstall.item.caches" = "キャッシュとサポートファイル";
 "app.settings.windowTitle" = "%@ 設定";
 "app.general.startup" = "起動";
-"app.whatsNew.summary" = "Ice 2 を macOS 27 向けに作り直しました。メニューバーの各項目は「表示」か「非表示」のどちらかで、非表示の項目は Ice アイコンの下の Ice Bar にまとまります。";
+"app.whatsNew.summary" = "メンテナンスアップデート。";
 "app.menuBar.unavailable" = "このバージョンの macOS では非表示にできません。すべて表示しています。";
 "app.menuBar.needsAccessibility" = "メニューバー項目を非表示にするには、Ice 2 にアクセシビリティの許可が必要です。許可するまではすべて表示されます。";
 "app.menuBar.timeout" = "macOS が非表示を確認しなかったため、すべて表示しています。Ice 2 はもう一度試します。";
@@ -41,7 +41,7 @@
 "app.backup.contents.launchAtLogin" = "ログイン時に起動";
 "app.backup.contents.hidden" = "表示するメニューバー項目と非表示にする項目";
 "app.backup.contents.order" = "Ice Bar の項目の順番";
-"app.whatsNew.changed1" = "メニューバーの各項目の「表示」「非表示」は、設定の「一般」で選べます。";
+"app.whatsNew.changed1" = "設定の共通ツールキットを DragonKit 4.5.1 に更新しました。";
 "app.whatsNew.changed2" = "Ice 2 3.0 には macOS 27 以降が必要です。macOS 26 以前の Mac は Ice 2 2.17 のままです。";
 "app.whatsNew.added1" = "Ice アイコンをクリックすると Ice Bar が開きます。項目をクリックするとそのメニューが開きます。";
 "app.whatsNew.added2" = "Ice Bar または設定で項目をドラッグすると順番を変更できます。";

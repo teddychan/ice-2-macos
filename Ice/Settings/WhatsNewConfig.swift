@@ -22,21 +22,13 @@ enum WhatsNewConfig {
     @MainActor
     static var content: WhatsNewContent {
         WhatsNewContent(
-            date: "2026-11-07",
+            date: "2026-11-08",
             summary: L("app.whatsNew.summary"),
             // Keys are stable across releases (see CHANGELOG.md for what changed); each release
             // rewrites the strings behind them in every language.
             sections: [
                 ChangeSection(kind: .changed, entries: [
                     L("app.whatsNew.changed1"),
-                    L("app.whatsNew.changed2"),
-                ]),
-                ChangeSection(kind: .added, entries: [
-                    L("app.whatsNew.added1"),
-                    L("app.whatsNew.added2"),
-                ]),
-                ChangeSection(kind: .removed, entries: [
-                    L("app.whatsNew.removed1"),
                 ]),
             ]
         )
