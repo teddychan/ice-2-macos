@@ -19,7 +19,7 @@
 "app.uninstall.item.caches" = "Кэши и вспомогательные файлы";
 "app.settings.windowTitle" = "Настройки %@";
 "app.general.startup" = "Запуск";
-"app.whatsNew.summary" = "Ice 2 переписан для macOS 27. Каждый объект строки меню либо показан, либо скрыт, а скрытые ждут в Ice Bar под значком Ice.";
+"app.whatsNew.summary" = "Обновление для обслуживания.";
 "app.menuBar.unavailable" = "В этой версии macOS скрытие недоступно. Показано всё.";
 "app.menuBar.needsAccessibility" = "Чтобы скрывать объекты строки меню, Ice 2 нужно разрешение «Универсальный доступ». Пока его нет, показано всё.";
 "app.menuBar.timeout" = "macOS не подтвердила скрытие, поэтому показано всё. Ice 2 попробует снова.";
@@ -41,7 +41,7 @@
 "app.backup.contents.launchAtLogin" = "Запускать при входе в систему";
 "app.backup.contents.hidden" = "Какие объекты строки меню показаны, а какие скрыты";
 "app.backup.contents.order" = "Порядок объектов в Ice Bar";
-"app.whatsNew.changed1" = "Выбирайте «Показать» или «Скрыть» для каждого объекта строки меню в настройках, раздел «Основные».";
+"app.whatsNew.changed1" = "Общий набор инструментов окна настроек обновлён до DragonKit 4.5.1.";
 "app.whatsNew.changed2" = "Для Ice 2 3.0 нужна macOS 27 или новее. На Mac с macOS 26 и старше остаётся Ice 2 2.17.";
 "app.whatsNew.added1" = "Нажмите значок Ice, чтобы открыть Ice Bar. Нажмите объект, чтобы открыть его меню.";
 "app.whatsNew.added2" = "Перетаскивайте объекты в Ice Bar или в настройках, чтобы изменить их порядок.";

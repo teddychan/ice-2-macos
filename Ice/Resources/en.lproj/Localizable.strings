@@ -19,7 +19,7 @@
 "app.uninstall.item.caches" = "Caches and support files";
 "app.settings.windowTitle" = "%@ Settings";
 "app.general.startup" = "Startup";
-"app.whatsNew.summary" = "Ice 2 is rebuilt for macOS 27. Each menu bar item is either shown or hidden, and hidden items wait in the Ice Bar under the Ice icon.";
+"app.whatsNew.summary" = "Maintenance update.";
 "app.menuBar.unavailable" = "Hiding isn't available on this version of macOS. Everything is shown.";
 "app.menuBar.needsAccessibility" = "Ice 2 needs Accessibility permission to hide menu bar items. Everything is shown until you allow it.";
 "app.menuBar.timeout" = "macOS didn't confirm hiding, so everything is shown. Ice 2 will try again.";
@@ -41,7 +41,7 @@
 "app.backup.contents.launchAtLogin" = "Launch at login";
 "app.backup.contents.hidden" = "Which menu bar items are shown and which are hidden";
 "app.backup.contents.order" = "The order of items in the Ice Bar";
-"app.whatsNew.changed1" = "Choose Show or Hide for each menu bar item in Settings, General.";
+"app.whatsNew.changed1" = "Updated to DragonKit 4.5.1, the shared toolkit behind Settings.";
 "app.whatsNew.changed2" = "Ice 2 3.0 needs macOS 27 or later. Macs on macOS 26 or earlier stay on Ice 2 2.17.";
 "app.whatsNew.added1" = "Click the Ice icon to open the Ice Bar. Click an item there to open its menu.";
 "app.whatsNew.added2" = "Drag items in the Ice Bar or in Settings to change their order.";

@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.0 - 2026-11-08
+
+### Internal
+
+Updated to DragonKit 4.5.1, the shared toolkit behind Settings and Backup & Restore.
+
 ## 3.0.0 - 2026-11-07
 
 Ice 2 is rebuilt for macOS 27, where the system draws every menu bar item in one window. It needs

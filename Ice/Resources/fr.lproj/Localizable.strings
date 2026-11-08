@@ -19,7 +19,7 @@
 "app.uninstall.item.caches" = "Caches et fichiers de prise en charge";
 "app.settings.windowTitle" = "Réglages de %@";
 "app.general.startup" = "Démarrage";
-"app.whatsNew.summary" = "Ice 2 a été refait pour macOS 27. Chaque élément de la barre des menus est affiché ou masqué, et les éléments masqués attendent dans la Ice Bar, sous l’icône d’Ice.";
+"app.whatsNew.summary" = "Mise à jour de maintenance.";
 "app.menuBar.unavailable" = "Le masquage n’est pas disponible sur cette version de macOS. Tout est affiché.";
 "app.menuBar.needsAccessibility" = "Ice 2 a besoin de l’autorisation Accessibilité pour masquer des éléments de la barre des menus. Tout reste affiché tant que vous ne l’accordez pas.";
 "app.menuBar.timeout" = "macOS n’a pas confirmé le masquage, tout est donc affiché. Ice 2 réessaiera.";
@@ -41,7 +41,7 @@
 "app.backup.contents.launchAtLogin" = "Lancer à l'ouverture de session";
 "app.backup.contents.hidden" = "Les éléments de la barre des menus affichés et ceux masqués";
 "app.backup.contents.order" = "L’ordre des éléments dans la Ice Bar";
-"app.whatsNew.changed1" = "Choisissez Afficher ou Masquer pour chaque élément de la barre des menus dans Réglages, Général.";
+"app.whatsNew.changed1" = "Mise à jour vers DragonKit 4.5.1, la boîte à outils partagée des Réglages.";
 "app.whatsNew.changed2" = "Ice 2 3.0 nécessite macOS 27 ou version ultérieure. Les Mac sous macOS 26 ou antérieur restent sur Ice 2 2.17.";
 "app.whatsNew.added1" = "Cliquez sur l’icône d’Ice pour ouvrir la Ice Bar. Cliquez sur un élément pour ouvrir son menu.";
 "app.whatsNew.added2" = "Faites glisser les éléments dans la Ice Bar ou dans les Réglages pour changer leur ordre.";
