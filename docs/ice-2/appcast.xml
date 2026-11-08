@@ -3,12 +3,12 @@
     <channel>
         <title>Ice 2</title>
         <item>
-            <title>3.0.0</title>
-            <pubDate>Sat, 07 Nov 2026 14:59:25 +0000</pubDate>
-            <sparkle:version>1456</sparkle:version>
-            <sparkle:shortVersionString>3.0.0</sparkle:shortVersionString>
+            <title>3.1.0</title>
+            <pubDate>Sun, 08 Nov 2026 14:01:23 +0000</pubDate>
+            <sparkle:version>1458</sparkle:version>
+            <sparkle:shortVersionString>3.1.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>27.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/teddychan/ice-2-macos/releases/download/v3.0.0/Ice-2-v3.0.0.zip" length="1526557" type="application/octet-stream" sparkle:edSignature="TtxgDdj3/JxgnY0UqF1ooB/Uv2260Q0WLHCsuxcBoRXYC6eCpH4SZ/+pFwzLWKg61rJsAujOQDoVx6YcmF79Bw=="/>
+            <enclosure url="https://github.com/teddychan/ice-2-macos/releases/download/v3.1.0/Ice-2-v3.1.0.zip" length="1542346" type="application/octet-stream" sparkle:edSignature="4xgFM3INyufTNFOj1D/ciDkpvoaZSxxBZ2BWasqgStpe42yPkoY1t8tsaziEhg5QOQk09yYumLD5tL7ZisaOAQ=="/>
         </item>
     </channel>
 </rss>
