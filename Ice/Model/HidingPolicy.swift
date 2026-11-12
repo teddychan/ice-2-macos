@@ -26,12 +26,20 @@ enum HidingPolicy {
 
     /// The configuration that hides `hidden`, or nil when nothing on screen needs hiding.
     ///
-    /// - Parameter revealing: one hidden item to allow anyway, while its menu is open.
+    /// - Parameters:
+    ///   - revealing: one hidden item to allow anyway, while its menu is open.
+    ///   - cameraInUse: whether a camera is running. Assessment mode removes Control Center's
+    ///     camera indicator whatever the configuration allows, so hiding pauses while a camera
+    ///     is in use and the indicator always shows.
     static func configuration(
         hidden: Set<String>,
         runningBundles: Set<String>,
-        revealing: String? = nil
+        revealing: String? = nil,
+        cameraInUse: Bool = false
     ) -> Configuration? {
+        guard !cameraInUse else {
+            return nil
+        }
         let hiding = hidden.subtracting(revealing.map { [$0] } ?? [])
         let items = hiding.compactMap { MenuBarItem(id: $0, name: "") }
         let hiddenBundles = Set(items.compactMap(\.bundleIdentifier)).subtracting(ownBundles)

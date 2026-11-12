@@ -23,6 +23,7 @@
 "app.menuBar.unavailable" = "このバージョンの macOS では非表示にできません。すべて表示しています。";
 "app.menuBar.needsAccessibility" = "メニューバー項目を非表示にするには、Ice 2 にアクセシビリティの許可が必要です。許可するまではすべて表示されます。";
 "app.menuBar.timeout" = "macOS が非表示を確認しなかったため、すべて表示しています。Ice 2 はもう一度試します。";
+"app.menuBar.pausedForCamera" = "カメラが使用中のため、オフになるまで非表示の項目を表示しています。Ice 2 が項目を非表示にしている間は、macOS がカメラのインジケータを消してしまいます。";
 "app.general.items" = "メニューバー項目";
 "app.general.items.show" = "表示";
 "app.general.items.hide" = "非表示";
