@@ -23,6 +23,7 @@
 "app.menuBar.unavailable" = "此版本的 macOS 無法隱藏項目，已全部顯示。";
 "app.menuBar.needsAccessibility" = "Ice 2 需要「輔助使用」權限才能隱藏選單列項目。在你允許之前，所有項目都會顯示。";
 "app.menuBar.timeout" = "macOS 未確認隱藏，因此已全部顯示。Ice 2 會再試一次。";
+"app.menuBar.pausedForCamera" = "相機正在使用中，因此在關閉前會顯示隱藏的項目。Ice 2 隱藏項目時，macOS 會移除相機指示器。";
 "app.general.items" = "選單列項目";
 "app.general.items.show" = "顯示";
 "app.general.items.hide" = "隱藏";

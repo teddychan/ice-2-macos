@@ -20,6 +20,9 @@ final class MenuBarController {
     /// Why hiding is off right now, or nil when it works.
     private(set) var errorMessage: String?
 
+    /// Whether hiding is paused because a camera is in use (see ``CameraMonitor``).
+    private(set) var isPausedForCamera = false
+
     @ObservationIgnored private let model: SettingsModel
     @ObservationIgnored private var assertion: AnyObject?
     @ObservationIgnored private var pendingAssertion: AnyObject?
@@ -32,6 +35,7 @@ final class MenuBarController {
     @ObservationIgnored private var revealTask: Task<Void, Never>?
     @ObservationIgnored private var cancellables = Set<AnyCancellable>()
     @ObservationIgnored private let logger = Logger(category: "MenuBar")
+    @ObservationIgnored private let camera = CameraMonitor()
 
     // Notification Center bridge state. See the extension at the end of this file.
     @ObservationIgnored fileprivate var isSuspendedForNotificationCenter = false
@@ -44,6 +48,8 @@ final class MenuBarController {
 
     func start() {
         model.onHiddenChange = { [weak self] in self?.synchronize() }
+        camera.onChange = { [weak self] in self?.synchronize() }
+        camera.start()
         NSWorkspace.shared.publisher(for: \.runningApplications)
             .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -84,6 +90,7 @@ final class MenuBarController {
             return
         }
         installNotificationCenterBridgeIfNeeded()
+        camera.update()
         isRefreshing = true
         defer { isRefreshing = false }
         let snapshot = await Task.detached(priority: .utility) { ICEMenuBarAgentSnapshot() }.value
@@ -107,10 +114,15 @@ final class MenuBarController {
             failOpen(L("app.menuBar.needsAccessibility"))
             return
         }
+        let hidden = model.settings.hidden
+        let runningBundles = Set(NSWorkspace.shared.runningApplications.compactMap(\.bundleIdentifier))
+        isPausedForCamera = camera.isCameraInUse
+            && HidingPolicy.configuration(hidden: hidden, runningBundles: runningBundles) != nil
         apply(HidingPolicy.configuration(
-            hidden: model.settings.hidden,
-            runningBundles: Set(NSWorkspace.shared.runningApplications.compactMap(\.bundleIdentifier)),
-            revealing: revealing
+            hidden: hidden,
+            runningBundles: runningBundles,
+            revealing: revealing,
+            cameraInUse: camera.isCameraInUse
         ))
     }
 

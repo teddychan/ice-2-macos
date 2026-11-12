@@ -23,6 +23,7 @@
 "app.menuBar.unavailable" = "此版本的 macOS 无法隐藏项目，已全部显示。";
 "app.menuBar.needsAccessibility" = "Ice 2 需要“辅助功能”权限才能隐藏菜单栏项目。在你允许之前，所有项目都会显示。";
 "app.menuBar.timeout" = "macOS 未确认隐藏，因此已全部显示。Ice 2 会再试一次。";
+"app.menuBar.pausedForCamera" = "摄像头正在使用，因此在它关闭前会显示隐藏的项目。Ice 2 隐藏项目时，macOS 会移除摄像头指示器。";
 "app.general.items" = "菜单栏项目";
 "app.general.items.show" = "显示";
 "app.general.items.hide" = "隐藏";

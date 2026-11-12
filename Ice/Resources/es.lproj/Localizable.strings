@@ -23,6 +23,7 @@
 "app.menuBar.unavailable" = "No se pueden ocultar elementos en esta versión de macOS. Se muestra todo.";
 "app.menuBar.needsAccessibility" = "Ice 2 necesita el permiso de Accesibilidad para ocultar elementos de la barra de menús. Se muestra todo hasta que lo concedas.";
 "app.menuBar.timeout" = "macOS no confirmó la ocultación, así que se muestra todo. Ice 2 lo volverá a intentar.";
+"app.menuBar.pausedForCamera" = "Hay una cámara encendida, así que los elementos ocultos se muestran hasta que se apague. Mientras Ice 2 oculta elementos, macOS quita el indicador de la cámara.";
 "app.general.items" = "Elementos de la barra de menús";
 "app.general.items.show" = "Mostrar";
 "app.general.items.hide" = "Ocultar";

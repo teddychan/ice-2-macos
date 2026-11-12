@@ -56,6 +56,9 @@ private struct GeneralPaneView: View {
                 if let message = menuBar.errorMessage {
                     Label(message, systemImage: "exclamationmark.triangle")
                         .foregroundStyle(.secondary)
+                } else if menuBar.isPausedForCamera {
+                    Label(L("app.menuBar.pausedForCamera"), systemImage: "video")
+                        .foregroundStyle(.secondary)
                 }
                 if model.listedItems.isEmpty {
                     Text(L("app.general.items.empty"))

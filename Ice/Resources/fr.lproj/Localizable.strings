@@ -23,6 +23,7 @@
 "app.menuBar.unavailable" = "Le masquage n’est pas disponible sur cette version de macOS. Tout est affiché.";
 "app.menuBar.needsAccessibility" = "Ice 2 a besoin de l’autorisation Accessibilité pour masquer des éléments de la barre des menus. Tout reste affiché tant que vous ne l’accordez pas.";
 "app.menuBar.timeout" = "macOS n’a pas confirmé le masquage, tout est donc affiché. Ice 2 réessaiera.";
+"app.menuBar.pausedForCamera" = "Une caméra est allumée : les éléments masqués s’affichent jusqu’à ce qu’elle s’éteigne. Quand Ice 2 masque des éléments, macOS retire l’indicateur de caméra.";
 "app.general.items" = "Éléments de la barre des menus";
 "app.general.items.show" = "Afficher";
 "app.general.items.hide" = "Masquer";
