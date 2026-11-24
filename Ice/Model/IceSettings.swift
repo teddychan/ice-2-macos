@@ -19,6 +19,8 @@ struct IceSettings: Codable, Equatable, Sendable {
     /// Whether the Ice icon is in the menu bar. With it hidden, Settings is the way back in.
     var showInMenuBar = true
 
+    var menuBarIcon = MenuBarIconConfiguration()
+
     /// The ids of hidden items (see ``MenuBarItem/id``). Every other item is shown.
     var hidden: Set<String> = []
 
@@ -143,6 +145,7 @@ extension IceSettings {
         ("launchAtLogin", "app.backup.contents.launchAtLogin"),
         ("language", "app.backup.contents.language"),
         ("showInMenuBar", "app.backup.contents.showInMenuBar"),
+        ("menuBarIcon", "app.backup.contents.menuBarIcon"),
         ("hidden", "app.backup.contents.hidden"),
         ("order", "app.backup.contents.order"),
     ]
