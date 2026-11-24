@@ -84,10 +84,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Per-bundle-id autosave name, so the release and debug builds keep separate slots.
         item.autosaveName = "IceIcon-\(Constants.bundleIdentifier)"
         if let button = item.button {
-            let image = NSImage(named: "DotFill")
-            image?.isTemplate = true
-            image?.accessibilityDescription = Constants.displayName
-            button.image = image
+            button.image = MenuBarIconRenderer.image(for: model.settings.menuBarIcon)
             button.target = self
             button.action = #selector(iconClicked(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
@@ -95,6 +92,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         item.isVisible = model.showInMenuBar
         statusItem = item
         model.onShowInMenuBarChange = { [weak self] in self?.showInMenuBarChanged() }
+        model.onMenuBarIconChange = { [weak self] in
+            guard let self else { return }
+            self.statusItem?.button?.image = MenuBarIconRenderer.image(for: self.model.settings.menuBarIcon)
+        }
     }
 
     /// Shows or hides the Ice icon to match the setting. The Ice Bar hangs off the icon, so it

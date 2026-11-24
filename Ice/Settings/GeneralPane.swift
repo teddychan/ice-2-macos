@@ -45,6 +45,7 @@ private struct GeneralPaneView: View {
                 Text(L("app.general.menuBar"))
             } content: {
                 Toggle(L("app.general.showInMenuBar"), isOn: $model.showInMenuBar)
+                MenuBarIconSettings(model: model)
             } footer: {
                 Text(L("app.general.showInMenuBarHint"))
             }

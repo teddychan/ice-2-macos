@@ -30,6 +30,9 @@ final class SettingsModel {
             if settings.showInMenuBar != oldValue.showInMenuBar {
                 onShowInMenuBarChange()
             }
+            if settings.menuBarIcon != oldValue.menuBarIcon {
+                onMenuBarIconChange()
+            }
         }
     }
 
@@ -41,6 +44,8 @@ final class SettingsModel {
 
     /// Called when "Show in menu bar" changes, so the Ice icon follows.
     @ObservationIgnored var onShowInMenuBarChange: () -> Void = {}
+
+    @ObservationIgnored var onMenuBarIconChange: () -> Void = {}
 
     /// - Parameter legacyDefaults: where 2.x kept its settings, read once on a first launch.
     init(suiteName: String = SettingsModel.suiteName, legacyDefaults: UserDefaults = .standard) {
@@ -124,6 +129,24 @@ final class SettingsModel {
     var showInMenuBar: Bool {
         get { settings.showInMenuBar }
         set { settings.showInMenuBar = newValue }
+    }
+
+    var menuBarIconChoice: MenuBarIconChoice {
+        get { settings.menuBarIcon.choice }
+        set { settings.menuBarIcon.selection = newValue.rawValue }
+    }
+
+    var menuBarIconUsesOriginalColors: Bool {
+        get { settings.menuBarIcon.usesOriginalColors }
+        set { settings.menuBarIcon.appearance = newValue ? "original" : "automatic" }
+    }
+
+    func importMenuBarIcon(from url: URL) throws {
+        let png = try MenuBarIconRenderer.importPNG(from: url)
+        var configuration = settings.menuBarIcon
+        configuration.customPNG = png
+        configuration.selection = MenuBarIconChoice.custom.rawValue
+        settings.menuBarIcon = configuration
     }
 
     var launchAtLogin: Bool {
