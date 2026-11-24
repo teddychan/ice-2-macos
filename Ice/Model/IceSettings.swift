@@ -19,6 +19,9 @@ struct IceSettings: Codable, Equatable, Sendable {
     /// Whether the Ice icon is in the menu bar. With it hidden, Settings is the way back in.
     var showInMenuBar = true
 
+    /// Applies only when an item is first discovered.
+    var hideNewItems = false
+
     /// The ids of hidden items (see ``MenuBarItem/id``). Every other item is shown.
     var hidden: Set<String> = []
 
@@ -47,13 +50,16 @@ extension IceSettings {
 // MARK: Items
 
 extension IceSettings {
-    /// Adds newly discovered items to the end of the order (they start as Show) and records
+    /// Adds newly discovered items using the chosen default visibility and records
     /// each app's current name.
     mutating func merge(discovered: [MenuBarItem]) {
         var known = Set(order)
         for item in discovered {
             if known.insert(item.id).inserted {
                 order.append(item.id)
+                if hideNewItems {
+                    hidden.insert(item.id)
+                }
             }
             if item.bundleIdentifier != nil, !item.name.isEmpty, names[item.id] != item.name {
                 names[item.id] = item.name
@@ -143,6 +149,7 @@ extension IceSettings {
         ("launchAtLogin", "app.backup.contents.launchAtLogin"),
         ("language", "app.backup.contents.language"),
         ("showInMenuBar", "app.backup.contents.showInMenuBar"),
+        ("hideNewItems", "app.backup.contents.hideNewItems"),
         ("hidden", "app.backup.contents.hidden"),
         ("order", "app.backup.contents.order"),
     ]

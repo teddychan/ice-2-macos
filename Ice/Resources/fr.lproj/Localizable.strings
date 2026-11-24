@@ -54,3 +54,6 @@
 "app.general.showInMenuBarHint" = "Tant que l’icône d’Ice est masquée, vous ne pouvez pas ouvrir la Ice Bar et les éléments masqués restent masqués. Si Ice 2 démarre avec l’icône masquée, les Réglages s’ouvrent pour que vous puissiez la réactiver.";
 "app.backup.contents.language" = "Langue";
 "app.backup.contents.showInMenuBar" = "Afficher dans la barre des menus";
+"app.general.items.defaultVisibility" = "Visibilité par défaut des nouveaux éléments";
+"app.general.items.defaultVisibilityHint" = "S’applique uniquement aux éléments détectés pour la première fois. Les éléments existants conservent leurs réglages.";
+"app.backup.contents.hideNewItems" = "Visibilité par défaut des nouveaux éléments de la barre des menus";

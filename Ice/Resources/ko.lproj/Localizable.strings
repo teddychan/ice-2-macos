@@ -54,3 +54,6 @@
 "app.general.showInMenuBarHint" = "Ice 아이콘이 숨겨져 있는 동안에는 Ice Bar를 열 수 없고 숨긴 항목도 계속 숨겨집니다. 아이콘이 숨겨진 상태로 Ice 2가 시작되면 다시 켤 수 있도록 설정이 열립니다.";
 "app.backup.contents.language" = "언어";
 "app.backup.contents.showInMenuBar" = "메뉴 막대에 표시";
+"app.general.items.defaultVisibility" = "새 항목의 기본 표시 상태";
+"app.general.items.defaultVisibilityHint" = "처음 발견된 항목에만 적용됩니다. 기존 항목의 설정은 유지됩니다.";
+"app.backup.contents.hideNewItems" = "새 메뉴 막대 항목의 기본 표시 상태";

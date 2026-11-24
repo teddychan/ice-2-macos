@@ -54,3 +54,6 @@
 "app.general.showInMenuBarHint" = "Ice 圖示隱藏時，無法打開 Ice Bar，隱藏的項目也會保持隱藏。如果 Ice 2 啟動時圖示處於隱藏狀態，會打開設定以便你重新開啟。";
 "app.backup.contents.language" = "語言";
 "app.backup.contents.showInMenuBar" = "在選單列中顯示";
+"app.general.items.defaultVisibility" = "新項目預設狀態";
+"app.general.items.defaultVisibilityHint" = "僅對首次發現的項目生效，現有項目保留各自的顯示或隱藏設定。";
+"app.backup.contents.hideNewItems" = "新選單列項目的預設顯示或隱藏狀態";

@@ -54,3 +54,6 @@
 "app.general.showInMenuBarHint" = "While the Ice icon is hidden, you can't open the Ice Bar, and hidden items stay hidden. If Ice 2 starts with the icon hidden, Settings opens so you can turn it back on.";
 "app.backup.contents.language" = "Language";
 "app.backup.contents.showInMenuBar" = "Show in menu bar";
+"app.general.items.defaultVisibility" = "Default visibility for new items";
+"app.general.items.defaultVisibilityHint" = "Applies only to newly discovered items. Existing items keep their settings.";
+"app.backup.contents.hideNewItems" = "Default visibility for new menu bar items";
