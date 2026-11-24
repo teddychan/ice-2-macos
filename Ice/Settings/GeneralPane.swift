@@ -48,6 +48,23 @@ private struct GeneralPaneView: View {
             } footer: {
                 Text(L("app.general.showInMenuBarHint"))
             }
+            DragonSection {
+                EmptyView()
+            } content: {
+                HStack {
+                    Text(L("app.general.items.defaultVisibility"))
+                    Spacer()
+                    Picker(L("app.general.items.defaultVisibility"), selection: $model.hideNewItems) {
+                        Text(L("app.general.items.show")).tag(false)
+                        Text(L("app.general.items.hide")).tag(true)
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .fixedSize()
+                }
+            } footer: {
+                Text(L("app.general.items.defaultVisibilityHint"))
+            }
             // The note is the section's footer: wrapping the section in a modifier hides it from
             // the Form, which then draws the header inside the box.
             DragonSection {

@@ -54,3 +54,6 @@
 "app.general.showInMenuBarHint" = "Ice 图标隐藏时，无法打开 Ice Bar，隐藏的项目也会保持隐藏。如果 Ice 2 启动时图标处于隐藏状态，会打开设置以便你重新开启。";
 "app.backup.contents.language" = "语言";
 "app.backup.contents.showInMenuBar" = "在菜单栏中显示";
+"app.general.items.defaultVisibility" = "新项目默认状态";
+"app.general.items.defaultVisibilityHint" = "仅对首次发现的项目生效，已有项目保留各自的显示或隐藏设置。";
+"app.backup.contents.hideNewItems" = "新菜单栏项目的默认显示或隐藏状态";

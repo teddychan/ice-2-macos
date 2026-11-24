@@ -69,7 +69,7 @@ final class SettingsModel {
         }
     }
 
-    /// Records the items discovered on screen; new ones join the order as shown.
+    /// Records discovered items, applying the default visibility only to new ones.
     func update(discovered items: [MenuBarItem]) {
         discovered = items
         settings.merge(discovered: items)
@@ -124,6 +124,11 @@ final class SettingsModel {
     var showInMenuBar: Bool {
         get { settings.showInMenuBar }
         set { settings.showInMenuBar = newValue }
+    }
+
+    var hideNewItems: Bool {
+        get { settings.hideNewItems }
+        set { settings.hideNewItems = newValue }
     }
 
     var launchAtLogin: Bool {

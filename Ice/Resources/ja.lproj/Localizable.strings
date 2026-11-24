@@ -54,3 +54,6 @@
 "app.general.showInMenuBarHint" = "Ice アイコンを非表示にしている間は Ice Bar を開けず、非表示の項目も非表示のままです。アイコンが非表示の状態で Ice 2 が起動すると、再び表示できるように設定が開きます。";
 "app.backup.contents.language" = "言語";
 "app.backup.contents.showInMenuBar" = "メニューバーに表示";
+"app.general.items.defaultVisibility" = "新しい項目の初期表示";
+"app.general.items.defaultVisibilityHint" = "初めて検出された項目にのみ適用されます。既存の項目の設定は変わりません。";
+"app.backup.contents.hideNewItems" = "新しいメニューバー項目の初期表示";

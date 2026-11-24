@@ -54,3 +54,6 @@
 "app.general.showInMenuBarHint" = "Пока значок Ice скрыт, Ice Bar не открыть, а скрытые объекты остаются скрытыми. Если Ice 2 запускается со скрытым значком, открываются Настройки, чтобы его можно было снова включить.";
 "app.backup.contents.language" = "Язык";
 "app.backup.contents.showInMenuBar" = "Показывать в строке меню";
+"app.general.items.defaultVisibility" = "Видимость новых элементов по умолчанию";
+"app.general.items.defaultVisibilityHint" = "Применяется только к впервые обнаруженным элементам. Настройки существующих элементов сохраняются.";
+"app.backup.contents.hideNewItems" = "Видимость новых элементов строки меню по умолчанию";
