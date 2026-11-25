@@ -35,7 +35,9 @@ final class MenuBarController {
 
     // Notification Center bridge state. See the extension at the end of this file.
     @ObservationIgnored fileprivate var isSuspendedForNotificationCenter = false
-    @ObservationIgnored fileprivate var notificationCenterTap: CFMachPort?
+    @ObservationIgnored private var notificationCenterMouseTap: CFMachPort?
+    @ObservationIgnored private var notificationCenterKeyTap: CFMachPort?
+    @ObservationIgnored private var pendingClockClick: CGPoint?
     @ObservationIgnored fileprivate var notificationCenterWatch: Task<Void, Never>?
 
     init(model: SettingsModel) {
@@ -277,9 +279,11 @@ final class MenuBarController {
 // While an `MBAssessmentModeAssertion` is active, macOS 27 does not open Notification
 // Center: clicking the clock and the "Show Notification Center" keyboard shortcut do
 // nothing, whatever system items and bundles the configuration allows (the restriction
-// comes from assessment mode itself). So the bridge watches for those two gestures,
-// releases the assertion, replays the gesture, and keeps the assertion released while
-// the panel is open. Hidden items are visible during that time, then concealed again.
+// comes from assessment mode itself). The bridge releases the assertion, replays the
+// gesture, and keeps the assertion released while the panel is open. For clock clicks,
+// it consumes both original mouse events so the click can't also take effect as the
+// assertion is released and toggle the panel a second time.
+// Hidden items are visible while the panel is open, then concealed again.
 // The trackpad gesture cannot be detected and is not bridged.
 extension MenuBarController {
     /// Marks events posted by the bridge so that its own tap ignores them.
@@ -295,77 +299,124 @@ extension MenuBarController {
     }
 
     fileprivate func installNotificationCenterBridgeIfNeeded() {
-        guard notificationCenterTap == nil else {
-            if let tap = notificationCenterTap, !CGEvent.tapIsEnabled(tap: tap) {
-                CGEvent.tapEnable(tap: tap, enable: true)
-            }
-            return
-        }
-        let mask = (1 << CGEventType.leftMouseDown.rawValue) | (1 << CGEventType.keyDown.rawValue)
-        let callback: CGEventTapCallBack = { _, type, event, refcon in
-            if let refcon {
+        if notificationCenterMouseTap == nil {
+            notificationCenterMouseTap = makeNotificationCenterTap(
+                events: [.leftMouseDown, .leftMouseUp],
+                options: .defaultTap
+            ) { _, type, event, refcon in
+                guard let refcon else {
+                    return Unmanaged.passUnretained(event)
+                }
                 let controller = Unmanaged<MenuBarController>.fromOpaque(refcon).takeUnretainedValue()
-                // The tap's source is on the main run loop, so this runs on the main thread.
-                MainActor.assumeIsolated {
-                    controller.handleNotificationCenterEvent(type: type, event: event)
+                return MainActor.assumeIsolated {
+                    controller.consumeClockEvent(type: type, event: event) ? nil : Unmanaged.passUnretained(event)
                 }
             }
-            return Unmanaged.passUnretained(event)
         }
-        // Listen only: the gesture does nothing while the assertion is active, so it needs
-        // no swallowing, and a filtering tap would hold every click and keystroke on the
-        // system until this app's main thread got to it.
+        // Leave keyboard events on a listen-only tap so they never wait for Ice.
+        if notificationCenterKeyTap == nil {
+            notificationCenterKeyTap = makeNotificationCenterTap(
+                events: [.keyDown],
+                options: .listenOnly
+            ) { _, type, event, refcon in
+                if let refcon {
+                    let controller = Unmanaged<MenuBarController>.fromOpaque(refcon).takeUnretainedValue()
+                    MainActor.assumeIsolated {
+                        controller.handleNotificationCenterKeyEvent(type: type, event: event)
+                    }
+                }
+                return Unmanaged.passUnretained(event)
+            }
+        }
+        for tap in [notificationCenterMouseTap, notificationCenterKeyTap].compactMap({ $0 })
+            where !CGEvent.tapIsEnabled(tap: tap) {
+            CGEvent.tapEnable(tap: tap, enable: true)
+        }
+    }
+
+    private func makeNotificationCenterTap(
+        events: [CGEventType],
+        options: CGEventTapOptions,
+        callback: CGEventTapCallBack
+    ) -> CFMachPort? {
+        let mask = events.reduce(CGEventMask(0)) { $0 | (1 << $1.rawValue) }
         guard let tap = CGEvent.tapCreate(
             tap: .cgSessionEventTap,
             place: .headInsertEventTap,
-            options: .listenOnly,
-            eventsOfInterest: CGEventMask(mask),
+            options: options,
+            eventsOfInterest: mask,
             callback: callback,
             userInfo: Unmanaged.passUnretained(self).toOpaque()
         ) else {
             logger.error("Notification Center bridge: could not create the event tap")
-            return
+            return nil
         }
         let source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)
+        // Both callbacks run on the main run loop and can access MainActor state.
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
-        CGEvent.tapEnable(tap: tap, enable: true)
-        notificationCenterTap = tap
+        return tap
     }
 
-    private func handleNotificationCenterEvent(type: CGEventType, event: CGEvent) {
+    private func consumeClockEvent(type: CGEventType, event: CGEvent) -> Bool {
         if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
-            if let tap = notificationCenterTap {
+            pendingClockClick = nil
+            if let tap = notificationCenterMouseTap {
+                CGEvent.tapEnable(tap: tap, enable: true)
+            }
+            return false
+        }
+        guard event.getIntegerValueField(.eventSourceUserData) != Self.replayMarker else {
+            return false
+        }
+        if type == .leftMouseUp, let start = pendingClockClick {
+            pendingClockClick = nil
+            if event.location == start || isClock(event.location) {
+                suspendForNotificationCenter(replaying: .click(event.location))
+            }
+            return true
+        }
+        guard type == .leftMouseDown else {
+            return false
+        }
+        pendingClockClick = nil
+        let modifiers: CGEventFlags = [.maskCommand, .maskControl, .maskAlternate, .maskShift]
+        guard
+            isConcealing,
+            !isSuspendedForNotificationCenter,
+            event.flags.isDisjoint(with: modifiers),
+            isClock(event.location)
+        else {
+            return false
+        }
+        pendingClockClick = event.location
+        return true
+    }
+
+    private func isClock(_ point: CGPoint) -> Bool {
+        isInMenuBar(point) && ICEMenuBarAgentElementHasIdentifier(point, Self.clockIdentifier)
+    }
+
+    private func handleNotificationCenterKeyEvent(type: CGEventType, event: CGEvent) {
+        if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
+            if let tap = notificationCenterKeyTap {
                 CGEvent.tapEnable(tap: tap, enable: true)
             }
             return
         }
         guard
+            type == .keyDown,
             isConcealing,
             !isSuspendedForNotificationCenter,
-            event.getIntegerValueField(.eventSourceUserData) != Self.replayMarker
+            event.getIntegerValueField(.eventSourceUserData) != Self.replayMarker,
+            event.getIntegerValueField(.keyboardEventAutorepeat) == 0,
+            let hotKey = notificationCenterHotKey()
         else {
             return
         }
-        switch type {
-        case .leftMouseDown:
-            let location = event.location
-            if isInMenuBar(location), ICEMenuBarAgentElementHasIdentifier(location, Self.clockIdentifier) {
-                suspendForNotificationCenter(replaying: .click(location))
-            }
-        case .keyDown:
-            guard
-                event.getIntegerValueField(.keyboardEventAutorepeat) == 0,
-                let hotKey = notificationCenterHotKey()
-            else {
-                return
-            }
-            let keyCode = CGKeyCode(event.getIntegerValueField(.keyboardEventKeycode))
-            let relevant: CGEventFlags = [.maskCommand, .maskControl, .maskAlternate, .maskShift]
-            if keyCode == hotKey.keyCode, event.flags.intersection(relevant) == hotKey.flags.intersection(relevant) {
-                suspendForNotificationCenter(replaying: .key(keyCode, event.flags))
-            }
-        default:
-            break
+        let keyCode = CGKeyCode(event.getIntegerValueField(.keyboardEventKeycode))
+        let relevant: CGEventFlags = [.maskCommand, .maskControl, .maskAlternate, .maskShift]
+        if keyCode == hotKey.keyCode, event.flags.intersection(relevant) == hotKey.flags.intersection(relevant) {
+            suspendForNotificationCenter(replaying: .key(keyCode, event.flags))
         }
     }
 
@@ -409,9 +460,13 @@ extension MenuBarController {
 
     private func suspendForNotificationCenter(replaying gesture: NotificationCenterGesture) {
         isSuspendedForNotificationCenter = true
-        restore()
         notificationCenterWatch?.cancel()
         notificationCenterWatch = Task { [weak self] in
+            // Release outside the filtering tap so the original mouse-up is consumed first.
+            guard !Task.isCancelled else {
+                return
+            }
+            self?.restore()
             // MenuBarAgent needs a moment after the release before the gesture works.
             try? await Task.sleep(for: .milliseconds(200))
             guard let self, !Task.isCancelled else {
